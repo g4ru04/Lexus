@@ -1,9 +1,74 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>cs_manger</title>
-  </head>
-  <body>
-    <h1>cs_manger</h1>
-  </body>
+    <head>
+        <title>cs_manger</title>
+		<style>
+			div {
+				border: 1px solid #000;
+			}
+			#console{
+				height:400px;
+			}
+			#chat_text{
+				width:400px;
+			}
+			.dialog{
+				height:40px;
+			}
+			.dialog.customer *{
+				float:left;
+			}
+			.dialog.officer *{
+				float:right;
+			}
+			.func_list{
+				display:none;
+			}
+			.func_list *{
+				display: inline-block;
+			}
+		</style>
+    </head>
+    <body>
+		<h1>cs_manger</h1>
+		<table id="my_container">
+			<tr>
+				<td colspan='2'>
+					<div id='console'>
+						<div class='dialog customer'>
+							<label for='customer-1'>Customer</label>
+							<p id='customer-1'>Hello, I need your help.</p>
+						</div>
+						<div class='dialog officer'>
+							<label for='officer-1'>Officer</label>
+							<p id='officer-1'>How can I help you?</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' id='func_list' class='func_list'>
+					<div>FUNC1</div>
+					<div>FUNC2</div>
+					<div>FUNC3</div>
+					<div>FUNC4</div>
+					<div>FUNC5</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input id='chat_text' />
+				</td>
+				<td>
+					<button id='send_button'>送出</button>
+					<button id='func_menu' onclick="list_func()">功能</button>
+				</td>
+			</tr>
+		</table>
+		<script>
+		function list_func(){
+			document.getElementById("func_list").style.display = "initial";
+		}
+		</script>
+	</body>
 </html>
