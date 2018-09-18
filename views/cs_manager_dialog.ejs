@@ -53,31 +53,37 @@
 				</td>
 				<td>
 					<button id='send_button'>送出</button>
-					<button id='func_menu' onclick="list_func()">功能</button>
+					<button id='func_menu'>功能</button>
 				</td>
 			</tr>
 		</table>
-		<div id ="func_list">
-			<ul>
-				<li><div>金牌話術</div></li>
-				<li><div>訊息推播</div></li>
-				<li><div>照片</div></li>
-				<li><div>相機</div></li>
-				<li><div>撥打</div></li>
-				<li><div>出價</div></li>
-				<li><div>車主資料</div></li>
-				<li><div>常用訊息</div></li>
-			</ul>
-		</div>
+		<ul id ="func_list">
+			<li><div>金牌話術</div></li>
+			<li><div>訊息推播</div></li>
+			<li><div>照片</div></li>
+			<li><div>相機</div></li>
+			<li><div>撥打</div></li>
+			<li><div>出價</div></li>
+			<li><div>車主資料</div></li>
+			<li><div>常用訊息</div></li>
+		</ul>
+		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script>
 			$(function(){
-				$( "#func_list ul" ).menu();
+				$( "#func_list" ).menu();
+				$("#func_menu").click(function(){
+				
+					$("#func_list").toggle();
+					$("#func_list").position({
+					  my: "right-10 bottom-10",
+					  at: "right top",
+					  of: "#func_menu"
+					});
+				});
+				
 			});
-			function list_func(){
-				document.getElementById("func_list").style.display = "initial";
-			}
 		</script>
 	</body>
 </html>
