@@ -1,53 +1,10 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>cs_customer</title>
-		<style>
-			div {
-				border: 1px solid #000;
-			}
-			#console{
-				height:400px;
-			}
-			#chat_text{
-				width:400px;
-			}
-			.dialog{
-				height:40px;
-			}
-			.dialog.customer *{
-				float:right;
-			}
-			.dialog.officer *{
-				float:left;
-			}
-		</style>
-    </head>
-    <body>
-		<h1>cs_customer</h1>
-		<table id="my_container">
-			<tr>
-				<td colspan="2">
-					<div id='console'>
-						<div class='dialog customer'>
-							<label for='customer-1'>Customer</label>
-							<p id='customer-1'>Hello, I need your help.</p>
-						</div>
-						<div class='dialog officer'>
-							<label for='officer-1'>Officer</label>
-							<p id='officer-1'>How can I help you?</p>
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input id='chat_text' />
-				</td>
-				<td>
-					<button id='send_button'>送出</button>
-				</td>
-			</tr>
-		</table>
-	</body>
+	<head>
+		<title>cs_customer</title>
+	</head>
+	<frameset cols="1*,2*">
+		<frame src="./cs_customer_list" name="list" >
+		<frame src="./cs_customer_dialog" name="dialog">
+	</frameset>
 </html>

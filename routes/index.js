@@ -5,6 +5,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/cs_customer_dialog', function(req, res, next) {
+  res.render('cs_customer_dialog');
+});
+router.get('/cs_customer_list', function(req, res, next) {
+  res.render('cs_customer_list');
+});
 router.get('/cs_customer', function(req, res, next) {
   res.render('cs_customer');
 });
