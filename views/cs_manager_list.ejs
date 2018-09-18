@@ -1,9 +1,85 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>cs_manger_list</title>
-  </head>
-  <body>
-    <h1>cs_manger_list</h1>
-  </body>
+	<head>
+		<title>cs_manger_list</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<style>
+			#search_box_container{
+				height:50px;
+			}
+			#search_box_container *{
+				float:right;
+			}
+			.unread{
+				border:1px solid #000;
+			}
+			.avatar{
+				float:left;
+				width:30px;
+				height:30px;
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script>
+			$( function() {
+				$( "#tabs" ).tabs();
+			});
+		</script>
+	</head>
+	<body>
+	
+		<div id="search_box_container">
+			<input type="text" />
+			<button>O</button>
+		</div>
+		<div id="tabs">
+			<ul>
+				<li><a href="#tabs_1">Tab1</a></li>
+				<li><a href="#tabs_2">Tab2</a></li>
+				<li><a href="#tabs_3">Tab3</a></li>
+			</ul>
+			<div id="tabs_1"></div>
+			<div id="tabs_2"></div>
+			<div id="tabs_3"></div>
+		</div>
+		
+		<script>
+			function draw_conversation(conversation_list){
+			
+				let table_container = $("<table/>");
+				conversation_list.forEach(function(element) {
+					let container = $("<tr/>");
+					table_container.append(
+						$("<tr/>").append(
+							$("<td/>").append(
+								$("<img/>",{
+									"src":element.avatar,
+									"class":"avatar"
+								})
+							),
+							$("<td/>").append(
+								$("<p/>").text(element.type + " / " + element.vehicle_id + " / " + element.name),
+								$("<p/>").text(element.note[0]?element.note[0].msg:"")
+							),
+							$("<td/>").append(
+								$("<p/>",{"class":"unread"}).text(element.unread)
+							)
+						)
+					);
+				});
+				
+				$("#tabs_1").html(table_container.prop("outerHTML"));
+				
+			}
+			$( function() {
+			
+				var conversation_list = [{"type":"CT200H","vehicle_id":"ABZ-1234","name":"王大明","avatar":"","unread":2,"note":[{"msg":"生日"}],},{"type":"ES200","vehicle_id":"ABE-1234","name":"陳大為","avatar":"","unread":4,"note":[{"msg":"保險到期日09/26"}],},{"type":"RX450H","vehicle_id":"ACE-8866","name":"林小東","avatar":"","unread":0,"note":[],},{"type":"GS300","vehicle_id":"LXS-8888","name":"吳小涵","avatar":"","unread":0,"note":[],},{"type":"NX200","vehicle_id":"AAA-0000","name":"李小龍","avatar":"","unread":0,"note":[],}];
+				conversation_list = [conversation_list[0]];
+				
+				draw_conversation(conversation_list);
+				
+			} );
+		</script>
+	</body>
 </html>
