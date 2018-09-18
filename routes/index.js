@@ -9,12 +9,15 @@ router.get('/cs_customer', function(req, res, next) {
   res.render('cs_customer');
 });
 
-router.get('/cs_manager', function(req, res, next) {
-  res.render('cs_manager');
+router.get('/cs_manager_dialog', function(req, res, next) {
+  res.render('cs_manager_dialog');
 });
 
 router.get('/cs_manager_list', function(req, res, next) {
   res.render('cs_manager_list');
+});
+router.get('/cs_manager', function(req, res, next) {
+  res.render('cs_manager');
 });
 
 module.exports = router;
