@@ -2,8 +2,9 @@
 <html>
     <head>
         <title>cs_manager_dialog</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 		<style>
-			div {
+			#console, #console div {
 				border: 1px solid #000;
 			}
 			#console{
@@ -21,11 +22,11 @@
 			.dialog.officer *{
 				float:right;
 			}
-			.func_list{
+			#func_list{
 				display:none;
 			}
-			.func_list *{
-				display: inline-block;
+			.ui-menu { 
+				width: 150px; 
 			}
 		</style>
     </head>
@@ -47,15 +48,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' id='func_list' class='func_list'>
-					<div>FUNC1</div>
-					<div>FUNC2</div>
-					<div>FUNC3</div>
-					<div>FUNC4</div>
-					<div>FUNC5</div>
-				</td>
-			</tr>
-			<tr>
 				<td>
 					<input id='chat_text' />
 				</td>
@@ -65,10 +57,27 @@
 				</td>
 			</tr>
 		</table>
+		<div id ="func_list">
+			<ul>
+				<li><div>金牌話術</div></li>
+				<li><div>訊息推播</div></li>
+				<li><div>照片</div></li>
+				<li><div>相機</div></li>
+				<li><div>撥打</div></li>
+				<li><div>出價</div></li>
+				<li><div>車主資料</div></li>
+				<li><div>常用訊息</div></li>
+			</ul>
+		</div>
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script>
-		function list_func(){
-			document.getElementById("func_list").style.display = "initial";
-		}
+			$(function(){
+				$( "#func_list ul" ).menu();
+			});
+			function list_func(){
+				document.getElementById("func_list").style.display = "initial";
+			}
 		</script>
 	</body>
 </html>
