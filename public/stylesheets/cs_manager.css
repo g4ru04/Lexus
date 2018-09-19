@@ -15,6 +15,11 @@
 .unread{
 	border:1px solid #000;
 }
+.note{
+	font-weight:bold;
+	color:red;
+	text-align:right;
+}
 .avatar{
 	float:left;
 	width:30px;

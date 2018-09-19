@@ -80,11 +80,15 @@ function draw_for_different_tab(conversation_data,tab_name){
 			)
 		}else if( tab_name=="tabs_note" ){
 			let note_str = element.note.map(function( note){
-				return "<p>"+note.msg+"</p>";
+				return note.msg;
 			});
 			tr_container.append(
 				$("<td/>").append(
-					note_str
+					$("<p/>",{
+						"class":"note"
+					}).text(
+						note_str
+					)
 				)
 			)
 		}
