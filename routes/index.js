@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var common = require('../service/common');
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -25,5 +26,8 @@ router.get('/cs_manager_list', function(req, res, next) {
 router.get('/cs_manager', function(req, res, next) {
   res.render('cs_manager');
 });
+
+router.get('/api/json/sl', common.getSl);
+router.get('/api/json/cl', common.getCl);
 
 module.exports = router;

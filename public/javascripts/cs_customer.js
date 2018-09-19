@@ -1,10 +1,14 @@
 //Only for cs_customer
 
 $( function() {
-
-	var conversation_list = [{"name":"銷售專員","avatar":"","unread":0,"latest_msg":[{"msg":"好的，馬上為您準備車款資訊！","time":"2019/09/20 10:11:50"}],"note":[{"msg":"生日"}]},{"name":"服務專員","avatar":"","unread":1,"latest_msg":[{"msg":"下次見！！","time":"2019/09/18 14:05:03"}]}];
 	
-	draw_conversation(conversation_list);
+	fetch('api/json/cl')
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(myJson) {
+			draw_conversation(myJson);
+		});
 	
 } );
 
