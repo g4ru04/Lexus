@@ -16,6 +16,12 @@ $( function() {
 		});
 	});
 	
+	$("#func_list").delegate( "li", "click", function() {
+		$("#func_list").hide();
+		alert($(this).text());
+		
+	});
+	
 } );
 
 //三個tab共用 以參數tab_name區隔
