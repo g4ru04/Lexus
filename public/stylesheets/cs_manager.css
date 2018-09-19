@@ -1,0 +1,61 @@
+#cs_manager_list{
+	width:calc(30vw);
+	float:left;
+}
+#cs_manager_dialog{
+	width:calc(60vw);
+	float:left;
+}
+#search_box_container{
+	height:50px;
+}
+#search_box_container *{
+	float:right;
+}
+.unread{
+	border:1px solid #000;
+}
+.avatar{
+	float:left;
+	width:30px;
+	height:30px;
+}
+#console, #console div {
+	border: 1px solid #000;
+}
+#console{
+	height:400px;
+}
+#chat_text{
+	width:400px;
+}
+.dialog{
+	height:40px;
+}
+.dialog.customer *{
+	float:left;
+}
+.dialog.officer *{
+	float:right;
+}
+#func_list{
+	display:none;
+}
+.ui-menu { 
+	width: 150px; 
+}
+#console, #console div {
+	border: 1px solid #000;
+}
+#console{
+	height:400px;
+}
+#chat_text{
+	width:400px;
+}
+#func_list{
+	display:none;
+}
+.ui-menu { 
+	width: 150px; 
+}

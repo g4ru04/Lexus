@@ -3,45 +3,11 @@
 	<head>
 		<title>cs_customer</title>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-		<style>
-			#cs_customer_list{
-				width:calc(33vw);
-				float:left;
-			}
-			#cs_customer_dialog{
-				width:calc(66vw);
-				float:left;
-			}
-			#search_box_container{
-				height:50px;
-			}
-			#search_box_container *{
-				float:right;
-			}
-			#console, .unread{
-				border:1px solid #000;
-			}
-			.avatar{
-				float:left;
-				width:30px;
-				height:30px;
-			}
-			#console{
-				height:400px;
-			}
-			#chat_text{
-				width:400px;
-			}
-			.dialog{
-				height:40px;
-				border:1px solid #000;
-			}
-			.dialog.customer *, .dialog.officer *{
-				float:right;
-			}
-		</style>
+		<link rel="stylesheet" href="/stylesheets/cs_customer.css">
 	</head>
 	<body>
+	
+		<!-- Left Hand Side-->
 		<div id='cs_customer_list'>
 			<div id="search_box_container">
 				<button>O</button>
@@ -56,6 +22,8 @@
 				<div id="tabs_unread"></div>
 			</div>
 		</div>
+		
+		<!-- Right Hand Side-->
 		<div id='cs_customer_dialog'>
 			<h1>cs_customer_dialog</h1>
 			<table id="my_container">
@@ -83,98 +51,12 @@
 				</tr>
 			</table>
 		</div>
+		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-		<script>
-			$( function() {
-				$( "#tabs" ).tabs();
-			});
-		</script>
-		<script>
-			//三個tab共用 以參數tab_name區隔
-			function draw_for_different_tab(conversation_data,tab_name){
-			
-				//不同TAB資料篩選
-				if(tab_name=="tabs_all"){
-					
-				}else if(tab_name=="tabs_unread"){
-					conversation_data = conversation_data.filter(function(item){
-						if(item.unread>0){
-							return true;
-						}
-					})
-				}
-				
-				//排序對話框時間
-				conversation_data.sort(function(a,b){
-					if(a.latest_msg[0].time < b.latest_msg[0].time){
-						return true;
-					}else if(a.latest_msg[0].time > b.latest_msg[0].time){
-						return false;
-					}
-				});
-				
-				
-				//畫出Tab內容
-				let container = conversation_data.reduce(function( table_container, element) {
-					
-					let tr_container= $("<tr/>");
-					tr_container.append([
-						$("<td/>").append(
-							$("<img/>",{
-								"src":element.avatar,
-								"class":"avatar"
-							})
-						),
-						$("<td/>").append(
-							$("<p/>").text( element.name ),
-							$("<p/>").text( element.latest_msg[0].msg )
-						)
-					]);
-					
-					//畫出Tab最後一欄
-					if( tab_name=="tabs_all" ){
-						
-					}else if( tab_name=="tabs_unread" ){
-						tr_container.append(
-							$("<td/>").append(
-								$("<p/>",{
-									"class":"unread"
-								}).text(
-									element.unread
-								)
-							)
-						)
-					}
-					
-					table_container.append(
-						tr_container
-					);
-					
-					return table_container;
-				},$("<table/>"));
-				
-				return container.prop("outerHTML");
-			}
 		
-		
-			function draw_conversation(conversation_list){
-				
-				$("#tabs_all").html(
-					draw_for_different_tab(conversation_list, "tabs_all")
-				);
-				$("#tabs_unread").html(
-					draw_for_different_tab(conversation_list, "tabs_unread")
-				);
-				
-			}
-			$( function() {
-			
-				var conversation_list = [{"name":"銷售專員","avatar":"","unread":0,"latest_msg":[{"msg":"好的，馬上為您準備車款資訊！","time":"2019/09/20 10:11:50"}],"note":[{"msg":"生日"}]},{"name":"服務專員","avatar":"","unread":1,"latest_msg":[{"msg":"下次見！！","time":"2019/09/18 14:05:03"}]}];
-				
-				draw_conversation(conversation_list);
-				
-			} );
-		</script>
+		<script src="/javascripts/cs_customer_preset.js"></script>
+		<script src="/javascripts/cs_customer.js"></script>
+
 	</body>
 </html>
