@@ -15,7 +15,7 @@ function emotion_setting(){
 }
 
 function produce_dialog_element(item) {
-	
+	let the_time = new Date(item.content[0].time);
 	return `<div class="dialog dialog--${item.type} clearfix">
 		<div class="dialog__profile">
 			<div class="dialog__profileImage"><img src="${item.profile[0].avatar}"></div>
@@ -27,7 +27,7 @@ function produce_dialog_element(item) {
 			</div>
 			<div class="dialogTips">
 				<div class="dialogTips__read">${item.content[0].read}</div>
-				<div class="dialogTips__time">${item.content[0].time}</div>
+				<div class="dialogTips__time">${the_time.getHours()}:${the_time.getMinutes()}</div>
 			</div>
 		</div>
 	</div>`;
