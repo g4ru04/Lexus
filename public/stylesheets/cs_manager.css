@@ -39,6 +39,9 @@
 .ui-menu { 
 	width: 150px; 
 }
+#func_list_containter{
+	height:0px;
+}
 #func_list{
 	display:none;
 }
@@ -108,3 +111,12 @@
 	margin-left: auto;
 }
 */
+
+#video_container{
+	position:absolute;
+	display:none;
+}
+#video_container video{
+	width:400px;
+	height:300px;
+}

@@ -5,17 +5,19 @@ $( function() {
 	fetch('api/json/sl')
 		.then(function(response) {
 			return response.json();
-		})
-		.then(function(myJson) {
+		}).then(function(myJson) {
 			draw_conversation(myJson);
+		}).catch(function(error) {
+			console.log(error);
 		});
 		
 	fetch('api/json/dl')
 		.then(function(response) {
 			return response.json();
-		})
-		.then(function(myJson) {
+		}).then(function(myJson) {
 			draw_dialog(myJson);
+		}).catch(function(error) {
+			console.log(error);
 		});
 	
 	$("#func_menu").click(function(){
@@ -30,8 +32,23 @@ $( function() {
 	
 	$("#func_list").delegate( "li", "click", function() {
 		$("#func_list").hide();
-		alert($(this).text());
-		
+		if($(this).text()=="相機"){
+			$("#video_container").position({
+			  my: "right-10 top+10",
+			  at: "right top",
+			  of: "#console"
+			});
+			
+			const video = document.querySelector('video');
+			if($("#video_container").attr("status")!="play"){
+				$("#video_container").attr("status","play");
+				navigator.mediaDevices.getUserMedia({ video: true}).
+				  then((stream) => {video.srcObject = stream});
+			}
+			$("#video_container").toggle();
+		}else{
+			alert($(this).text());
+		}
 	});
 	
 } );
