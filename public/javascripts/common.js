@@ -14,20 +14,20 @@ function emotion_setting(){
 	});
 }
 
-function produce_dialog_element( type, name, avatar, message, read, time) {
+function produce_dialog_element(item) {
 	
-	return `<div class="dialog dialog--${type} clearfix">
+	return `<div class="dialog dialog--${item.type} clearfix">
 		<div class="dialog__profile">
-			<div class="dialog__profileImage"><img src="${avatar}"></div>
-			<div class="dialog__profileName">${name}</div>
+			<div class="dialog__profileImage"><img src="${item.profile[0].avatar}"></div>
+			<div class="dialog__profileName">${item.profile[0].name}</div>
 		</div>
 		<div class="dialog__content">
 			<div class="dialogPop">
-				<p class="dialogPop__comment">${message}</p>
+				<p class="dialogPop__comment">${item.content[0].msg}</p>
 			</div>
 			<div class="dialogTips">
-				<div class="dialogTips__read">${read}</div>
-				<div class="dialogTips__time">${time}</div>
+				<div class="dialogTips__read">${item.content[0].read}</div>
+				<div class="dialogTips__time">${item.content[0].time}</div>
 			</div>
 		</div>
 	</div>`;
@@ -36,14 +36,7 @@ function produce_dialog_element( type, name, avatar, message, read, time) {
 function draw_dialog(dialog_data){
 
 	let dialog_html = dialog_data.map(function(item){
-		return produce_dialog_element(
-			item.type,
-			item.profile[0].name,
-			item.profile[0].avatar,
-			item.content[0].msg, 
-			item.content[0].read,
-			item.content[0].time
-		);
+		return produce_dialog_element(item);
 	});
 	$("#console").html(dialog_html);
 }
