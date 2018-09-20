@@ -23,17 +23,73 @@
 #console{
 	height:400px;
 	border:1px solid #000;
+	width: 600px;
+	color: #324148;
 }
 #chat_text{
 	width:400px;
 }
-.dialog{
-	height:40px;
-	border:1px solid #000;
+/* CTBC style */
+.dialog--service .dialog__profile {
+  float: left;
 }
-.dialog.customer *{
-	float:right;
+.dialog--service .dialog__content {
+  float: left;
+  margin-left: 20px;
+  border-top-left-radius: 0;
 }
-.dialog.officer *{
-	float:left;
+.dialog--service .dialog__content:after {
+  left: -15px;
+  background-position: 0 0;
 }
+.dialog--service .dialogTips {
+  left: 100%;
+  margin-right: -100%;
+}
+.dialog--client .dialog__profile {
+  float: right;
+}
+.dialog--client .dialog__content {
+  float: right;
+  margin-right: 20px;
+  border-top-right-radius: 0;
+}
+.dialog--client .dialog__content:after {
+  right: -15px;
+  background-position: -15px 0;
+}
+.dialog--client .dialogTips {
+  right: 100%;
+  margin-left: -100%;
+}
+.dialog--service {
+    margin-left: 20px;
+}
+.dialog--service .dialog__profile {
+	left: -20px;
+}
+.dialog--service .dialog__content {
+	margin-left: 0;
+}
+/*
+.dialog--service .dialogTips {
+	left: auto;
+	right: 0;
+	margin-right: auto;
+}
+*/
+.dialog--client {
+	margin-right: 20px;
+}
+.dialog--client .dialog__profile {
+	right: -20px;
+}
+.dialog--client .dialog__content {
+	margin-right: 0;
+}
+/*
+.dialog--client .dialogTips {
+	right: auto;
+	left: 0;
+	margin-left: auto;
+}*/

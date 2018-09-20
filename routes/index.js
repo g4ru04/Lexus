@@ -29,5 +29,6 @@ router.get('/cs_manager', function(req, res, next) {
 
 router.get('/api/json/sl', common.getSl);
 router.get('/api/json/cl', common.getCl);
+router.get('/api/json/dl', common.getDl);
 
 module.exports = router;

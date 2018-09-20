@@ -9,6 +9,14 @@ $( function() {
 		.then(function(myJson) {
 			draw_conversation(myJson);
 		});
+		
+	fetch('api/json/dl')
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(myJson) {
+			draw_dialog(myJson);
+		});
 	
 	$("#func_menu").click(function(){
 	
@@ -27,6 +35,41 @@ $( function() {
 	});
 	
 } );
+
+function produce_dialog_element( type, name, avatar, message, read, time) {
+	console.log("produce_dialog_element");
+	return `<div class="dialog dialog--${type} clearfix">
+		<div class="dialog__profile">
+			<div class="dialog__profileImage"><img src="${avatar}"></div>
+			<div class="dialog__profileName">${name}</div>
+		</div>
+		<div class="dialog__content">
+			<div class="dialogPop">
+				<p class="dialogPop__comment">${message}</p>
+			</div>
+			<div class="dialogTips">
+				<div class="dialogTips__read">${read}</div>
+				<div class="dialogTips__time">${time}</div>
+			</div>
+		</div>
+	</div>`;
+}
+
+function draw_dialog(dialog_data){
+
+	let dialog_html = dialog_data.map(function(item){
+		return produce_dialog_element(
+			item.type,
+			item.profile[0].name,
+			item.profile[0].avatar,
+			item.content[0].msg, 
+			item.content[0].read,
+			item.content[0].time
+		);
+	});
+	$("#console").html(dialog_html);
+}
+
 
 //三個tab共用 以參數tab_name區隔
 function draw_for_different_tab(conversation_data,tab_name){

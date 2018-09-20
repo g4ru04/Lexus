@@ -4,6 +4,7 @@
 		constructor() {
 			this.getSl = this.getSl.bind(this);
 			this.getCl = this.getCl.bind(this);
+			this.getDl = this.getDl.bind(this);
 		}
 		getSl(req, res) {
 			var data = require('./specialist.json', 'utf-8');
@@ -11,6 +12,10 @@
 		}
 		getCl(req, res) {
 			var data = require('./customer.json', 'utf-8');
+			return res.send(data);
+		}
+		getDl(req, res) {
+			var data = require('./dialog.json', 'utf-8');
 			return res.send(data);
 		}
 	}
