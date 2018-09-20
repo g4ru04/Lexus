@@ -6,7 +6,29 @@ $( function() {
 	
 	emotion_setting();
 	menu_setting();
+	
+	fetch('api/json/tl')
+		.then(function(response) {
+			return response.json();
+		}).then(function(myJson) {
+			talk_tricks_setting(myJson);
+		}).catch(function(error) {
+			console.log(error);
+		});
+	
 });
+function talk_tricks_setting(data){
+	
+	let talk_tricks_str = data.map(function(item){
+		return `<a class='talk_trick'>${item}</a>`;
+	}).join("");
+	
+	$("#talk_tricks_container").html(talk_tricks_str);
+	
+	$("#talk_tricks_container").delegate( ".talk_trick", "click", function() {
+		alert($(this).text());
+	});
+}
 
 function menu_setting(){
 	
@@ -49,6 +71,8 @@ function menu_setting(){
 				of: "#console"
 			});
 			
+		}else if($(this).text()=="金牌話術"){
+			$("#talk_tricks_container").toggleClass("enable"); 
 		}else{
 			alert($(this).text());
 		}

@@ -76,3 +76,19 @@
 	width:400px;
 	height:300px;
 }
+
+#talk_tricks_container{
+	height:0px;
+	overflow: hidden;
+	transition: height 0.3s;
+}
+#talk_tricks_container.enable{
+	height:50px;
+	line-height:50px;
+}
+.talk_trick{
+	margin:8px;
+	border: 2px solid #ccc;
+    border-radius: 16px;
+	padding: 10px;
+}
