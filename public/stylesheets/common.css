@@ -1,0 +1,30 @@
+#search_box_container{
+	height:50px;
+}
+#search_box_container *{
+	float:right;
+}
+.unread{
+	border:1px solid #000;
+}
+.avatar{
+	float:left;
+	width:30px;
+	height:30px;
+}
+#console{
+	height:400px;
+	width: 600px;
+	color: #324148;
+}
+#chat_text{
+	width:400px;
+}
+#emoticon_container{
+	height:0px;
+	overflow: hidden;
+	transition: height 0.3s;
+}
+#emoticon_container.emotionIconOn{
+	height:300px;
+}

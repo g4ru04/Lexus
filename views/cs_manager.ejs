@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 		<link rel="stylesheet" href="/stylesheets/CTBC.css">
 		<link rel="stylesheet" href="/stylesheets/cs_manager.css">
+		<link rel="stylesheet" href="/stylesheets/common.css">
 		
 	</head>
 	<body>
@@ -31,31 +32,31 @@
 		<!-- Right Hand Side-->
 		<div id='cs_manager_dialog'>
 			<h1>cs_manager_dialog</h1>
-			<table id="my_container">
-				<tr>
-					<td colspan='2'>
-						<div id='console'>
-							<div class='dialog customer'>
-								<label for='customer-1'>Customer</label>
-								<p id='customer-1'>Hello, I need your help.</p>
-							</div>
-							<div class='dialog officer'>
-								<label for='officer-1'>Officer</label>
-								<p id='officer-1'>How can I help you?</p>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input id='chat_text' />
-					</td>
-					<td>
-						<button id='send_button'>送出</button>
-						<button id='func_menu'>功能</button>
-					</td>
-				</tr>
-			</table>
+				<div id='console'>
+					<div class='dialog customer'>
+						<label for='customer-1'>Customer</label>
+						<p id='customer-1'>Hello, I need your help.</p>
+					</div>
+					<div class='dialog officer'>
+						<label for='officer-1'>Officer</label>
+						<p id='officer-1'>How can I help you?</p>
+					</div>
+				</div>
+				<div>
+					<input id='chat_text' />
+					<button id='send_button'>送出</button>
+					<button id='func_menu'>功能</button>
+					<a id='emotionIcon' href='#' class='chatUi__iconEmoticon'></a>
+				</div>
+				<div >
+					
+					<div id='emoticon_container'></div>
+				</div>
+			
+			<!-- Div After click "相機"-->
+			<div id='video_container'>
+				<video autoplay></video>
+			</div>
 			
 			<!-- Menu After click "功能"-->
 			<div id='func_list_containter'>
@@ -70,9 +71,6 @@
 					<li><div>常用訊息</div></li>
 				</ul>
 			</div>
-			<div id='video_container'>
-				<video autoplay></video>
-			</div>
 		</div>
 		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -80,6 +78,7 @@
 		
 		<script src="/javascripts/cs_manager_preset.js"></script>
 		<script src="/javascripts/cs_manager.js"></script>
+		<script src="/javascripts/common.js"></script>
 		
 	</body>
 </html>

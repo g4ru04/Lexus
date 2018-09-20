@@ -2,4 +2,5 @@
 
 $( function() {
 	$( "#tabs" ).tabs();
+	emotion_setting();
 });

@@ -6,28 +6,7 @@
 	width:calc(60vw);
 	float:left;
 }
-#search_box_container{
-	height:50px;
-}
-#search_box_container *{
-	float:right;
-}
-.unread{
-	border:1px solid #000;
-}
-.avatar{
-	float:left;
-	width:30px;
-	height:30px;
-}
-#console{
-	height:400px;
-	width: 600px;
-	color: #324148;
-}
-#chat_text{
-	width:400px;
-}
+
 /* CTBC style */
 .dialog--service .dialog__profile {
   float: left;
@@ -70,13 +49,6 @@
 .dialog--service .dialog__content {
 	margin-left: 0;
 }
-/*
-.dialog--service .dialogTips {
-	left: auto;
-	right: 0;
-	margin-right: auto;
-}
-*/
 .dialog--client {
 	margin-right: 20px;
 }
@@ -86,9 +58,3 @@
 .dialog--client .dialog__content {
 	margin-right: 0;
 }
-/*
-.dialog--client .dialogTips {
-	right: auto;
-	left: 0;
-	margin-left: auto;
-}*/
