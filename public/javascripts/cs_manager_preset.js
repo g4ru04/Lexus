@@ -26,7 +26,7 @@ function talk_tricks_setting(data){
 	$("#talk_tricks_container").html(talk_tricks_str);
 	
 	$("#talk_tricks_container").delegate( ".talk_trick", "click", function() {
-		alert($(this).text());
+		$("#chat_text").val($(this).text());
 	});
 }
 
