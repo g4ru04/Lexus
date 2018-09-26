@@ -1,12 +1,3 @@
-#cs_customer_list{
-	width:calc(30vw);
-	float:left;
-}
-#cs_customer_dialog{
-	width:calc(60vw);
-	float:left;
-}
-
 /* CTBC style */
 .dialog--service .dialog__profile {
   float: left;
