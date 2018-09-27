@@ -12,16 +12,38 @@
 		
 		<!-- Customer Dialog -->
 		<div id='cs_customer_dialog'>
+			<div class="header_content">
+				<div class="heder_service">
+					<img alt="" class="img-responsive" src="">
+				</div>
+				<div class="txt">
+					<div class="logo">
+					</div>
+					服務專員
+				</div>
+			</div>
 			<div id='console'>
 			</div>
-			<div>
-				<input id='chat_text' />
-				<button id='send_button'>送出</button>
-				<a id='emotionIcon' href='#' class='chatUi__iconEmoticon'></a>
-			</div>
-			<div >
-				<div id='emoticon_container'></div>
-			</div>
+			<!-- 下方控制面板 -->
+				<div class="control-bar">
+					<!-- 表情符號(隱) -->
+					<div>
+						<div id='emoticon_container'></div>
+					</div>
+					<!-- 對話頁面(顯) -->
+					<div class="smart_top" avalon-events="" style="">
+						<div class="box">
+							<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
+							</a>
+							<input class="input msg" placeholder="告訴我，你想問什麼？" maxlength="30" avalon-events="" type="text">
+							<a href="javascript:void(0)" class="btn-mic" avalon-events="">
+								<span class="btn-search">
+									<i></i>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
 		</div>
 		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
