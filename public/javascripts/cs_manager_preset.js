@@ -28,7 +28,7 @@ function talk_tricks_setting(data){
 	$("#talk_tricks_container").html(talk_tricks_str);
 	
 	$("#talk_tricks_container").delegate( ".talk_trick", "click", function() {
-		$("#chat_text").val($(this).text());
+		$(".input").val($(this).text());
 	});
 }
 
@@ -71,5 +71,7 @@ function menu_setting(){
 		}else{
 			alert(func_name);
 		}
+		
+		$(".select-menu").toggle();
 	});
 }
