@@ -61,6 +61,7 @@
 .dialog--service .dialog__content {
 	margin-right: 0;
 }
+
 /* 
 	Cathaybk css for function menu
 	from https://www.cathaybk.com.tw/ChatWeb/resources/css/smart_style.css?patchDate=2018091301
@@ -113,89 +114,7 @@ ul.select-line hr {
 	display: block;
 }
 
-.control-bar {
-    position: fixed;
-    -webkit-backface-visibility: hidden;
-    width: inherit;
-    bottom: 0;
-    z-index: 99;
-}
-.control-bar .box {
-    display: table;
-	box-sizing: border-box;
-    width: 100%;
-    height: 60px;
-    background-color: #ecf2ed;
-}
 
-.control-bar .box .btn-laugh , .control-bar .box .btn-laugh{
-	display: table-cell;
-	vertical-align: middle;
-	overflow: hidden;
-	text-indent: -9999px;
-	text-indent: 100%;
-	white-space: nowrap;
-	width: 60px;
-	height: 60px;
-}
-.control-bar .box .btn-laugh {
-	background: url(/images/laugh.png);
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-.control-bar .box .btn-add {
-	background: url(/images/funcs.png);
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-.control-bar .box .input {
-	box-sizing: border-box;
-	border-radius: 30px;
-	display: table-cell;
-	vertical-align: middle;
-	width: 100%;
-	height: 40px;
-	padding: 4px 13px;
-	margin: 10px 0;
-	color: #879195;
-	font-size: 16px;
-	line-height: 32px;
-	border: none;
-	background-color: #fff;
-	border: 1px solid #cee6c5;
-}
-.control-bar .box a {
-    display: table-cell;
-    vertical-align: middle;
-    overflow: hidden;
-    text-indent: 100%;
-    white-space: nowrap;
-	width: 80px;
-	height: 60px;
-	text-decoration: none;
-	background-color: transparent;
-}
-span.btn-search {
-    display: block;
-    width: 60px;
-    height: 40px;
-    background-color: #27AE58;
-    border-radius: 20px;
-    margin: 10px auto;
-    position: relative;
-    z-index: 999;
-}
-span.btn-search i {
-    width: 20px;
-    height: 18px;
-    background: url(/images/send.png);
-    background-size: 100%;
-    background-repeat: no-repeat;
-    display: block;
-    position: absolute;
-    top: 11px;
-    left: 22px;
-}
 /* Function css */
 #video_container{
 	position:absolute;
