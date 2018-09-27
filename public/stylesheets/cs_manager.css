@@ -6,17 +6,11 @@
 	width:calc(60vw);
 	float:left;
 }
-#func_list{
-	display:none;
-}
-#func_list_containter{
-	height:0px;
-}
-.ui-menu { 
-	width: 150px; 
-}
 
-/* CTBC style */
+/* 
+	CTBC style for dialog
+	from view-source:https://webchat.ctbcbank.com/webchat/resources/css/main.css
+*/
 .dialog--client .dialog__profile {
 	float: left;
 }
@@ -67,7 +61,142 @@
 .dialog--service .dialog__content {
 	margin-right: 0;
 }
+/* 
+	Cathaybk css for function menu
+	from https://www.cathaybk.com.tw/ChatWeb/resources/css/smart_style.css?patchDate=2018091301
+*/
+.select-menu {
+	overflow: hidden;
+    background-color: #fff;
+    border-top: 5px solid #ecf2ed;
+    display: table;
+    width: 100%;
+    padding: 5px 0px 15px;
+}
+.select-menu li {
+    list-style: none;
+    float: left;
+    width: 33%;
+    text-align: center;
+    border-right: 1px solid #eaeaea;
+}
+ul.select-line li {
+    border-right: none;
+    margin: 0px;
+}
+ul.select-line hr {
+    width: 50%;
+    padding: 0;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.select-menu li:last-child {
+    border-right: none;
+}
+.select-menu ul {
+    padding: 0;
+    margin: 0;
+}
 
+.select-menu li a{
+  color: #27AE58;
+  font-size: 16px;
+}
+.select-menu li a:hover,.select-menu li a:focus{
+  text-decoration:none;
+}
+
+.select-menu li img {
+    width: 60px;
+    height: 60px;
+    margin: 0px auto;
+	display: block;
+}
+
+.control-bar {
+    position: fixed;
+    -webkit-backface-visibility: hidden;
+    width: inherit;
+    bottom: 0;
+    z-index: 99;
+}
+.control-bar .box {
+    display: table;
+	box-sizing: border-box;
+    width: 100%;
+    height: 60px;
+    background-color: #ecf2ed;
+}
+
+.control-bar .box .btn-laugh , .control-bar .box .btn-laugh{
+	display: table-cell;
+	vertical-align: middle;
+	overflow: hidden;
+	text-indent: -9999px;
+	text-indent: 100%;
+	white-space: nowrap;
+	width: 60px;
+	height: 60px;
+}
+.control-bar .box .btn-laugh {
+	background: url(/images/laugh.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.control-bar .box .btn-add {
+	background: url(/images/funcs.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.control-bar .box .input {
+	box-sizing: border-box;
+	border-radius: 30px;
+	display: table-cell;
+	vertical-align: middle;
+	width: 100%;
+	height: 40px;
+	padding: 4px 13px;
+	margin: 10px 0;
+	color: #879195;
+	font-size: 16px;
+	line-height: 32px;
+	border: none;
+	background-color: #fff;
+	border: 1px solid #cee6c5;
+}
+.control-bar .box a {
+    display: table-cell;
+    vertical-align: middle;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+	width: 80px;
+	height: 60px;
+	text-decoration: none;
+	background-color: transparent;
+}
+span.btn-search {
+    display: block;
+    width: 60px;
+    height: 40px;
+    background-color: #27AE58;
+    border-radius: 20px;
+    margin: 10px auto;
+    position: relative;
+    z-index: 999;
+}
+span.btn-search i {
+    width: 20px;
+    height: 18px;
+    background: url(/images/send.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    display: block;
+    position: absolute;
+    top: 11px;
+    left: 22px;
+}
+/* Function css */
 #video_container{
 	position:absolute;
 	display:none;

@@ -2,7 +2,6 @@
 
 $( function() {
 	$( "#tabs" ).tabs();
-	$( "#func_list" ).menu();
 	
 	emotion_setting();
 	menu_setting();
@@ -16,6 +15,9 @@ $( function() {
 			console.log(error);
 		});
 	
+	$(".btn-search").click(function(){
+		console.log($(".input").val());
+	});
 });
 function talk_tricks_setting(data){
 	
@@ -32,20 +34,13 @@ function talk_tricks_setting(data){
 
 function menu_setting(){
 	
-	$("#func_menu").click(function(){
-	
-		$("#func_list").toggle();
-		$("#func_list").position({
-			my: "right-10 bottom-10",
-			at: "right top",
-			of: "#func_menu"
-		});
-		
+	$(".btn-add").click(function(){
+		$(".select-menu").toggle();
 	});
 	
-	$("#func_list").delegate( "li", "click", function() {
-		$("#func_list").hide();
-		if($(this).text()=="相機"){
+	$(".select-menu a").click(function(){
+		let func_name = $(this).text().trim();
+		if(func_name=="相機"){
 			
 			if (window.stream) {
 				if (window.stream) {
@@ -71,10 +66,10 @@ function menu_setting(){
 				of: "#console"
 			});
 			
-		}else if($(this).text()=="金牌話術"){
+		}else if(func_name=="金牌話術"){
 			$("#talk_tricks_container").toggleClass("enable"); 
 		}else{
-			alert($(this).text());
+			alert(func_name);
 		}
 	});
 }

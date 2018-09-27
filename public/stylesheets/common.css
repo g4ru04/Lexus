@@ -38,7 +38,7 @@
 	transition: height 0.3s;
 }
 #emoticon_container.emotionIconOn{
-	height:300px;
+	height:80px;
 }
 
 /* 

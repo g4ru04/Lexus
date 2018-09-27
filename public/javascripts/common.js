@@ -9,7 +9,7 @@ function emotion_setting(){
 	})
 	$("#emoticon_container").html(emotion_str);
 	
-	$("#emotionIcon").click(function(){
+	$(".btn-laugh").click(function(){
 		$("#emoticon_container").toggleClass("emotionIconOn"); 
 	});
 }
