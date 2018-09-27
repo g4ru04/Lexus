@@ -4,14 +4,26 @@
 #search_box_container *{
 	float:right;
 }
-.unread{
-	border:1px solid #000;
-}
-.avatar{
-	float:left;
-	width:30px;
+/* CSS in List */
+.list_element{
 	height:30px;
 }
+.img, .msg {
+	float:left;
+}
+.unread {
+	background-color:#B43104;
+}
+.note {
+	background-color:#FFBF00;
+}
+.unread, .note {
+	color:white;
+	float:right;
+	border-radius:16px;
+	padding:5px;
+}
+/* CSS in Dialog */
 #console{
 	height:400px;
 	width: 600px;
@@ -27,4 +39,29 @@
 }
 #emoticon_container.emotionIconOn{
 	height:300px;
+}
+
+/* 
+	tooltip css from
+	https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip 
+*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+	word-break:keep-all;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 8px;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

@@ -24,7 +24,12 @@ router.get('/cs_manager_list', function(req, res, next) {
   res.render('cs_manager_list');
 });
 router.get('/serv.do', function(req, res, next) {
-  res.render('cs_manager');
+  
+  let list_data = require('../service/specialist.json', 'utf-8');
+  res.render('cs_manager',{
+    list_data:list_data
+  });
+  
 });
 
 router.get('/api/json/sl', common.getSl);

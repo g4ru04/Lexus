@@ -17,16 +17,32 @@
 				<button>O</button>
 				<input type="text" placeholder="搜尋"/>
 			</div>
-			<div id="tabs">
-				<ul>
-					<li><a href="#tabs_all">全部</a></li>
-					<li><a href="#tabs_unread">未讀</a></li>
-					<li><a href="#tabs_note">提醒</a></li>
-				</ul>
-				<div id="tabs_all"></div>
-				<div id="tabs_unread"></div>
-				<div id="tabs_note"></div>
-			</div>
+			
+			<% list_data.forEach(function (item) { %>
+				<div class='list_element'>
+					<div class="img" alt="">
+						<img src="<%= item.avatar %>" alt="">
+						<div class="title">
+							<%= item.type %>/<%= item.vehicle_id %>/<%= item.name %>
+						</div>
+					</div>
+					<div class="msg">
+						<%= item.latest_msg[0].msg %>
+					</div>
+					<% if (item.unread) { %>
+						<div class="unread">
+							<%= item.unread %>
+						</div>
+					<% } %>
+					<% if (item.note.length>0) { %>
+						<div class="note" title=''>
+							<div class="tooltip">重要提醒
+								<span class="tooltiptext"><%= item.note.map(function(item){return item.msg;}) %></span>
+							</div>
+						</div>
+					<% } %>
+				</div>
+			<% }); %>
 		</div>
 		
 		<!-- Right Hand Side-->
