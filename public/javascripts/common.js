@@ -34,9 +34,44 @@ function produce_dialog_element(item) {
 }
 
 function draw_dialog(dialog_data){
-
+	
+	let loading_bar = `
+		<div class="loading_div">
+			<img src="/images/loading.gif" />
+		</div>
+	`;
 	let dialog_html = dialog_data.map(function(item){
 		return produce_dialog_element(item);
+	}).join("");
+	$("#console").html(loading_bar + dialog_html);
+	$("#console").on("touchstart", function(e) {
+		// 判断默认行为是否可以被禁用
+		if (e.cancelable) {
+			// 判断默认行为是否已经被禁用
+			if (!e.defaultPrevented) {
+				e.preventDefault();
+			}
+		}   
+		startX = e.originalEvent.changedTouches[0].pageX,
+		startY = e.originalEvent.changedTouches[0].pageY;
 	});
-	$("#console").html(dialog_html);
+	$("#console").on("touchmove", function(e){
+		if (e.cancelable) {
+			// 判断默认行为是否已经被禁用
+			if (!e.defaultPrevented) {
+				e.preventDefault();
+			}
+		}               
+		moveEndX = e.originalEvent.changedTouches[0].pageX,
+		moveEndY = e.originalEvent.changedTouches[0].pageY,
+		X = moveEndX - startX,
+		Y = moveEndY - startY;
+		if ( Y > 0 ) {
+			$("#console .loading_div").addClass("active");
+			setTimeout(function(){
+				$("#console .loading_div").removeClass("active")
+			},2000);  
+		}
+		
+	});
 }

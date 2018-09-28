@@ -10,12 +10,12 @@ body{
 
 /* CSS in Dialog */
 #console{
-	height: calc( 100vh - 110px );
-	max-height:400px;
-	
+	height: calc( 100vh - 120px );
+	/*max-height:400px;*/
 	width: 100%;
 	color: #324148;
 	padding-top: 10px;
+	overflow-y: auto;
 }
 #chat_text{
 	width:400px;
@@ -47,8 +47,8 @@ body{
     border-radius: 6px;
     padding: 5px 8px;
     position: absolute;
-	top:15px;
-	right:30px;
+	top: 15px;
+	right: 80%;
     z-index: 1;
 }
 
@@ -169,22 +169,25 @@ span.btn-search i {
 	display:none;
 }
 
+.loading_div{
+	height: 0px;
+	text-align: center;
+	transition: height 0.3s;
+}
+.loading_div img{
+	height:100%;
+}
+.loading_div.active{
+	height:40px;
+}
 /* 手機頁面的不同 */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
 	.heder_service{
 		display:block;
 	}
-	.tooltip .tooltiptext {
-		top:15px;
-		right:80%;
-	}
 }
 @media (max-width: 768px) {
 	.heder_service{
 		display:block;
-	}
-	.tooltip .tooltiptext {
-		top:15px;
-		right:80%;
 	}
 }
