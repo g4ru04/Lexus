@@ -1,7 +1,6 @@
 //need jquery && jquery-ui
 
 $( function() {
-	$( "#tabs" ).tabs();
 	
 	emotion_setting();
 	menu_setting();
@@ -15,23 +14,36 @@ $( function() {
 			console.log(error);
 		});
 	
+	//點擊note
+	$(".list_element .note .tooltip").click(function(event){
+		//頁面不觸發跳轉
+		event.stopPropagation();
+	});
+	
+	//List跳Dialog Dialog回到List
 	$(".list_element , .heder_service").click(function(){
+
 		let customer_name = $(this).find(".title").text().split("/").pop();
-		console.log(customer_name);
 		$(".cs_manager_list").toggleClass("current_view");
 		$(".cs_manager_dialog").toggleClass("current_view");
 		$(".cs_manager_list").toggleClass("hide_view");
 		$(".cs_manager_dialog").toggleClass("hide_view");
+		
 		if(customer_name!=""){
 			$(".dialog--client .dialog__profileName").text(customer_name);
 			$(".header_content .txt").html(customer_name);
 		}
 		
 	});
+	
+	//送出按鈕
 	$(".btn-search").click(function(){
 		console.log($(".input").val());
 	});
+	
 });
+
+//金牌話術
 function talk_tricks_setting(data){
 	
 	let talk_tricks_str = data.map(function(item){
@@ -45,6 +57,7 @@ function talk_tricks_setting(data){
 	});
 }
 
+//功能選單
 function menu_setting(){
 	
 	$(".btn-add").click(function(){
