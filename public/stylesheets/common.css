@@ -26,9 +26,9 @@
 /* CSS in Dialog */
 #console{
 	height:400px;
-	width: 600px;
+	width: 100%;
 	color: #324148;
-	padding:10px;
+	padding-top: 10px;
 }
 #chat_text{
 	width:400px;

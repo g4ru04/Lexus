@@ -15,6 +15,19 @@ $( function() {
 			console.log(error);
 		});
 	
+	$(".list_element , .heder_service").click(function(){
+		let customer_name = $(this).find(".title").text().split("/").pop();
+		console.log(customer_name);
+		$(".cs_manager_list").toggleClass("current_view");
+		$(".cs_manager_dialog").toggleClass("current_view");
+		$(".cs_manager_list").toggleClass("hide_view");
+		$(".cs_manager_dialog").toggleClass("hide_view");
+		if(customer_name!=""){
+			$(".dialog--client .dialog__profileName").text(customer_name);
+			$(".header_content .txt").html(customer_name);
+		}
+		
+	});
 	$(".btn-search").click(function(){
 		console.log($(".input").val());
 	});
