@@ -1,31 +1,18 @@
+body{
+	margin:0px;
+}
 #search_box_container{
 	height:50px;
 }
 #search_box_container *{
 	float:right;
 }
-/* CSS in List */
-.list_element{
-	height:30px;
-}
-.img, .msg {
-	float:left;
-}
-.unread {
-	background-color:#B43104;
-}
-.note {
-	background-color:#FFBF00;
-}
-.unread, .note {
-	color:white;
-	float:right;
-	border-radius:16px;
-	padding:5px;
-}
+
 /* CSS in Dialog */
 #console{
-	height:400px;
+	height: calc( 100vh - 110px );
+	max-height:400px;
+	
 	width: 100%;
 	color: #324148;
 	padding-top: 10px;
@@ -60,6 +47,8 @@
     border-radius: 6px;
     padding: 5px 8px;
     position: absolute;
+	top:15px;
+	right:30px;
     z-index: 1;
 }
 
@@ -175,4 +164,27 @@ span.btn-search i {
     position: absolute;
     top: 11px;
     left: 22px;
+}
+.heder_service{
+	display:none;
+}
+
+/* 手機頁面的不同 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+	.heder_service{
+		display:block;
+	}
+	.tooltip .tooltiptext {
+		top:15px;
+		right:80%;
+	}
+}
+@media (max-width: 768px) {
+	.heder_service{
+		display:block;
+	}
+	.tooltip .tooltiptext {
+		top:15px;
+		right:80%;
+	}
 }

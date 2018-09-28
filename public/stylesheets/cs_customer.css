@@ -1,5 +1,7 @@
-#cs_customer_dialog{
-	width:100%;
+.cs_customer_dialog{
+	width: 100%;
+	display: block;
+	overflow: hidden;
 }
 
 /* CTBC style */
@@ -52,4 +54,40 @@
 }
 .dialog--client .dialog__content {
 	margin-right: 0;
+}
+
+/* 手機頁面的不同 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+	.dialog {
+		position: relative;
+	}
+	.dialog--service {
+		margin-left: 70px;
+	}
+	.dialog--service .dialog__profile {
+		left: -70px;
+	}
+	.dialog--client {
+		margin-right: 70px;
+	}
+	.dialog--client .dialog__profile {
+		right: -70px;
+	}
+}
+@media (max-width: 768px) {
+	.dialog {
+		position: relative;
+	}
+	.dialog--service {
+		margin-left: 70px;
+	}
+	.dialog--service .dialog__profile {
+		left: -70px;
+	}
+	.dialog--client {
+		margin-right: 70px;
+	}
+	.dialog--client .dialog__profile {
+		right: -70px;
+	}
 }
