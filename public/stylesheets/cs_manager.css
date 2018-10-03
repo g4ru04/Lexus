@@ -22,14 +22,22 @@
 	text-align: center;
 	height: inherit;
 }
-.img .title{
+.chat_body .title{
+	padding-top:6px;
 	word-break: keep-all;
-	font-size: 0.8em;
+	/*font-weight:600;*/
+	font-size: 1em;
 }
+.chat_body .msg{
+	padding-top:5px;
+	font-size: 1.1em;
+	color:#888;
+}
+
 .img img{
-	height:70%;
+	height:100%;
 }
-.img, .msg {
+.img, .chat_body {
 	float:left;
 }
 .unread {

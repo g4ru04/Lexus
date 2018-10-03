@@ -34,9 +34,31 @@ router.get('/serv.do', function(req, res, next) {
   });
   
 });
-
+router.get('/serv.do', function(req, res, next) {
+  
+  let func_list =["金牌話術","訊息推播","照片","相機","撥打","出價","車主資料","常用訊息"];
+  
+  let list_data = require('../service/specialist.json', 'utf-8');
+  res.render('cs_manager',{
+    list_data: list_data,
+	func_list: func_list
+  });
+  
+});
+router.get('/serv_fin.do', function(req, res, next) {
+  
+  let func_list =["金牌話術","訊息推播","照片","相機","撥打","出價","VIP客戶資料","常用訊息"];
+  
+  let list_data = require('../service/specialist_fin.json', 'utf-8');
+  res.render('cs_manager_fin',{
+    list_data: list_data,
+	func_list: func_list
+  });
+  
+});
 router.get('/api/json/sl', common.getSl);
 router.get('/api/json/dl', common.getDl);
+router.get('/api/json/d2', common.getD2);
 router.get('/api/json/tl', common.getTl);
 
 module.exports = router;

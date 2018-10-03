@@ -27,7 +27,7 @@
 					</div>
 					<div class='chat_body'>
 						<div class="title">
-							<%= item.type %>/<%= item.vehicle_id %>/<%= item.name %>
+							<%= item.name %>
 						</div>
 						<div class="msg">
 							<%= item.latest_msg[0].msg %>
@@ -40,8 +40,7 @@
 					<% } %>
 					<% if (item.note.length>0) { %>
 						<div class="note" title=''>
-							<div class="tooltip">重要提醒
-								<span class="tooltiptext"><%= item.note.map(function(item){return item.msg;}) %></span>
+							<div class=""><%= item.note.map(function(item){return item.msg;}) %>
 							</div>
 						</div>
 					<% } %>
@@ -127,7 +126,7 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		
 		<script src="/javascripts/cs_manager_preset.js"></script>
-		<script src="/javascripts/cs_manager.js"></script>
+		<script src="/javascripts/cs_manager_fin.js"></script>
 		<script src="/javascripts/common.js"></script>
 		
 	</body>
