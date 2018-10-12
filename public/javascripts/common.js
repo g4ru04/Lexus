@@ -75,3 +75,17 @@ function draw_dialog(dialog_data){
 		
 	});
 }
+
+function warningMsg(title, msg) {
+	$("<div/>").html(msg).dialog({
+		title: title,
+		draggable : true, resizable : false, autoOpen : true,
+		height : "auto", width : "240", modal : true,
+		buttons : [{
+			text: "確定", 
+			click: function() { 
+				$(this).dialog("close");
+			}
+		}]
+	});
+}

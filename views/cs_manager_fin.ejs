@@ -20,7 +20,7 @@
 				<input type="text" placeholder="搜尋"/>
 			</div>
 			
-			<% list_data.forEach(function (item) { %>
+			<% [{"type":"CT200H","vehicle_id":"ABZ-1234","name":"王大明","avatar":"/images/avatar.png","unread":2,"latest_msg":[{"msg":"是的","time":"2019/09/20 10:11:50"}],"note":[{"msg":"生日"}]},{"type":"ES200","vehicle_id":"ABE-1234","name":"陳大為","avatar":"/images/avatar.png","unread":4,"latest_msg":[{"msg":"謝謝！！","time":"2019/09/18 14:05:03"}],"note":[{"msg":"基金到期日10/06"}]},{"type":"RX450H","vehicle_id":"ACE-8866","name":"林小東","avatar":"/images/avatar.png","unread":0,"latest_msg":[{"msg":"感謝您！","time":"2019/09/21 08:05:15"}],"note":[]},{"type":"GS300","vehicle_id":"LXS-8888","name":"吳小涵","avatar":"/images/avatar.png","unread":0,"latest_msg":[{"msg":"了解","time":"2019/09/15 18:35:07"}],"note":[]},{"type":"NX200","vehicle_id":"AAA-0000","name":"李小龍","avatar":"/images/avatar.png","unread":0,"latest_msg":[{"msg":"您已寄出一張圖片","time":"2019/09/17 12:00:44"}],"note":[]}].forEach(function (item) { %>
 				<div class='list_element'>
 					<div class="img" alt="">
 						<img src="<%= item.avatar %>" alt="">
@@ -66,12 +66,12 @@
 				<!-- 下方控制面板 -->
 				<div class="control-bar">
 					<!-- 功能列表(隱) -->
-					<% if(func_list.length>0){ %>
+					<% if(["金牌話術","訊息推播","照片","相機","撥打","出價","車主資料","常用訊息"].length>0){ %>
 						<div class="select-menu" style="display: none;">
 							<ul class="select-tag05">
 					<% } %>
 					
-					<% func_list.forEach(function (item,i) { %>
+					<% ["金牌話術","訊息推播","照片","相機","撥打","出價","車主資料","常用訊息"].forEach(function (item,i) { %>
 						<% if( i!=0 && i%3==0 ){%>
 							</ul>
 							<ul class="select-tag05">
@@ -84,7 +84,7 @@
 						</li>
 					<% }); %>
 					
-					<% if(func_list.length>0){ %>
+					<% if(["金牌話術","訊息推播","照片","相機","撥打","出價","車主資料","常用訊息"].length>0){ %>
 							</ul>
 						</div>
 					<% } %>
@@ -126,7 +126,13 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		
 		<script src="/javascripts/cs_manager_preset.js"></script>
-		<script src="/javascripts/cs_manager_fin.js"></script>
+		<script>
+			$( function() {
+				
+				draw_dialog([{"type":"service","profile":[{"name":"服務專員","avatar":"/images/avatar.png"}],"content":[{"msg":"您好！","read":"","time":"2018/09/19 14:55:13"}]},{"type":"client","profile":[{"name":"王大明","avatar":"/images/avatar.png"}],"content":[{"msg":"我想了解最新的理財商品","read":"","time":"2018/09/19 14:55:19"}]},{"type":"service","profile":[{"name":"服務專員","avatar":"/images/avatar.png"}],"content":[{"msg":"好的，馬上為您服務！","read":"","time":"2018/09/19 14:55:25"}]}]);
+				
+			} );
+		</script>
 		<script src="/javascripts/common.js"></script>
 		
 	</body>
