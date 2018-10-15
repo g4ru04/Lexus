@@ -21,7 +21,7 @@
 			</div>
 			
 			<% list_data.forEach(function (item) { %>
-				<div class='list_element'>
+				<div class='list_element' customer_id='<%= item.id %>'>
 					<div class="img" alt="">
 						<img src="<%= item.avatar %>" alt="">
 					</div>
@@ -56,9 +56,6 @@
 					<img alt="" class="img-responsive" src="/images/back.png">
 				</div>
 				<div class="txt">
-					<div class="logo">
-					</div>
-					王大明
 				</div>
 			</div>
 				<div id='console'>
@@ -126,6 +123,7 @@
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		
+		<script src="/javascripts/socket.io/socket.io.js"></script>
 		<script src="/javascripts/cs_manager_preset.js"></script>
 		<script src="/javascripts/cs_manager.js"></script>
 		<script src="/javascripts/common.js"></script>

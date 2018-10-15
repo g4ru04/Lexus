@@ -1,0 +1,236 @@
+[{
+		"id": "f0cf7ead.f9a0a8",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "MSG IN",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 607.3333129882812,
+		"y": 259.3333282470703,
+		"wires": []
+	}, {
+		"id": "c659ec27.994278",
+		"type": "socketio-in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "d5c1b5fd.4dfad8",
+		"rules": [{
+				"v": "message"
+			}, {
+				"v": "enter"
+			}, {
+				"v": "leave"
+			}
+		],
+		"x": 264.33331298828125,
+		"y": 385.33331298828125,
+		"wires": [["25998a28.5db1d6"]]
+	}, {
+		"id": "d764afe7.de0d98",
+		"type": "switch",
+		"z": "da8f7bde.d2b408",
+		"name": "checkEvent",
+		"property": "socketIOEvent",
+		"propertyType": "msg",
+		"rules": [{
+				"t": "eq",
+				"v": "message",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "enter",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "leave",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "newListener",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "typing",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "stop typing",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "disconnect",
+				"vt": "str"
+			}
+		],
+		"checkall": "false",
+		"repair": false,
+		"outputs": 7,
+		"x": 614.3333129882812,
+		"y": 385.33331298828125,
+		"wires": [["ffd27283.5745f8"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], [], [], [], []]
+	}, {
+		"id": "ffd27283.5745f8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "new message",
+		"func": "/*msg.payload = {\n username: msg.socketIOStaticProperties.room,\n message: msg.payload\n};*/\n//RED.util.setMessageProperty(msg, \"socketIOEmit\", \"broadcast.emit\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\nmsg.room = msg.socketIOStaticProperties.room;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 961.3333129882812,
+		"y": 338.33331298828125,
+		"wires": [["cc3d78e6.2eb7f8", "bacab9aa.9e48b8"]]
+	}, {
+		"id": "530c0694.2cb448",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "EVENT",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "socketIOEvent",
+		"x": 601.0833129882812,
+		"y": 303.0833282470703,
+		"wires": []
+	}, {
+		"id": "ac5f8440.ef12b",
+		"type": "catch",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"scope": null,
+		"x": 342.699951171875,
+		"y": 555.8333740234375,
+		"wires": [["f1e283da.230ae8"]]
+	}, {
+		"id": "f1e283da.230ae8",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "ERROR",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 599.6999816894531,
+		"y": 595.5833740234375,
+		"wires": []
+	}, {
+		"id": "25998a28.5db1d6",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "if([\"newListener\",\"disconnecting\",\"\"].indexOf(msg.socketIOEvent)==-1){\n    return msg;\n}",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 439.6999816894531,
+		"y": 385.3333435058594,
+		"wires": [["d764afe7.de0d98", "f0cf7ead.f9a0a8", "530c0694.2cb448"]]
+	}, {
+		"id": "158e7869.f375a8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "enter room",
+		"func": "RED.util.setMessageProperty(\n    msg, \"socketIOAddStaticProperties\", \n    {\n        room:msg.payload\n    }, true);\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nmsg.payload = {\n    room: msg.payload\n};\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 953.0833129882812,
+		"y": 376.083251953125,
+		"wires": [["bc0353dc.7d5838", "cc3d78e6.2eb7f8", "c1ac7b2d.b8cfe"]]
+	}, {
+		"id": "bc0353dc.7d5838",
+		"type": "socketio-join",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "4419a078.23234",
+		"x": 1155.699951171875,
+		"y": 375.33331298828125,
+		"wires": []
+	}, {
+		"id": "cf38306a.e7073",
+		"type": "socketio-leave",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "4419a078.23234",
+		"x": 1165.63330078125,
+		"y": 413.79998779296875,
+		"wires": []
+	}, {
+		"id": "6f348e91.0f8e98",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "leave room",
+		"func": "msg.payload = {\n    room: msg.payload\n};\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 953.4666748046875,
+		"y": 413.566650390625,
+		"wires": [["cf38306a.e7073", "cc3d78e6.2eb7f8", "8767060f.1eb65"]]
+	}, {
+		"id": "cc3d78e6.2eb7f8",
+		"type": "socketio-out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "d5c1b5fd.4dfad8",
+		"x": 1159.4666748046875,
+		"y": 338.566650390625,
+		"wires": []
+	}, {
+		"id": "bacab9aa.9e48b8",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "MSG OUT",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 1166.566650390625,
+		"y": 222.56666564941406,
+		"wires": []
+	}, {
+		"id": "c1ac7b2d.b8cfe",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "MSG OUT",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 1152.566650390625,
+		"y": 454.566650390625,
+		"wires": []
+	}, {
+		"id": "8767060f.1eb65",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "MSG OUT",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 1147.566650390625,
+		"y": 499.566650390625,
+		"wires": []
+	}, {
+		"id": "d5c1b5fd.4dfad8",
+		"type": "socketio-config",
+		"z": "",
+		"port": "1881",
+		"sendClient": "true",
+		"path": "/socket.io",
+		"bindToNode": true
+	}, {
+		"id": "4419a078.23234",
+		"type": "socketio-config",
+		"z": "",
+		"port": "1881",
+		"sendClient": "true",
+		"path": "/socket.io",
+		"bindToNode": true
+	}
+]

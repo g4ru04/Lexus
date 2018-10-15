@@ -14,34 +14,112 @@ $( function() {
 			console.log(error);
 		});
 	
-	//點擊note
-	$(".list_element .note .tooltip").click(function(event){
-		//頁面不觸發跳轉
-		event.stopPropagation();
-	});
-	
-	//List跳Dialog Dialog回到List
-	$(".list_element , .heder_service").click(function(){
-
-		let customer_name = $(this).find(".title").text().split("/").pop();
-		$(".cs_manager_list").toggleClass("current_view");
-		$(".cs_manager_dialog").toggleClass("current_view");
-		$(".cs_manager_list").toggleClass("hide_view");
-		$(".cs_manager_dialog").toggleClass("hide_view");
-		
-		if(customer_name!=""){
-			$(".dialog--client .dialog__profileName").text(customer_name);
-			$(".header_content .txt").html(customer_name);
-		}
-		
-	});
-	
-	//送出按鈕
-	$(".btn-search").click(function(){
-		console.log($(".input").val());
-	});
+	set_manager_socket();
 	
 });
+
+//click or event 使用
+function reiceive_msg(message){
+	
+	if(message.message!=null){
+		$("#console").append(message.from + ": " + message.message.text + "<br>");
+	}else{
+		$("#console").append(
+			JSON.stringify(message,null,"    ")
+				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")
+				.replace(/\n/g,"<br>")
+			+"<br>"
+		);
+	}
+	
+}
+
+//click or event 使用
+function send_text_msg(){
+	
+	if(Connection){
+		Connection.send_msg($("input.input.msg").val());
+		$("input.input.msg").val('');
+	}
+	
+}
+
+//設定 Socket 
+function set_manager_socket(){
+	
+	Connection = {}
+	
+	Connection.init = function(){
+		Connection.socket = io('http://localhost:1880/');
+		Connection.customer_name = null;
+		Connection.service_name = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
+		
+		Connection.end_point = "service" ;
+		Connection.conn = false ;
+		Connection.set_listener();
+	}
+	
+	Connection.set_listener = function(){
+		
+		Connection.socket.on('message', function (data) {
+			reiceive_msg(data);
+		});
+		
+		Connection.socket.on('disconnect', function () {
+			reiceive_msg('已斷線');
+		});
+		
+		Connection.socket.on('enter', function () {
+			Connection.conn = true;
+			reiceive_msg("與 '"+Connection.customer_name+"' 連線成功");
+		});
+		
+		Connection.socket.on('leave', function () {
+			if(Connection.next_customer_name){
+				Connection.socket.emit("enter", Connection.next_customer_name+"_"+Connection.service_name);
+			}
+			Connection.customer_name = Connection.next_customer_name;
+			Connection.next_customer_name = null;
+		});
+		
+	}
+	
+	Connection.send_msg = function(message){
+		if(Connection.customer_name){
+			Connection.socket.emit("message", {
+				"from": Connection.service_name,
+				"to": Connection.customer_name,
+				"time": Date.now(),
+				"message": {
+					"type": "text",
+					"text": message
+				},
+				//"command": []
+			});
+		}else{
+			alert('無對象');
+		}
+	}
+	
+	Connection.change_customer = function(customer_id){
+		Connection.next_customer_name = customer_id;
+		Connection.socket.emit('leave',Connection.customer_name);
+	}
+	
+	Connection.get_history_unread = function(){
+		
+	}
+	
+	Connection.get_history_last = function(){
+		
+	}
+	
+	Connection.get_history_unread = function(){
+		
+	}
+	
+	Connection.init();
+}
 
 //金牌話術
 function talk_tricks_setting(data){
