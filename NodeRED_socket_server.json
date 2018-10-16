@@ -8,8 +8,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 607.3333129882812,
-		"y": 259.3333282470703,
+		"x": 763.3332824707031,
+		"y": 340.33331298828125,
 		"wires": []
 	}, {
 		"id": "c659ec27.994278",
@@ -25,9 +25,9 @@
 				"v": "leave"
 			}
 		],
-		"x": 264.33331298828125,
-		"y": 385.33331298828125,
-		"wires": [["25998a28.5db1d6"]]
+		"x": 158.33331298828125,
+		"y": 406.3333282470703,
+		"wires": [["87f13c2a.920eb8"]]
 	}, {
 		"id": "d764afe7.de0d98",
 		"type": "switch",
@@ -49,6 +49,10 @@
 				"vt": "str"
 			}, {
 				"t": "eq",
+				"v": "disconnect",
+				"vt": "str"
+			}, {
+				"t": "eq",
 				"v": "newListener",
 				"vt": "str"
 			}, {
@@ -59,29 +63,25 @@
 				"t": "eq",
 				"v": "stop typing",
 				"vt": "str"
-			}, {
-				"t": "eq",
-				"v": "disconnect",
-				"vt": "str"
 			}
 		],
 		"checkall": "false",
 		"repair": false,
 		"outputs": 7,
-		"x": 614.3333129882812,
-		"y": 385.33331298828125,
-		"wires": [["ffd27283.5745f8"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], [], [], [], []]
+		"x": 770.3332824707031,
+		"y": 466.3332977294922,
+		"wires": [["811411b9.d1e678"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], []]
 	}, {
 		"id": "ffd27283.5745f8",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "new message",
-		"func": "/*msg.payload = {\n username: msg.socketIOStaticProperties.room,\n message: msg.payload\n};*/\n//RED.util.setMessageProperty(msg, \"socketIOEmit\", \"broadcast.emit\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\nmsg.room = msg.socketIOStaticProperties.room;\nreturn msg;",
+		"func": "/*msg.payload = {\n username: msg.socketIOStaticProperties.room,\n message: msg.payload\n};*/\n//RED.util.setMessageProperty(msg, \"socketIOEmit\", \"broadcast.emit\", true);\n\nmsg.payload = msg.payload_preserved;\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\nif(msg.socketIOStaticProperties==null){\n    node.warn(\"Room id 不見了!\");\n}\n\nmsg.room = msg.socketIOStaticProperties.room;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 961.3333129882812,
-		"y": 338.33331298828125,
-		"wires": [["cc3d78e6.2eb7f8", "bacab9aa.9e48b8"]]
+		"x": 1226.3336181640625,
+		"y": 706.3333435058594,
+		"wires": [["bacab9aa.9e48b8", "55c71071.a9475"]]
 	}, {
 		"id": "530c0694.2cb448",
 		"type": "debug",
@@ -92,8 +92,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "socketIOEvent",
-		"x": 601.0833129882812,
-		"y": 303.0833282470703,
+		"x": 757.0832824707031,
+		"y": 384.08331298828125,
 		"wires": []
 	}, {
 		"id": "ac5f8440.ef12b",
@@ -101,8 +101,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"scope": null,
-		"x": 342.699951171875,
-		"y": 555.8333740234375,
+		"x": 240.69996643066406,
+		"y": 246.8333740234375,
 		"wires": [["f1e283da.230ae8"]]
 	}, {
 		"id": "f1e283da.230ae8",
@@ -114,19 +114,19 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 599.6999816894531,
-		"y": 595.5833740234375,
+		"x": 454.69996643066406,
+		"y": 281.5833740234375,
 		"wires": []
 	}, {
 		"id": "25998a28.5db1d6",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "if([\"newListener\",\"disconnecting\",\"\"].indexOf(msg.socketIOEvent)==-1){\n    return msg;\n}",
+		"func": "//node.warn(msg.socketIOEvent+ \" ## \"+JSON.stringify(msg.payload));\n\nif([\"newListener\",\"disconnecting\"].indexOf(msg.socketIOEvent)==-1){\n    return msg;\n}\n\n\n",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 439.6999816894531,
-		"y": 385.3333435058594,
+		"x": 595.699951171875,
+		"y": 466.3333282470703,
 		"wires": [["d764afe7.de0d98", "f0cf7ead.f9a0a8", "530c0694.2cb448"]]
 	}, {
 		"id": "158e7869.f375a8",
@@ -137,8 +137,8 @@
 		"outputs": 1,
 		"noerr": 0,
 		"x": 953.0833129882812,
-		"y": 376.083251953125,
-		"wires": [["bc0353dc.7d5838", "cc3d78e6.2eb7f8", "c1ac7b2d.b8cfe"]]
+		"y": 446.08326721191406,
+		"wires": [["bc0353dc.7d5838", "cc3d78e6.2eb7f8", "c1ac7b2d.b8cfe", "46a3e44a.9d180c"]]
 	}, {
 		"id": "bc0353dc.7d5838",
 		"type": "socketio-join",
@@ -146,7 +146,7 @@
 		"name": "",
 		"server": "4419a078.23234",
 		"x": 1155.699951171875,
-		"y": 375.33331298828125,
+		"y": 445.3333282470703,
 		"wires": []
 	}, {
 		"id": "cf38306a.e7073",
@@ -155,27 +155,27 @@
 		"name": "",
 		"server": "4419a078.23234",
 		"x": 1165.63330078125,
-		"y": 413.79998779296875,
+		"y": 483.8000030517578,
 		"wires": []
 	}, {
 		"id": "6f348e91.0f8e98",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "leave room",
-		"func": "msg.payload = {\n    room: msg.payload\n};\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nreturn msg;",
+		"func": "let room_id = \"\";\n\nif(msg.socketIOEvent==\"leave\"){\n    room_id = msg.payload;\n}else if(msg.socketIOEvent==\"disconnect\"){\n    room_id = msg.socketIOStaticProperties?msg.socketIOStaticProperties.room:\"\";\n}\n\nmsg.payload = {\n    room: room_id\n};\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 953.4666748046875,
-		"y": 413.566650390625,
-		"wires": [["cf38306a.e7073", "cc3d78e6.2eb7f8", "8767060f.1eb65"]]
+		"y": 483.56666564941406,
+		"wires": [["cf38306a.e7073", "cc3d78e6.2eb7f8", "8767060f.1eb65", "46a3e44a.9d180c"]]
 	}, {
 		"id": "cc3d78e6.2eb7f8",
 		"type": "socketio-out",
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1159.4666748046875,
-		"y": 338.566650390625,
+		"x": 1155.4667358398438,
+		"y": 521.5666656494141,
 		"wires": []
 	}, {
 		"id": "bacab9aa.9e48b8",
@@ -187,8 +187,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1166.566650390625,
-		"y": 222.56666564941406,
+		"x": 1406.5669555664062,
+		"y": 677.5666656494141,
 		"wires": []
 	}, {
 		"id": "c1ac7b2d.b8cfe",
@@ -200,21 +200,450 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1152.566650390625,
-		"y": 454.566650390625,
+		"x": 1147.566650390625,
+		"y": 406.566650390625,
 		"wires": []
 	}, {
 		"id": "8767060f.1eb65",
 		"type": "debug",
 		"z": "da8f7bde.d2b408",
 		"name": "MSG OUT",
-		"active": true,
+		"active": false,
 		"tosidebar": true,
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1147.566650390625,
-		"y": 499.566650390625,
+		"x": 1144.566650390625,
+		"y": 561.5666198730469,
+		"wires": []
+	}, {
+		"id": "fe8e1e52.aca93",
+		"type": "inject",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "",
+		"payload": "",
+		"payloadType": "date",
+		"repeat": "",
+		"crontab": "",
+		"once": false,
+		"onceDelay": 0.1,
+		"x": 964.36669921875,
+		"y": 311.00001525878906,
+		"wires": [["46a3e44a.9d180c"]]
+	}, {
+		"id": "8ca03bf4.2ef41",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "false",
+		"x": 1335.36669921875,
+		"y": 310.75001525878906,
+		"wires": []
+	}, {
+		"id": "46a3e44a.9d180c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "chat_status",
+		"func": "\nvar chat_status = context.get(\"chat_status\");\nchat_status = chat_status!=null ? chat_status : {};\n\nif( typeof msg.payload ==\"number\"){\n    \n    return {\n        payload:chat_status\n    };\n    \n}else{\n    \n    if(msg.payload.room!=null){\n        \n        if(chat_status[msg.payload.room]==null){\n            chat_status[msg.payload.room]=0;\n        }\n        \n        if(msg.socketIOEvent==\"enter\"){\n            chat_status[msg.payload.room]++;\n        }\n        \n        if(msg.socketIOEvent==\"leave\"){\n            chat_status[msg.payload.room]--;\n            chat_status[msg.payload.room] = chat_status[msg.payload.room]<0?0:chat_status[msg.payload.room];\n        }\n        \n        context.set(\"chat_status\",chat_status);\n        \n    }\n}",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 1158.36669921875,
+		"y": 313.00001525878906,
+		"wires": [["8ca03bf4.2ef41"]]
+	}, {
+		"id": "7a49043b.aada2c",
+		"type": "mqtt in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "socket_server_in",
+		"qos": "2",
+		"broker": "6fbdd64d.932d48",
+		"x": 272.75,
+		"y": 465.74998474121094,
+		"wires": [["3d17f383.0db1fc"]]
+	}, {
+		"id": "80a7d71f.429b",
+		"type": "mqtt out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "socket_server_in",
+		"qos": "",
+		"retain": "",
+		"broker": "6fbdd64d.932d48",
+		"x": 508.25,
+		"y": 406.1666564941406,
+		"wires": []
+	}, {
+		"id": "87f13c2a.920eb8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn {\n    payload:msg\n};",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 319.31671142578125,
+		"y": 406.13330078125,
+		"wires": [["80a7d71f.429b"]]
+	}, {
+		"id": "3d17f383.0db1fc",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn JSON.parse(msg.payload) ;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 445.31671142578125,
+		"y": 466.1332550048828,
+		"wires": [["25998a28.5db1d6"]]
+	}, {
+		"id": "76e3c330.14a53c",
+		"type": "watson-conversation-v1",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"workspaceid": "234bf172-8356-42cc-8ec3-cb0a3dc69a0c",
+		"multiuser": true,
+		"context": true,
+		"empty-payload": false,
+		"default-endpoint": true,
+		"service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
+		"timeout": "",
+		"optout-learning": false,
+		"x": 846.4501953125,
+		"y": 638.8332824707031,
+		"wires": [["473f4e34.17ac38", "1ea1709e.199dcf"]]
+	}, {
+		"id": "55c71071.a9475",
+		"type": "socketio-out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "d5c1b5fd.4dfad8",
+		"x": 1427.2337036132812,
+		"y": 728.5666809082031,
+		"wires": []
+	}, {
+		"id": "46995860.4afcb",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "Source Type",
+		"func": "\nif(msg.payload.type==\"client\"){\n    msg.payload_preserved = msg.payload;\n    return [msg,null];\n}else{\n    msg.payload_preserved = msg.payload;\n    return [null,msg];\n}\n",
+		"outputs": 2,
+		"noerr": 0,
+		"x": 288.449951171875,
+		"y": 734.6667175292969,
+		"wires": [["ada5e176.1f9c9"], ["ffd27283.5745f8"]]
+	}, {
+		"id": "473f4e34.17ac38",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.payload_preserved.intents = msg.payload.intents;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 1010.4501342773438,
+		"y": 667.6666564941406,
+		"wires": [["ffd27283.5745f8"]]
+	}, {
+		"id": "8b407712.00fb9",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Deal Message - B",
+		"links": ["811411b9.d1e678"],
+		"x": 174.4499969482422,
+		"y": 736.6000213623047,
+		"wires": [["46995860.4afcb", "c71d3ab.8b92048"]]
+	}, {
+		"id": "811411b9.d1e678",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Deal Message - A",
+		"links": ["8b407712.00fb9"],
+		"x": 931.449951171875,
+		"y": 397.96669006347656,
+		"wires": []
+	}, {
+		"id": "1059af92.1a5ee",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "Config",
+		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n\nConversation:\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n",
+		"x": 89.00001525878906,
+		"y": 65.66661834716797,
+		"wires": []
+	}, {
+		"id": "ada5e176.1f9c9",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "Message Type",
+		"func": "let payload_preserved = msg.payload_preserved;\n\nif(payload_preserved.message.type==\"text\"){\n    msg.payload = payload_preserved.message.text;\n    msg.user = payload_preserved.from.name;\n    return [msg,null];\n}else{\n    msg.visual_recog_url = payload_preserved.message.text;\n    \n    return [null,msg];\n}\n",
+		"outputs": 2,
+		"noerr": 0,
+		"x": 487.33331298828125,
+		"y": 660.3334045410156,
+		"wires": [["819ebfc7.2e53f8"], ["74086a02.246f44"]]
+	}, {
+		"id": "3b5c6a69.8c067e",
+		"type": "catch",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"scope": ["340efc70.9569dc"],
+		"x": 487.3332977294922,
+		"y": 917.333251953125,
+		"wires": [["a85903d8.bf13f8"]]
+	}, {
+		"id": "a85903d8.bf13f8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "let output_msg = \"\";\n/*\nif(msg.watsonerror.indexOf(\"Image size limit exceeded\")!=-1){\n    output_msg=\"這張圖太大了啦 看得我眼睛好痠... 能換換嗎?\";\n}else if(msg.watsonerror.indexOf(\"Key is over transaction limit\")!=-1){\n    output_msg=\"我只是個時薪120的工讀生，剛剛我已經辨識完我的工作份量了喔，今天打烊下次請早。\";\n}else if(msg.watsonerror.indexOf(\"service credentials\")!=-1){\n    output_msg=\"抱歉我看不太懂，可以用文字告訴我嗎？\";\n}else{\n    //已知原因有丟gif檔會得到 An undefined server error occurred.\n    output_msg=\"抱歉我看不太懂，可以換張圖片我看看？\";\n}*/\n\nmsg.recognitionResult = output_msg;\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 647.3332977294922,
+		"y": 917.333251953125,
+		"wires": [["f56b8521.8e449"]]
+	}, {
+		"id": "934c1dd5.279d5",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Line VisualRecog IN - B",
+		"links": ["74086a02.246f44"],
+		"x": 212.3332977294922,
+		"y": 957.333251953125,
+		"wires": [["a337b25e.9ff8c", "87fa54be.080148"]]
+	}, {
+		"id": "f56b8521.8e449",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Line VisualRecog OUT - A",
+		"links": ["6bf9bc1d.06f314"],
+		"x": 764.3333129882812,
+		"y": 997.333251953125,
+		"wires": []
+	}, {
+		"id": "68faefd2.801dd",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "let output_msg = \"\";\n\nif(\n    msg.result &&\n    msg.result.images &&\n    msg.result.images[0] &&\n    msg.result.images[0].classifiers &&\n    msg.result.images[0].classifiers[0] &&\n    msg.result.images[0].classifiers[0].classes\n){\n    let labels = msg.result.images[0]\n                    .classifiers[0].classes;\n    labels.sort(function(a, b){\n        return b[\"score\"]-a[\"score\"];\n    });\n    labels.filter(function(item){\n        return item[\"score\"]>0.6;\n    });\n    output_msg = labels.map(function(item){\n       return item.class\n    }).join(\",\");\n}\n\nmsg.recognitionResult = output_msg;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 618.3332977294922,
+		"y": 957.3332214355469,
+		"wires": [["63f7634.954551c"]]
+	}, {
+		"id": "63f7634.954551c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nmsg.payload = {\n    \"text\":msg.recognitionResult,\n    \"model_id\":\"en-zh-TW\"\n};\n\nmsg.headers = {\n    \"Content-Type\": \"application/json\",\n    \"Accepts\": \"application/json\",\n    \"Authorization\":\"Basic \" + new Buffer('8f2be220-38af-4e08-a0e9-2beeb4a7db1f' + \":\" + 'nEVxvfgyWmzV').toString(\"base64\")\n};\n\nmsg.url = \"https://gateway.watsonplatform.net/language-translator/api/v3/translate?version=2018-05-01\";\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 360.3332977294922,
+		"y": 1007.3332214355469,
+		"wires": [["b3d97dbe.ddf7"]]
+	}, {
+		"id": "b3d97dbe.ddf7",
+		"type": "http request",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"method": "POST",
+		"ret": "obj",
+		"url": "",
+		"tls": "",
+		"x": 500.3332977294922,
+		"y": 1007.3332214355469,
+		"wires": [["b649c692.1fea68"]]
+	}, {
+		"id": "b649c692.1fea68",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "let output_msg = \"\";\nif(\n    msg.payload.translations \n    && msg.payload.translations[0] \n    && msg.payload.translations[0].translation \n){\n    output_msg = msg.payload.translations[0].translation;\n}\n\nmsg.recognitionResult = output_msg;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 640.3332977294922,
+		"y": 1007.3332214355469,
+		"wires": [["f56b8521.8e449", "3586d46d.f1b5dc"]]
+	}, {
+		"id": "a337b25e.9ff8c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nmsg.payload = msg.visual_recog_url;\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 307.33331298828125,
+		"y": 958.333251953125,
+		"wires": [["340efc70.9569dc"]]
+	}, {
+		"id": "340efc70.9569dc",
+		"type": "visual-recognition-v3",
+		"z": "da8f7bde.d2b408",
+		"name": "圖片辨識",
+		"apikey": "BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W",
+		"vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
+		"image-feature": "classifyImage",
+		"lang": "en",
+		"x": 472.3332977294922,
+		"y": 958.333251953125,
+		"wires": [["68faefd2.801dd", "cc24d8e5.e7469"]]
+	}, {
+		"id": "6ea8c3.db85073c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.payload_preserved.recognitionResult = msg.recognitionResult;\n\nmsg.payload = msg.recognitionResult;\nmsg.user = msg.payload_preserved.from.name;\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 691.9999389648438,
+		"y": 673.3334045410156,
+		"wires": [["819ebfc7.2e53f8"]]
+	}, {
+		"id": "6bf9bc1d.06f314",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Line VisualRecog OUT - B",
+		"links": ["f56b8521.8e449"],
+		"x": 566.9999389648438,
+		"y": 706.0000305175781,
+		"wires": [["6ea8c3.db85073c"]]
+	}, {
+		"id": "74086a02.246f44",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Line VisualRecog IN - A",
+		"links": ["934c1dd5.279d5"],
+		"x": 637,
+		"y": 707.3334045410156,
+		"wires": []
+	}, {
+		"id": "3586d46d.f1b5dc",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "Translate OUT",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 826.3333129882812,
+		"y": 1049.3333740234375,
+		"wires": []
+	}, {
+		"id": "cc24d8e5.e7469",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "Recog OUT",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 816.566650390625,
+		"y": 958.1666870117188,
+		"wires": []
+	}, {
+		"id": "1ea1709e.199dcf",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "Assistant OUT",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 1039.75,
+		"y": 604.75,
+		"wires": []
+	}, {
+		"id": "819ebfc7.2e53f8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "setting",
+		"func": "msg.params = {\n    alternate_intents:true\n};\n\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 701.36669921875,
+		"y": 618,
+		"wires": [["76e3c330.14a53c", "c85debdb.43b06"]]
+	}, {
+		"id": "5160cff2.1784d8",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "圖像辨識",
+		"info": "",
+		"x": 144.36666870117188,
+		"y": 872.5,
+		"wires": []
+	}, {
+		"id": "7604a9e5.a8e5e",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "訊息處理",
+		"info": "",
+		"x": 150.75,
+		"y": 570.5,
+		"wires": []
+	}, {
+		"id": "fd293ca5.215de8",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "Socket 進入點",
+		"info": "",
+		"x": 134.75,
+		"y": 330,
+		"wires": []
+	}, {
+		"id": "185370ef.145047",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "Error Handling",
+		"info": "",
+		"x": 137.75,
+		"y": 179,
+		"wires": []
+	}, {
+		"id": "c71d3ab.8b92048",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "Message Parse",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 317.33331298828125,
+		"y": 783.3333129882812,
+		"wires": []
+	}, {
+		"id": "87fa54be.080148",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "Picture Parse",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 335.33331298828125,
+		"y": 893.3333129882812,
+		"wires": []
+	}, {
+		"id": "c85debdb.43b06",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "Go Assistant",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 846.566650390625,
+		"y": 569.7666625976562,
 		"wires": []
 	}, {
 		"id": "d5c1b5fd.4dfad8",
@@ -232,5 +661,26 @@
 		"sendClient": "true",
 		"path": "/socket.io",
 		"bindToNode": true
+	}, {
+		"id": "6fbdd64d.932d48",
+		"type": "mqtt-broker",
+		"z": "",
+		"name": "",
+		"broker": "192.168.112.166",
+		"port": "1883",
+		"clientid": "",
+		"usetls": false,
+		"compatmode": true,
+		"keepalive": "60",
+		"cleansession": true,
+		"birthTopic": "",
+		"birthQos": "0",
+		"birthPayload": "",
+		"closeTopic": "",
+		"closeQos": "0",
+		"closePayload": "",
+		"willTopic": "",
+		"willQos": "0",
+		"willPayload": ""
 	}
 ]

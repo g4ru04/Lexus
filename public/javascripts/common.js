@@ -14,36 +14,79 @@ function emotion_setting(){
 	});
 }
 
-function produce_dialog_element(item) {
-	let the_time = new Date(item.content[0].time);
-	return `<div class="dialog dialog--${item.type} clearfix">
+function produce_dialog_element(message) {
+	console.log(message);
+	if(message.from==null || message.message==null){
+		return JSON.stringify(message,null,"    ")
+				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")
+				.replace(/\n/g,"<br>");
+	}
+		
+	let the_time = new Date(message.time);
+	let message_str = message.message.text ;
+	
+	if(message.intents && Connection.end_point=="service"){
+		message.intents = message.intents.filter(function(item){
+			return item.confidence>0.3;
+		});
+		if(message.intents.length!=0){
+			message_str += "【"
+				+message.intents.map(function(item){
+					return item.intent+"("+
+						new Number(item.confidence).toFixed(3)
+					+") ";
+				}).join(",")
+			+"】";
+		}else{
+			message_str += "【無明確意圖】";
+		}
+	}
+	
+	if(message.recognitionResult && Connection.end_point=="service"){
+		message_str += "【"+message.recognitionResult+"】";
+	}
+	
+	message_str += "<br>";
+	
+	return `<div class="dialog dialog--${message.type} clearfix">
 		<div class="dialog__profile">
-			<div class="dialog__profileImage"><img src="${item.profile[0].avatar}"></div>
-			<div class="dialog__profileName">${item.profile[0].name}</div>
+			<div class="dialog__profileImage"><img src="${message.from.avatar}"></div>
+			<div class="dialog__profileName">${message.from.name}</div>
 		</div>
 		<div class="dialog__content">
 			<div class="dialogPop">
-				<p class="dialogPop__comment">${item.content[0].msg}</p>
+				<p class="dialogPop__comment">${message_str}</p>
 			</div>
 			<div class="dialogTips">
-				<div class="dialogTips__read">${item.content[0].read}</div>
+				<div class="dialogTips__read"></div>
 				<div class="dialogTips__time">${the_time.getHours()}:${the_time.getMinutes()}</div>
 			</div>
 		</div>
 	</div>`;
 }
 
-function draw_dialog(dialog_data){
+//click or event 使用
+function reiceive_msg(message){
+	$("#console").append(produce_dialog_element(message));
+}
+
+//click or event 使用
+function send_text_msg(){
 	
+	if(Connection){
+		Connection.send_msg($("input.input.msg").val());
+		$("input.input.msg").val('');
+	}
+	
+}
+
+function set_dialog(){
 	let loading_bar = `
 		<div class="loading_div">
 			<img src="/images/loading.gif" />
 		</div>
 	`;
-	let dialog_html = dialog_data.map(function(item){
-		return produce_dialog_element(item);
-	}).join("");
-	$("#console").html(loading_bar + dialog_html);
+	$("#console").html(loading_bar);
 	$("#console").on("touchstart", function(e) {
 		// 判断默认行为是否可以被禁用
 		if (e.cancelable) {
@@ -55,6 +98,7 @@ function draw_dialog(dialog_data){
 		startX = e.originalEvent.changedTouches[0].pageX,
 		startY = e.originalEvent.changedTouches[0].pageY;
 	});
+	
 	$("#console").on("touchmove", function(e){
 		if (e.cancelable) {
 			// 判断默认行为是否已经被禁用

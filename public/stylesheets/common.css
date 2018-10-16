@@ -192,3 +192,7 @@ span.btn-search i {
 		display:block;
 	}
 }
+
+.dialog__profileName {
+    word-break: break-all;
+}

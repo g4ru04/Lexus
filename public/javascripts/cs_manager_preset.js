@@ -18,32 +18,6 @@ $( function() {
 	
 });
 
-//click or event 使用
-function reiceive_msg(message){
-	
-	if(message.message!=null){
-		$("#console").append(message.from + ": " + message.message.text + "<br>");
-	}else{
-		$("#console").append(
-			JSON.stringify(message,null,"    ")
-				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")
-				.replace(/\n/g,"<br>")
-			+"<br>"
-		);
-	}
-	
-}
-
-//click or event 使用
-function send_text_msg(){
-	
-	if(Connection){
-		Connection.send_msg($("input.input.msg").val());
-		$("input.input.msg").val('');
-	}
-	
-}
-
 //設定 Socket 
 function set_manager_socket(){
 	
@@ -52,11 +26,16 @@ function set_manager_socket(){
 	Connection.init = function(){
 		Connection.socket = io('http://localhost:1880/');
 		Connection.customer_name = null;
+		Connection.room_name = null;
 		Connection.service_name = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		
 		Connection.end_point = "service" ;
 		Connection.conn = false ;
 		Connection.set_listener();
+	}
+	
+	Connection.is_connect = function(){
+		return Connection.socket.connected;
 	}
 	
 	Connection.set_listener = function(){
@@ -74,9 +53,20 @@ function set_manager_socket(){
 			reiceive_msg("與 '"+Connection.customer_name+"' 連線成功");
 		});
 		
+		Connection.socket.on('reconnect', function () {
+			Connection.conn = true;
+			reiceive_msg("重新連接");
+			reiceive_msg(Connection.room_name);
+			Connection.socket.emit("enter", Connection.room_name);
+		});
+		
 		Connection.socket.on('leave', function () {
+			console.log("leave");
+			console.log(Connection.next_customer_name);
+			console.log(Connection.customer_name);
 			if(Connection.next_customer_name){
-				Connection.socket.emit("enter", Connection.next_customer_name+"_"+Connection.service_name);
+				Connection.room_name = Connection.next_customer_name+"_"+Connection.service_name
+				Connection.socket.emit("enter", Connection.room_name);
 			}
 			Connection.customer_name = Connection.next_customer_name;
 			Connection.next_customer_name = null;
@@ -87,8 +77,15 @@ function set_manager_socket(){
 	Connection.send_msg = function(message){
 		if(Connection.customer_name){
 			Connection.socket.emit("message", {
-				"from": Connection.service_name,
-				"to": Connection.customer_name,
+				"type": Connection.end_point,
+				"from": {
+					"name": Connection.service_name,
+					"avatar":"/images/avatar.png"
+				},
+				"to": {
+					"name": Connection.customer_name,
+					"avatar":"/images/avatar.png"
+				},
 				"time": Date.now(),
 				"message": {
 					"type": "text",
@@ -102,8 +99,9 @@ function set_manager_socket(){
 	}
 	
 	Connection.change_customer = function(customer_id){
+		console.log(customer_id);
 		Connection.next_customer_name = customer_id;
-		Connection.socket.emit('leave',Connection.customer_name);
+		Connection.socket.emit('leave',Connection.room_name);
 	}
 	
 	Connection.get_history_unread = function(){

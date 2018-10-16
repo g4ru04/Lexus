@@ -41,8 +41,6 @@ $( function() {
 		$(".dialog--client .dialog__profileName").text(customer_name);
 		$(".header_content .txt").html(customer_name);
 		
-		$("#console").html('<div class="loading_div"><img src="/images/loading.gif"></div><div class="dialog dialog--service clearfix"><div class="dialog__profile"><div class="dialog__profileImage"><img src="/images/avatar.png"></div><div class="dialog__profileName">服務專員</div></div><div class="dialog__content"><div class="dialogPop"><p class="dialogPop__comment">您好！</p></div><div class="dialogTips"><div class="dialogTips__read"></div><div class="dialogTips__time">14:55</div></div></div></div><div class="dialog dialog--client clearfix"><div class="dialog__profile"><div class="dialog__profileImage"><img src="/images/avatar.png"></div><div class="dialog__profileName">'+customer_name+'</div></div><div class="dialog__content"><div class="dialogPop"><p class="dialogPop__comment">我想要ES的型錄！</p></div><div class="dialogTips"><div class="dialogTips__read"></div><div class="dialogTips__time">14:55</div></div></div></div><div class="dialog dialog--service clearfix"><div class="dialog__profile"><div class="dialog__profileImage"><img src="/images/avatar.png"></div><div class="dialog__profileName">服務專員</div></div><div class="dialog__content"><div class="dialogPop"><p class="dialogPop__comment">好的，馬上為您準備車款資訊！</p></div><div class="dialogTips"><div class="dialogTips__read"></div><div class="dialogTips__time">14:55</div></div></div></div>');
-		
 	});
 	
 } );
