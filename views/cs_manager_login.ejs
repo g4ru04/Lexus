@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+		<meta property="og:image" content="https://cf55ae10.ngrok.io/FEIB_POC/servicebot.png" />
+		<title>客服人員登入</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="/stylesheets/ctbc.css">
+		<link rel="stylesheet" href="/stylesheets/cs_manager.css">
+		<link rel="stylesheet" href="/stylesheets/common.css">
+		<style>
+		
+		.login_panel {
+			width: 400px;
+			margin: 120px auto;
+			border: 1px solid #000;
+			padding: 10px 20px;
+			background-color:#efefef;
+		}
+		
+		</style>
+		
+	</head>
+	<body>
+	
+		<!-- Left Hand Side-->
+		<div class='login_panel'>
+			<h2>登入頁面</h2>
+			<ul>
+				<li>帳號: <input type='text' id='username' value='SE0001'/></li>
+				<li>密碼: <input type='password' value='1234'/></li>
+			</ul>
+			<button>登入</button>
+		</div>
+		
+		
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		
+		<script src="/javascripts/common.js"></script>
+		<script>
+			$( function() {
+				
+				$("button").click(function(){
+					alert('台北數位API 取回服務專員資料');
+					window.location.href='/serv.do?s='+b64EncodeUnicode($("#username").val());
+				})
+			} );
+		</script>
+		
+		
+	</body>
+</html>
