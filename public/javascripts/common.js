@@ -19,11 +19,23 @@ function produce_dialog_element(message) {
 	if(message.from==null || message.message==null){
 		return JSON.stringify(message,null,"    ")
 				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")
-				.replace(/\n/g,"<br>");
+				.replace(/\n/g,"<br>")+"<br>";
 	}
 		
 	let the_time = new Date(message.time);
-	let message_str = message.message.text ;
+	
+	let message_str = "";
+	if(message.message.type=="text"){
+		message_str = message.message.text ;
+		
+	}else if(message.message.type=="image"){
+		message_str += "<a target='_blank' href='"+message.message.url+"'>"
+						+"<img src='"+message.message.url+"' style='height:60px;' />"
+						+"</a>";
+		
+	}
+	
+	message_str += "<br>";
 	
 	if(message.intents && Connection.end_point=="service"){
 		message.intents = message.intents.filter(function(item){
@@ -41,12 +53,10 @@ function produce_dialog_element(message) {
 			message_str += "【無明確意圖】";
 		}
 	}
-	
 	if(message.recognitionResult && Connection.end_point=="service"){
 		message_str += "【"+message.recognitionResult+"】";
 	}
 	
-	message_str += "<br>";
 	
 	return `<div class="dialog dialog--${message.type} clearfix">
 		<div class="dialog__profile">
@@ -68,14 +78,25 @@ function produce_dialog_element(message) {
 //click or event 使用
 function reiceive_msg(message){
 	$("#console").append(produce_dialog_element(message));
+	$("#console").scrollTop($('#console')[0].scrollHeight);
 }
 
 //click or event 使用
 function send_text_msg(){
 	
 	if(Connection){
-		Connection.send_msg($("input.input.msg").val());
+		Connection.send_text($("input.input.msg").val());
 		$("input.input.msg").val('');
+	}
+	
+}
+
+//click or event 使用
+function send_image_msg(url){
+	
+	if(Connection){
+		Connection.send_image(url);
+		$("input[type='file']").val('');
 	}
 	
 }

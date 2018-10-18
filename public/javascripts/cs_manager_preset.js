@@ -74,7 +74,7 @@ function set_manager_socket(){
 		
 	}
 	
-	Connection.send_msg = function(message){
+	Connection.send_text = function(message){
 		if(Connection.customer_name){
 			Connection.socket.emit("message", {
 				"type": Connection.end_point,

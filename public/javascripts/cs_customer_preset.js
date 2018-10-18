@@ -52,7 +52,7 @@ function set_customer_socket(){
 		
 	}
 	
-	Connection.send_msg = function(message){
+	Connection.send_text = function(message){
 		Connection.socket.emit("message", {
 			"type": Connection.end_point,
 			"from": {
@@ -67,6 +67,26 @@ function set_customer_socket(){
 			"message": {
 				"type": "text",
 				"text": message
+			},
+			//"command": []
+		});
+	}
+	
+	Connection.send_image = function(url){
+		Connection.socket.emit("message", {
+			"type": Connection.end_point,
+			"from": {
+				"name": Connection.client_name,
+				"avatar":"/images/avatar.png"
+			},
+			"to": {
+				"name": Connection.service_name,
+				"avatar":"/images/avatar.png"
+			},
+			"time": Date.now(),
+			"message": {
+				"type": "image",
+				"url": url
 			},
 			//"command": []
 		});
