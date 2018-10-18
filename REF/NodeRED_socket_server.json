@@ -53,6 +53,10 @@
 				"vt": "str"
 			}, {
 				"t": "eq",
+				"v": "disconnecting",
+				"vt": "str"
+			}, {
+				"t": "eq",
 				"v": "newListener",
 				"vt": "str"
 			}, {
@@ -67,10 +71,10 @@
 		],
 		"checkall": "false",
 		"repair": false,
-		"outputs": 7,
+		"outputs": 8,
 		"x": 770.3332824707031,
 		"y": 466.3332977294922,
-		"wires": [["811411b9.d1e678"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], []]
+		"wires": [["811411b9.d1e678"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], [], []]
 	}, {
 		"id": "ffd27283.5745f8",
 		"type": "function",
@@ -195,7 +199,7 @@
 		"type": "debug",
 		"z": "da8f7bde.d2b408",
 		"name": "MSG OUT",
-		"active": true,
+		"active": false,
 		"tosidebar": true,
 		"console": false,
 		"tostatus": false,
@@ -366,20 +370,11 @@
 		"y": 397.96669006347656,
 		"wires": []
 	}, {
-		"id": "1059af92.1a5ee",
-		"type": "comment",
-		"z": "da8f7bde.d2b408",
-		"name": "Config",
-		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n\nConversation:\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n",
-		"x": 89.00001525878906,
-		"y": 65.66661834716797,
-		"wires": []
-	}, {
 		"id": "ada5e176.1f9c9",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "Message Type",
-		"func": "let payload_preserved = msg.payload_preserved;\n\nif(payload_preserved.message.type==\"text\"){\n    msg.payload = payload_preserved.message.text;\n    msg.user = payload_preserved.from.name;\n    return [msg,null];\n}else{\n    msg.visual_recog_url = payload_preserved.message.text;\n    \n    return [null,msg];\n}\n",
+		"func": "let payload_preserved = msg.payload_preserved;\n\nif(payload_preserved.message.type==\"text\"){\n    msg.payload = payload_preserved.message.text;\n    msg.user = payload_preserved.from.name;\n    return [msg,null];\n}else{\n    msg.visual_recog_url = payload_preserved.message.url;\n    \n    return [null,msg];\n}\n",
 		"outputs": 2,
 		"noerr": 0,
 		"x": 487.33331298828125,
@@ -411,7 +406,7 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Line VisualRecog IN - B",
 		"links": ["74086a02.246f44"],
-		"x": 212.3332977294922,
+		"x": 146.33331298828125,
 		"y": 957.333251953125,
 		"wires": [["a337b25e.9ff8c", "87fa54be.080148"]]
 	}, {
@@ -476,9 +471,9 @@
 		"func": "\nmsg.payload = msg.visual_recog_url;\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 307.33331298828125,
-		"y": 958.333251953125,
-		"wires": [["340efc70.9569dc"]]
+		"x": 258.33331298828125,
+		"y": 957.333251953125,
+		"wires": [["5c4bf8fc.707158"]]
 	}, {
 		"id": "340efc70.9569dc",
 		"type": "visual-recognition-v3",
@@ -564,7 +559,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "setting",
-		"func": "msg.params = {\n    alternate_intents:true\n};\n\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
+		"func": "msg.params = {\n    alternate_intents: true,\n    timeout: 9*1000\n};\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 701.36669921875,
@@ -575,7 +570,7 @@
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "圖像辨識",
-		"info": "",
+		"info": "因為recog的service讀不到localhost的檔案 \n目前先把檔案內容讀回來",
 		"x": 144.36666870117188,
 		"y": 872.5,
 		"wires": []
@@ -645,6 +640,284 @@
 		"x": 846.566650390625,
 		"y": 569.7666625976562,
 		"wires": []
+	}, {
+		"id": "3470fabc.8254fe",
+		"type": "http request",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"method": "GET",
+		"ret": "bin",
+		"url": "",
+		"tls": "",
+		"x": 354.3666687011719,
+		"y": 1136,
+		"wires": [["340efc70.9569dc"]]
+	}, {
+		"id": "5c4bf8fc.707158",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.url = msg.payload;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 201.36666870117188,
+		"y": 1136.5,
+		"wires": [["3470fabc.8254fe"]]
+	}, {
+		"id": "c207cd6d.45c4f8",
+		"type": "http in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"url": "/taipei_digital_api/manager_identity",
+		"method": "get",
+		"upload": false,
+		"swaggerDoc": "",
+		"x": 264.3666687011719,
+		"y": 1316.5,
+		"wires": [["1f38697a.6db277"]]
+	}, {
+		"id": "c501bde2.42963",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.payload = [{\n\t\t\"id\": \"3fb#23EV72uAr&FAA@fy\",\n\t\t\"type\": \"CT200H\",\n\t\t\"vehicle_id\": \"ABZ-1234\",\n\t\t\"name\": \"王大明\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 2,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"是的\",\n\t\t\t\t\"time\": \"2019/09/20 10:11:50\"\n\t\t\t}\n\t\t],\n\t\t\"note\": [{\n\t\t\t\t\"msg\": \"生日\"\n\t\t\t}\n\t\t]\n\t}, {\n\t\t\"id\": \"B%UnVWu7&*7tatpL4KHr\",\n\t\t\"type\": \"ES200\",\n\t\t\"vehicle_id\": \"ABE-1234\",\n\t\t\"name\": \"陳大為\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 4,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"謝謝！！\",\n\t\t\t\t\"time\": \"2019/09/18 14:05:03\"\n\t\t\t}\n\t\t],\n\t\t\"note\": [{\n\t\t\t\t\"msg\": \"保險到期日09/26\"\n\t\t\t}\n\t\t]\n\t}, {\n\t\t\"id\": \"UWtqzPU9@&smq9b&KVvf\",\n\t\t\"type\": \"RX450H\",\n\t\t\"vehicle_id\": \"ACE-8866\",\n\t\t\"name\": \"林小東\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 0,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"感謝您！\",\n\t\t\t\t\"time\": \"2019/09/21 08:05:15\"\n\t\t\t}\n\t\t],\n\t\t\"note\": []\n\t}, {\n\t\t\"id\": \"KEpz5bFFx&mnzd5UZfZf\",\n\t\t\"type\": \"GS300\",\n\t\t\"vehicle_id\": \"LXS-8888\",\n\t\t\"name\": \"吳小涵\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 0,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"了解\",\n\t\t\t\t\"time\": \"2019/09/15 18:35:07\"\n\t\t\t}\n\t\t],\n\t\t\"note\": []\n\t}, {\n\t\t\"id\": \"Qr8zrWexwdXtbHQkV5bY\",\n\t\t\"type\": \"NX200\",\n\t\t\"vehicle_id\": \"AAA-0000\",\n\t\t\"name\": \"李小龍\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 0,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"您已寄出一張圖片\",\n\t\t\t\t\"time\": \"2019/09/17 12:00:44\"\n\t\t\t}\n\t\t],\n\t\t\"note\": []\n\t}\n]\n\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 566.36669921875,
+		"y": 1363,
+		"wires": [["770e744f.10202c"]]
+	}, {
+		"id": "7776e800.e7c17",
+		"type": "http in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"url": "/taipei_digital_api/manager_responsibility",
+		"method": "get",
+		"upload": false,
+		"swaggerDoc": "",
+		"x": 282.75,
+		"y": 1363.25,
+		"wires": [["c501bde2.42963"]]
+	}, {
+		"id": "1f38697a.6db277",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.payload = {\n    \"成功與否\":\"success\",\n    \"ht_id\":\"SA0001\",\n    \"type\":\"Sales\",\n    \"經銷商\":\"AAA\",\n    \"據點別\":\"AAA\",\n    \"品牌\":\"AAA\",\n    \"帳號\":\"AAA\",\n    \"姓名\":\"AAA\"\n};\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 554.75,
+		"y": 1315.75,
+		"wires": [["9bed329a.06b0a"]]
+	}, {
+		"id": "9bed329a.06b0a",
+		"type": "http response",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"statusCode": "",
+		"headers": {},
+		"x": 784.36669921875,
+		"y": 1315.75,
+		"wires": []
+	}, {
+		"id": "770e744f.10202c",
+		"type": "http response",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"statusCode": "",
+		"headers": {},
+		"x": 792.36669921875,
+		"y": 1362.75,
+		"wires": []
+	}, {
+		"id": "d7d43f31.7dc92",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.payload = {\n\t\"address\": \"AAA\",\n\t\"tel\": \"AAA\",\n\t\"生日\": \"AAA\",\n\t\"車名 SFX\": \"AAA\",\n\t\"新車交車日\": \"AAA\",\n\t\"強制任意險到期日\": \"AAA\",\n\t\"上一次待修建議\": \"AAA\",\n\t\"上一次維修紀錄\": {}\n};\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 569.61669921875,
+		"y": 1410.25,
+		"wires": [["751902f6.017fec"]]
+	}, {
+		"id": "f2dbad68.27f2",
+		"type": "http in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"url": "/taipei_digital_api/vehicle_owner",
+		"method": "get",
+		"upload": false,
+		"swaggerDoc": "",
+		"x": 256,
+		"y": 1410.5,
+		"wires": [["d7d43f31.7dc92"]]
+	}, {
+		"id": "751902f6.017fec",
+		"type": "http response",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"statusCode": "",
+		"headers": {},
+		"x": 795.61669921875,
+		"y": 1410,
+		"wires": []
+	}, {
+		"id": "75fac16d.d7c63",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.payload = {};\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 568.61669921875,
+		"y": 1459.25,
+		"wires": [["6f4e1cc9.98d81c"]]
+	}, {
+		"id": "a3e20106.98852",
+		"type": "http in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"url": "/taipei_digital_api/reservation",
+		"method": "get",
+		"upload": false,
+		"swaggerDoc": "",
+		"x": 245,
+		"y": 1459.5,
+		"wires": [["75fac16d.d7c63"]]
+	}, {
+		"id": "6f4e1cc9.98d81c",
+		"type": "http response",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"statusCode": "",
+		"headers": {},
+		"x": 794.61669921875,
+		"y": 1459,
+		"wires": []
+	}, {
+		"id": "c840f08e.f1f9f8",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "台北數位API (未完成)",
+		"info": "",
+		"x": 120.36666870117188,
+		"y": 1234.5,
+		"wires": []
+	}, {
+		"id": "fafb17b5.e22db",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "資料庫會做的事(未完成)",
+		"info": "預計接在 socket 後的 checkEvent 之後",
+		"x": 130.75,
+		"y": 1553.75,
+		"wires": []
+	}, {
+		"id": "51c5fe01.aeb88",
+		"type": "switch",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"property": "payload",
+		"propertyType": "msg",
+		"rules": [{
+				"t": "eq",
+				"v": "寫入對話",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "用戶_讀最後一筆歷史對話資料",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "用戶_讀歷史對話資料",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "管理者_讀未讀對話資料",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "管理者_讀歷史對話資料",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "更新responsibility資料",
+				"vt": "str"
+			}
+		],
+		"checkall": "true",
+		"repair": false,
+		"outputs": 6,
+		"x": 234.36666870117188,
+		"y": 1678,
+		"wires": [["66852488.f707fc"], ["ae634843.a4483"], ["cb492865.e7efa8"], ["62b54256.e863cc"], ["e2733ef0.e4a4"], ["96ac4787.2dafd8"]]
+	}, {
+		"id": "66852488.f707fc",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "寫入對話",
+		"func": "\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 485.36669921875,
+		"y": 1559.5,
+		"wires": [[]]
+	}, {
+		"id": "ae634843.a4483",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "用戶_讀最後一筆歷史對話資料",
+		"func": "\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 555.36669921875,
+		"y": 1602.5,
+		"wires": [[]]
+	}, {
+		"id": "cb492865.e7efa8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "用戶_讀歷史對話資料",
+		"func": "\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 527.75,
+		"y": 1646.75,
+		"wires": [[]]
+	}, {
+		"id": "62b54256.e863cc",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "管理者_讀未讀對話資料",
+		"func": "\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 537.75,
+		"y": 1689.75,
+		"wires": [[]]
+	}, {
+		"id": "e2733ef0.e4a4",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "管理者_讀歷史對話資料",
+		"func": "\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 537.75,
+		"y": 1736.75,
+		"wires": [[]]
+	}, {
+		"id": "96ac4787.2dafd8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "更新responsibility資料",
+		"func": "\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 527.75,
+		"y": 1779.75,
+		"wires": [[]]
 	}, {
 		"id": "d5c1b5fd.4dfad8",
 		"type": "socketio-config",
