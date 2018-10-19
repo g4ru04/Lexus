@@ -2,12 +2,6 @@ body{
 	margin:0px;
 	font-family: Helvetica, Arial, '微軟正黑體', '新細明體', sans-serif;
 }
-#search_box_container{
-	height:50px;
-}
-#search_box_container *{
-	float:right;
-}
 
 /* CSS in Dialog */
 #console{
@@ -73,7 +67,7 @@ body{
     width: 100%;
     top: 0;
     z-index: 999;
-    background-color: #27AE58;
+    background-color: #2299CC;
     /* position: fixed; */
 }
 .header_content .txt {
@@ -149,7 +143,7 @@ span.btn-search {
     display: block;
     width: 60px;
     height: 40px;
-    background-color: #27AE58;
+    background-color: #2299CC;
     border-radius: 20px;
     margin: 10px auto;
     position: relative;

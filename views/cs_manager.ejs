@@ -15,38 +15,42 @@
 	
 		<!-- Left Hand Side-->
 		<div class='cs_manager_list current_view'>
-			<div id="search_box_container">
-				<button>O</button>
-				<input type="text" placeholder="搜尋"/>
+			<div class='list_header'>
+				<div class='header_logo'></div>
+				<div class="search_box_container">
+					<button></button>
+					<input type="text" placeholder="搜尋"/>	
+				</div>
 			</div>
-			
-			<% list_data.forEach(function (item) { %>
-				<div class='list_element'>
-					<div class="img" alt="">
-						<img src="<%= item.avatar %>" alt="">
-					</div>
-					<div class='chat_body'>
-						<div class="title">
-							<%= item.type %>/<%= item.vehicle_id %>/<%= item.name %>
+			<div class='cs_manager_list_container'>
+				<% list_data.forEach(function (item) { %>
+					<div class='list_element'>
+						<div class="img" alt="">
+							<img src="<%= item.avatar %>" alt="">
 						</div>
-						<div class="msg">
-							<%= item.latest_msg[0].msg %>
-						</div>
-					</div>
-					<% if (item.unread) { %>
-						<div class="unread">
-							<%= item.unread %>
-						</div>
-					<% } %>
-					<% if (item.note.length>0) { %>
-						<div class="note" title=''>
-							<div class="tooltip">重要提醒
-								<span class="tooltiptext"><%= item.note.map(function(item){return item.msg;}) %></span>
+						<div class='chat_body'>
+							<div class="title">
+								<%= item.type %>/<%= item.vehicle_id %>/<%= item.name %>
+							</div>
+							<div class="msg">
+								<%= item.latest_msg[0].msg %>
 							</div>
 						</div>
-					<% } %>
-				</div>
-			<% }); %>
+						<% if (item.unread) { %>
+							<div class="unread">
+								<%= item.unread %>
+							</div>
+						<% } %>
+						<% if (item.note.length>0) { %>
+							<div class="note" title=''>
+								<div class="tooltip">重要提醒
+									<span class="tooltiptext"><%= item.note.map(function(item){return item.msg;}) %></span>
+								</div>
+							</div>
+						<% } %>
+					</div>
+				<% }); %>
+			</div>
 		</div>
 		
 		<!-- Right Hand Side-->

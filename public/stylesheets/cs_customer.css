@@ -28,6 +28,7 @@
   float: right;
   margin-right: 20px;
   border-top-right-radius: 0;
+  background-color:#D6D6D6;
 }
 .dialog--client .dialog__content:after {
   right: -15px;
@@ -45,6 +46,8 @@
 }
 .dialog--service .dialog__content {
 	margin-left: 0;
+	background-color:#2299CC;
+	color:#FFFFFF;
 }
 .dialog--client {
 	margin-right: 20px;
