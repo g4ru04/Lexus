@@ -14,6 +14,7 @@
 
 .search_box_container{
 	float:right;
+	width:100px;
 	height: 100%;
 	text-align:center;
 	/* max-width: calc( 100% - 200px); */
@@ -22,7 +23,7 @@
     border: 1px solid #cccccc;
 	position: relative;
 	right: 4px;
-    width: 130px;
+    width: 40%;
 	height: 26px;
 	margin-top: 9px;
 	border-radius:4px;
@@ -34,7 +35,7 @@
 	background-image:url(/images/search_btn.png);
 	border: 0;
 	position: relative;
-	left: 130px;
+	left: 50px;
 	bottom: 5px;
 	z-index:1;
 }
