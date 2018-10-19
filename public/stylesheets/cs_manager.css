@@ -14,16 +14,15 @@
 
 .search_box_container{
 	float:right;
-	width:100px;
 	height: 100%;
 	text-align:center;
-	/* max-width: calc( 100% - 200px); */
+	width: calc( 100% - 220px);
 }
 .search_box_container input {
     border: 1px solid #cccccc;
 	position: relative;
 	right: 4px;
-    width: 60%;
+    width: 90%;
 	height: 26px;
 	margin-top: 9px;
 	border-radius:4px;
@@ -44,7 +43,7 @@
 	float:left;
 	transition: width 0.3s;
 	height: calc( 100vh - 50px );
-	min-width:380px;
+	min-width:340px;
 }
 .cs_manager_list_container{
 	overflow-x: hidden;
@@ -77,7 +76,7 @@
 	padding-top:6px;
 	word-break: keep-all;
 	/*font-weight:600;*/
-	font-size: 1em;
+	font-size: 0.9em;
 }
 .chat_body .msg{
 	padding-top:5px;

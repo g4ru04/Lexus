@@ -1,1 +1,122 @@
-[{"type":"CT200H","vehicle_id":"ABZ-1234","name":"王大明","avatar":"/images/avatar.png","unread":2,"latest_msg":[{"msg":"是的","time":"2019/09/20 10:11:50"}],"note":[{"msg":"生日"}]},{"type":"ES200","vehicle_id":"ABE-1234","name":"陳大為","avatar":"/images/avatar.png","unread":4,"latest_msg":[{"msg":"謝謝！！","time":"2019/09/18 14:05:03"}],"note":[{"msg":"保險到期日09/26"}]},{"type":"RX450H","vehicle_id":"ACE-8866","name":"林小東","avatar":"/images/avatar.png","unread":0,"latest_msg":[{"msg":"感謝您！","time":"2019/09/21 08:05:15"}],"note":[]},{"type":"GS300","vehicle_id":"LXS-8888","name":"吳小涵","avatar":"/images/avatar.png","unread":0,"latest_msg":[{"msg":"了解","time":"2019/09/15 18:35:07"}],"note":[]},{"type":"NX200","vehicle_id":"AAA-0000","name":"李小龍","avatar":"/images/avatar.png","unread":0,"latest_msg":[{"msg":"您已寄出一張圖片","time":"2019/09/17 12:00:44"}],"note":[]}]
+[{
+		"type": "CT200H",
+		"vehicle_id": "ABZ-1234",
+		"name": "王大明",
+		"avatar": "/images/avatar.png",
+		"unread": 2,
+		"latest_msg": [{
+				"msg": "是的",
+				"time": "2019/09/20 10:11:50"
+			}
+		],
+		"note": [{
+				"msg": "生日"
+			}
+		]
+	}, {
+		"type": "ES200",
+		"vehicle_id": "ABE-1234",
+		"name": "陳大為",
+		"avatar": "/images/avatar.png",
+		"unread": 4,
+		"latest_msg": [{
+				"msg": "謝謝！！",
+				"time": "2019/09/18 14:05:03"
+			}
+		],
+		"note": [{
+				"msg": "保險到期日09/26"
+			}
+		]
+	}, {
+		"type": "RX450H",
+		"vehicle_id": "ACE-8866",
+		"name": "林小東",
+		"avatar": "/images/avatar.png",
+		"unread": 0,
+		"latest_msg": [{
+				"msg": "感謝您！",
+				"time": "2019/09/21 08:05:15"
+			}
+		],
+		"note": []
+	}, {
+		"type": "GS300",
+		"vehicle_id": "LXS-8888",
+		"name": "吳小涵",
+		"avatar": "/images/avatar.png",
+		"unread": 0,
+		"latest_msg": [{
+				"msg": "了解",
+				"time": "2019/09/15 18:35:07"
+			}
+		],
+		"note": []
+	}, {
+		"type": "NX200",
+		"vehicle_id": "AAA-0000",
+		"name": "李小龍",
+		"avatar": "/images/avatar.png",
+		"unread": 0,
+		"latest_msg": [{
+				"msg": "您已寄出一張圖片",
+				"time": "2019/09/17 12:00:44"
+			}
+		],
+		"note": []
+	}, {
+		"type": "ES200",
+		"vehicle_id": "RAZ-6600",
+		"name": "陳精深",
+		"avatar": "/images/avatar.png",
+		"unread": 1,
+		"latest_msg": [{
+				"msg": "這樣不會造成困擾嗎?",
+				"time": "2019/09/16 12:00:44"
+			}
+		],
+		"note": []
+	}, {
+		"type": "NX200",
+		"vehicle_id": "ABE-3724",
+		"name": "王隆恩",
+		"avatar": "/images/avatar.png",
+		"unread": 0,
+		"latest_msg": [{
+				"msg": "有行車紀錄器更好",
+				"time": "2019/09/15 12:00:44"
+			}
+		],
+		"note": [{
+				"msg": "進廠保養09/26"
+			}
+		]
+	}, {
+		"type": "RX450",
+		"vehicle_id": "RAZ-6600",
+		"name": "陳精深",
+		"avatar": "/images/avatar.png",
+		"unread": 1,
+		"latest_msg": [{
+				"msg": "是指要我自己去嗎",
+				"time": "2019/09/13 12:00:44"
+			}
+		],
+		"note": [{
+				"msg": "進廠維修提醒2018/10/26"
+			}
+		]
+	}, {
+		"type": "ES200",
+		"vehicle_id": "ABE-3724",
+		"name": "黃筱涵",
+		"avatar": "/images/avatar.png",
+		"unread": 3,
+		"latest_msg": [{
+				"msg": "我不覺得妳這樣很好",
+				"time": "2019/09/14 12:00:44"
+			}
+		],
+		"note": []
+	}
+]
