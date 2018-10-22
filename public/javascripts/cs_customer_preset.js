@@ -15,13 +15,17 @@ function set_customer_socket(){
 	
 	Connection.init = function(){
 		Connection.socket = io('http://localhost:1880/');
-		Connection.client_name  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
-		Connection.service_name = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
-		Connection.room_name = Connection.client_name+"_"+Connection.service_name;
+		Connection.client_id  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
+		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
+		//Connection.room_name = Connection.client_id+"_"+Connection.service_name;
 		Connection.end_point = "client" ;
 		Connection.conn = false ;
 		Connection.set_listener();
-		Connection.socket.emit("enter", Connection.room_name);
+		Connection.socket.emit("enter", {
+			type : Connection.end_point,
+			client_id : Connection.client_id,
+			service_id : Connection.service_id
+		});
 	}
 	
 	Connection.is_connect = function(){
@@ -41,13 +45,17 @@ function set_customer_socket(){
 		
 		Connection.socket.on('enter', function () {
 			Connection.conn = true;
-			reiceive_msg("與 '"+Connection.service_name+"' 連線成功");
+			reiceive_msg("與 '"+Connection.service_id+"' 連線成功");
 		});
 		
 		Connection.socket.on('reconnect', function () {
 			Connection.conn = true;
 			reiceive_msg("重新連接");
-			Connection.socket.emit("enter", Connection.room_name);
+			Connection.socket.emit("enter", {
+				type : Connection.end_point,
+				client_id : Connection.client_id,
+				service_id : Connection.service_id
+			});
 		});
 		
 	}
@@ -56,11 +64,11 @@ function set_customer_socket(){
 		Connection.socket.emit("message", {
 			"type": Connection.end_point,
 			"from": {
-				"name": Connection.client_name,
+				"id": Connection.client_id,
 				"avatar":"/images/avatar.png"
 			},
 			"to": {
-				"name": Connection.service_name,
+				"id": Connection.service_id,
 				"avatar":"/images/avatar.png"
 			},
 			"time": Date.now(),
@@ -76,11 +84,11 @@ function set_customer_socket(){
 		Connection.socket.emit("message", {
 			"type": Connection.end_point,
 			"from": {
-				"name": Connection.client_name,
+				"id": Connection.client_id,
 				"avatar":"/images/avatar.png"
 			},
 			"to": {
-				"name": Connection.service_name,
+				"id": Connection.service_id,
 				"avatar":"/images/avatar.png"
 			},
 			"time": Date.now(),

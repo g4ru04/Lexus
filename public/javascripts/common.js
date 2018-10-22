@@ -61,7 +61,7 @@ function produce_dialog_element(message) {
 	return `<div class="dialog dialog--${message.type} clearfix">
 		<div class="dialog__profile">
 			<div class="dialog__profileImage"><img src="${message.from.avatar}"></div>
-			<div class="dialog__profileName">${message.from.name}</div>
+			<div class="dialog__profileName">${message.from.id}</div>
 		</div>
 		<div class="dialog__content">
 			<div class="dialogPop">
@@ -77,6 +77,7 @@ function produce_dialog_element(message) {
 
 //click or event 使用
 function reiceive_msg(message){
+	console.log(message);
 	$("#console").append(produce_dialog_element(message));
 	$("#console").scrollTop($('#console')[0].scrollHeight);
 }

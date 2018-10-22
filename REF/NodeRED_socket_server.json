@@ -20,14 +20,16 @@
 		"rules": [{
 				"v": "message"
 			}, {
+				"v": "register service"
+			}, {
 				"v": "enter"
 			}, {
 				"v": "leave"
 			}
 		],
-		"x": 158.33331298828125,
+		"x": 168.33331298828125,
 		"y": 406.3333282470703,
-		"wires": [["87f13c2a.920eb8"]]
+		"wires": [["3e72187a.2ba16"]]
 	}, {
 		"id": "d764afe7.de0d98",
 		"type": "switch",
@@ -38,6 +40,10 @@
 		"rules": [{
 				"t": "eq",
 				"v": "message",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "register service",
 				"vt": "str"
 			}, {
 				"t": "eq",
@@ -55,37 +61,25 @@
 				"t": "eq",
 				"v": "disconnecting",
 				"vt": "str"
-			}, {
-				"t": "eq",
-				"v": "newListener",
-				"vt": "str"
-			}, {
-				"t": "eq",
-				"v": "typing",
-				"vt": "str"
-			}, {
-				"t": "eq",
-				"v": "stop typing",
-				"vt": "str"
 			}
 		],
 		"checkall": "false",
 		"repair": false,
-		"outputs": 8,
-		"x": 770.3332824707031,
+		"outputs": 6,
+		"x": 750.3332824707031,
 		"y": 466.3332977294922,
-		"wires": [["811411b9.d1e678"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], [], []]
+		"wires": [["811411b9.d1e678"], ["40a4725f.3009cc"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], []]
 	}, {
 		"id": "ffd27283.5745f8",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "new message",
-		"func": "/*msg.payload = {\n username: msg.socketIOStaticProperties.room,\n message: msg.payload\n};*/\n//RED.util.setMessageProperty(msg, \"socketIOEmit\", \"broadcast.emit\", true);\n\nmsg.payload = msg.payload_preserved;\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\nif(msg.socketIOStaticProperties==null){\n    node.warn(\"Room id 不見了!\");\n}\n\nmsg.room = msg.socketIOStaticProperties.room;\nreturn msg;",
+		"func": "/*msg.payload = {\n username: msg.socketIOStaticProperties.room,\n message: msg.payload\n};*/\n//RED.util.setMessageProperty(msg, \"socketIOEmit\", \"broadcast.emit\", true);\n\nmsg.payload = msg.payload_preserved;\n\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\nif(msg.socketIOStaticProperties==null){\n    node.warn(\"Room id 不見了!\");\n}\n\nmsg.room = msg.socketIOStaticProperties.room_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 1226.3336181640625,
-		"y": 706.3333435058594,
-		"wires": [["bacab9aa.9e48b8", "55c71071.a9475"]]
+		"x": 1200.3336181640625,
+		"y": 727.3333740234375,
+		"wires": [["bacab9aa.9e48b8", "55c71071.a9475", "e73955f.a0daf28"]]
 	}, {
 		"id": "530c0694.2cb448",
 		"type": "debug",
@@ -107,7 +101,7 @@
 		"scope": null,
 		"x": 240.69996643066406,
 		"y": 246.8333740234375,
-		"wires": [["f1e283da.230ae8"]]
+		"wires": [["f1e283da.230ae8", "18e8a0af.9bf46f"]]
 	}, {
 		"id": "f1e283da.230ae8",
 		"type": "debug",
@@ -118,8 +112,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 454.69996643066406,
-		"y": 281.5833740234375,
+		"x": 439.69996643066406,
+		"y": 272.5833740234375,
 		"wires": []
 	}, {
 		"id": "25998a28.5db1d6",
@@ -137,11 +131,11 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "enter room",
-		"func": "RED.util.setMessageProperty(\n    msg, \"socketIOAddStaticProperties\", \n    {\n        room:msg.payload\n    }, true);\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nmsg.payload = {\n    room: msg.payload\n};\n\nreturn msg;",
+		"func": "msg.payload.room_id = \n    msg.payload.client_id + \"_\" + msg.payload.service_id;\nlet room_id = msg.payload.room_id;\n/*{\n    type : Connection.end_point,\n    client_id : Connection.client_id,\n    service_id : Connection.service_id,\n    room_id : \n}*/\nRED.util.setMessageProperty(\n    msg, \"socketIOAddStaticProperties\", \n    {\n        type : msg.payload.type,\n        client_id : msg.payload.client_id,\n        service_id : msg.payload.service_id,\n        room_id : msg.payload.room_id\n    },\n    true);\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nmsg.payload = {\n    room: room_id\n};\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 953.0833129882812,
-		"y": 446.08326721191406,
+		"x": 959.083251953125,
+		"y": 445.083251953125,
 		"wires": [["bc0353dc.7d5838", "cc3d78e6.2eb7f8", "c1ac7b2d.b8cfe", "46a3e44a.9d180c"]]
 	}, {
 		"id": "bc0353dc.7d5838",
@@ -149,7 +143,7 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "4419a078.23234",
-		"x": 1155.699951171875,
+		"x": 1162.699951171875,
 		"y": 445.3333282470703,
 		"wires": []
 	}, {
@@ -166,7 +160,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "leave room",
-		"func": "let room_id = \"\";\n\nif(msg.socketIOEvent==\"leave\"){\n    room_id = msg.payload;\n}else if(msg.socketIOEvent==\"disconnect\"){\n    room_id = msg.socketIOStaticProperties?msg.socketIOStaticProperties.room:\"\";\n}\n\nmsg.payload = {\n    room: room_id\n};\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nreturn msg;",
+		"func": "let room_id = \"\";\n\n//if(msg.socketIOEvent==\"leave\"){\n//    room_id = msg.payload;\n//}else if(msg.socketIOEvent==\"disconnect\"){\n    room_id = msg.socketIOStaticProperties\n                ?msg.socketIOStaticProperties.room_id\n                :\"\";\n//}\n\nmsg.payload = {\n    room: room_id\n};\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 953.4666748046875,
@@ -178,8 +172,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1155.4667358398438,
-		"y": 521.5666656494141,
+		"x": 1163.4668579101562,
+		"y": 521.566650390625,
 		"wires": []
 	}, {
 		"id": "bacab9aa.9e48b8",
@@ -191,33 +185,33 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1406.5669555664062,
-		"y": 677.5666656494141,
+		"x": 1421.5669555664062,
+		"y": 701.5666656494141,
 		"wires": []
 	}, {
 		"id": "c1ac7b2d.b8cfe",
 		"type": "debug",
 		"z": "da8f7bde.d2b408",
-		"name": "MSG OUT",
-		"active": false,
+		"name": "MSG ENTER",
+		"active": true,
 		"tosidebar": true,
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1147.566650390625,
-		"y": 406.566650390625,
+		"x": 1201.5667114257812,
+		"y": 408.566650390625,
 		"wires": []
 	}, {
 		"id": "8767060f.1eb65",
 		"type": "debug",
 		"z": "da8f7bde.d2b408",
-		"name": "MSG OUT",
-		"active": false,
+		"name": "MSG LEAVE",
+		"active": true,
 		"tosidebar": true,
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1144.566650390625,
+		"x": 1164.566650390625,
 		"y": 561.5666198730469,
 		"wires": []
 	}, {
@@ -232,8 +226,8 @@
 		"crontab": "",
 		"once": false,
 		"onceDelay": 0.1,
-		"x": 964.36669921875,
-		"y": 311.00001525878906,
+		"x": 950.36669921875,
+		"y": 294.00001525878906,
 		"wires": [["46a3e44a.9d180c"]]
 	}, {
 		"id": "8ca03bf4.2ef41",
@@ -246,7 +240,7 @@
 		"tostatus": false,
 		"complete": "false",
 		"x": 1335.36669921875,
-		"y": 310.75001525878906,
+		"y": 293.75001525878906,
 		"wires": []
 	}, {
 		"id": "46a3e44a.9d180c",
@@ -256,69 +250,24 @@
 		"func": "\nvar chat_status = context.get(\"chat_status\");\nchat_status = chat_status!=null ? chat_status : {};\n\nif( typeof msg.payload ==\"number\"){\n    \n    return {\n        payload:chat_status\n    };\n    \n}else{\n    \n    if(msg.payload.room!=null){\n        \n        if(chat_status[msg.payload.room]==null){\n            chat_status[msg.payload.room]=0;\n        }\n        \n        if(msg.socketIOEvent==\"enter\"){\n            chat_status[msg.payload.room]++;\n        }\n        \n        if(msg.socketIOEvent==\"leave\"){\n            chat_status[msg.payload.room]--;\n            chat_status[msg.payload.room] = chat_status[msg.payload.room]<0?0:chat_status[msg.payload.room];\n        }\n        \n        context.set(\"chat_status\",chat_status);\n        \n    }\n}",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 1158.36669921875,
-		"y": 313.00001525878906,
+		"x": 1135.36669921875,
+		"y": 294,
 		"wires": [["8ca03bf4.2ef41"]]
-	}, {
-		"id": "7a49043b.aada2c",
-		"type": "mqtt in",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "socket_server_in",
-		"qos": "2",
-		"broker": "6fbdd64d.932d48",
-		"x": 272.75,
-		"y": 465.74998474121094,
-		"wires": [["3d17f383.0db1fc"]]
-	}, {
-		"id": "80a7d71f.429b",
-		"type": "mqtt out",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "socket_server_in",
-		"qos": "",
-		"retain": "",
-		"broker": "6fbdd64d.932d48",
-		"x": 508.25,
-		"y": 406.1666564941406,
-		"wires": []
-	}, {
-		"id": "87f13c2a.920eb8",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn {\n    payload:msg\n};",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 319.31671142578125,
-		"y": 406.13330078125,
-		"wires": [["80a7d71f.429b"]]
-	}, {
-		"id": "3d17f383.0db1fc",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn JSON.parse(msg.payload) ;",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 445.31671142578125,
-		"y": 466.1332550048828,
-		"wires": [["25998a28.5db1d6"]]
 	}, {
 		"id": "76e3c330.14a53c",
 		"type": "watson-conversation-v1",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"workspaceid": "234bf172-8356-42cc-8ec3-cb0a3dc69a0c",
-		"multiuser": true,
+		"workspaceid": "",
+		"multiuser": false,
 		"context": true,
 		"empty-payload": false,
 		"default-endpoint": true,
 		"service-endpoint": "https://gateway.watsonplatform.net/conversation/api",
 		"timeout": "",
 		"optout-learning": false,
-		"x": 846.4501953125,
-		"y": 638.8332824707031,
+		"x": 851.4501953125,
+		"y": 662.8332824707031,
 		"wires": [["473f4e34.17ac38", "1ea1709e.199dcf"]]
 	}, {
 		"id": "55c71071.a9475",
@@ -326,8 +275,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1427.2337036132812,
-		"y": 728.5666809082031,
+		"x": 1432.2337036132812,
+		"y": 752.5666809082031,
 		"wires": []
 	}, {
 		"id": "46995860.4afcb",
@@ -337,19 +286,19 @@
 		"func": "\nif(msg.payload.type==\"client\"){\n    msg.payload_preserved = msg.payload;\n    return [msg,null];\n}else{\n    msg.payload_preserved = msg.payload;\n    return [null,msg];\n}\n",
 		"outputs": 2,
 		"noerr": 0,
-		"x": 288.449951171875,
-		"y": 734.6667175292969,
+		"x": 305.449951171875,
+		"y": 748.666748046875,
 		"wires": [["ada5e176.1f9c9"], ["ffd27283.5745f8"]]
 	}, {
 		"id": "473f4e34.17ac38",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "msg.payload_preserved.intents = msg.payload.intents;\nreturn msg;",
+		"func": "msg.flow_config.time_record.assistant_return = Date.now();\nmsg.payload_preserved.intents = msg.payload.intents;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 1010.4501342773438,
-		"y": 667.6666564941406,
+		"x": 1015.4501342773438,
+		"y": 691.6666564941406,
 		"wires": [["ffd27283.5745f8"]]
 	}, {
 		"id": "8b407712.00fb9",
@@ -357,8 +306,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Deal Message - B",
 		"links": ["811411b9.d1e678"],
-		"x": 174.4499969482422,
-		"y": 736.6000213623047,
+		"x": 181.4499969482422,
+		"y": 750.6000518798828,
 		"wires": [["46995860.4afcb", "c71d3ab.8b92048"]]
 	}, {
 		"id": "811411b9.d1e678",
@@ -366,19 +315,28 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Deal Message - A",
 		"links": ["8b407712.00fb9"],
-		"x": 931.449951171875,
-		"y": 397.96669006347656,
+		"x": 906.449951171875,
+		"y": 338.9666748046875,
+		"wires": []
+	}, {
+		"id": "1059af92.1a5ee",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "Config",
+		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n    3.node-red-node-mongodb\n    4.node-red-node-mysql\n\nConversation:\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    X BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n    l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v\n",
+		"x": 89.00001525878906,
+		"y": 65.66661834716797,
 		"wires": []
 	}, {
 		"id": "ada5e176.1f9c9",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "Message Type",
-		"func": "let payload_preserved = msg.payload_preserved;\n\nif(payload_preserved.message.type==\"text\"){\n    msg.payload = payload_preserved.message.text;\n    msg.user = payload_preserved.from.name;\n    return [msg,null];\n}else{\n    msg.visual_recog_url = payload_preserved.message.url;\n    \n    return [null,msg];\n}\n",
+		"func": "let payload_preserved = msg.payload_preserved;\n\nif(payload_preserved.message.type==\"text\"){\n    msg.payload = payload_preserved.message.text;\n    //msg.user = payload_preserved.from.id;\n    return [msg,null];\n}else{\n    msg.visual_recog_url = payload_preserved.message.url;\n    \n    return [null,msg];\n}\n",
 		"outputs": 2,
 		"noerr": 0,
-		"x": 487.33331298828125,
-		"y": 660.3334045410156,
+		"x": 492.33331298828125,
+		"y": 684.3334045410156,
 		"wires": [["819ebfc7.2e53f8"], ["74086a02.246f44"]]
 	}, {
 		"id": "3b5c6a69.8c067e",
@@ -423,7 +381,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "let output_msg = \"\";\n\nif(\n    msg.result &&\n    msg.result.images &&\n    msg.result.images[0] &&\n    msg.result.images[0].classifiers &&\n    msg.result.images[0].classifiers[0] &&\n    msg.result.images[0].classifiers[0].classes\n){\n    let labels = msg.result.images[0]\n                    .classifiers[0].classes;\n    labels.sort(function(a, b){\n        return b[\"score\"]-a[\"score\"];\n    });\n    labels.filter(function(item){\n        return item[\"score\"]>0.6;\n    });\n    output_msg = labels.map(function(item){\n       return item.class\n    }).join(\",\");\n}\n\nmsg.recognitionResult = output_msg;\nreturn msg;",
+		"func": "msg.flow_config.time_record.visualrecog_return = Date.now();\nlet output_msg = \"\";\n\nif(\n    msg.result &&\n    msg.result.images &&\n    msg.result.images[0] &&\n    msg.result.images[0].classifiers &&\n    msg.result.images[0].classifiers[0] &&\n    msg.result.images[0].classifiers[0].classes\n){\n    let labels = msg.result.images[0]\n                    .classifiers[0].classes;\n    labels.sort(function(a, b){\n        return b[\"score\"]-a[\"score\"];\n    });\n    labels = labels.filter(function(item){\n        return item[\"score\"]>0.6;\n    });\n    output_msg = labels.map(function(item){\n       return item.class\n    }).join(\",\");\n}\nmsg.trans = output_msg;\nmsg.recognitionResult = output_msg;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 618.3332977294922,
@@ -468,7 +426,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "\nmsg.payload = msg.visual_recog_url;\n\nreturn msg;",
+		"func": "msg.flow_config.time_record.visualrecog_call = Date.now();\nmsg.payload = msg.visual_recog_url;\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 258.33331298828125,
@@ -479,7 +437,7 @@
 		"type": "visual-recognition-v3",
 		"z": "da8f7bde.d2b408",
 		"name": "圖片辨識",
-		"apikey": "BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W",
+		"apikey": "l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v",
 		"vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
 		"image-feature": "classifyImage",
 		"lang": "en",
@@ -491,11 +449,11 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "msg.payload_preserved.recognitionResult = msg.recognitionResult;\n\nmsg.payload = msg.recognitionResult;\nmsg.user = msg.payload_preserved.from.name;\n\nreturn msg;",
+		"func": "msg.payload_preserved.recognitionResult = msg.recognitionResult;\n\nmsg.payload = msg.recognitionResult;\n//msg.user = msg.payload_preserved.from.name;\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 691.9999389648438,
-		"y": 673.3334045410156,
+		"x": 696.9999389648438,
+		"y": 697.3334045410156,
 		"wires": [["819ebfc7.2e53f8"]]
 	}, {
 		"id": "6bf9bc1d.06f314",
@@ -503,8 +461,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Line VisualRecog OUT - B",
 		"links": ["f56b8521.8e449"],
-		"x": 566.9999389648438,
-		"y": 706.0000305175781,
+		"x": 571.9999389648438,
+		"y": 730.0000305175781,
 		"wires": [["6ea8c3.db85073c"]]
 	}, {
 		"id": "74086a02.246f44",
@@ -512,8 +470,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Line VisualRecog IN - A",
 		"links": ["934c1dd5.279d5"],
-		"x": 637,
-		"y": 707.3334045410156,
+		"x": 642,
+		"y": 731.3334045410156,
 		"wires": []
 	}, {
 		"id": "3586d46d.f1b5dc",
@@ -551,19 +509,19 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1039.75,
-		"y": 604.75,
+		"x": 1044.75,
+		"y": 628.75,
 		"wires": []
 	}, {
 		"id": "819ebfc7.2e53f8",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "setting",
-		"func": "msg.params = {\n    alternate_intents: true,\n    timeout: 9*1000\n};\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
+		"func": "let workspace = msg.flow_config.watson_config[0];\nmsg.flow_config.time_record.assistant_call = Date.now();\n\nmsg.params = {\n    alternate_intents: true,\n    timeout: 9*1000,\n    \n    workspace_id: workspace.workspaceId,\n    username: workspace.username,\n    password: workspace.password,\n};\n\nmsg.flow_config.usedWorkspace = workspace.workspaceId;\nmsg.flow_config.usedWatsonName = workspace.name;\n\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 701.36669921875,
-		"y": 618,
+		"x": 716.36669921875,
+		"y": 642,
 		"wires": [["76e3c330.14a53c", "c85debdb.43b06"]]
 	}, {
 		"id": "5160cff2.1784d8",
@@ -611,8 +569,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 317.33331298828125,
-		"y": 783.3333129882812,
+		"x": 307.33331298828125,
+		"y": 796.3333740234375,
 		"wires": []
 	}, {
 		"id": "87fa54be.080148",
@@ -637,8 +595,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 846.566650390625,
-		"y": 569.7666625976562,
+		"x": 860.566650390625,
+		"y": 606.7667236328125,
 		"wires": []
 	}, {
 		"id": "3470fabc.8254fe",
@@ -649,8 +607,8 @@
 		"ret": "bin",
 		"url": "",
 		"tls": "",
-		"x": 354.3666687011719,
-		"y": 1136,
+		"x": 404.36663818359375,
+		"y": 1094,
 		"wires": [["340efc70.9569dc"]]
 	}, {
 		"id": "5c4bf8fc.707158",
@@ -660,8 +618,8 @@
 		"func": "msg.url = msg.payload;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 201.36666870117188,
-		"y": 1136.5,
+		"x": 251.36663818359375,
+		"y": 1094.5,
 		"wires": [["3470fabc.8254fe"]]
 	}, {
 		"id": "c207cd6d.45c4f8",
@@ -672,8 +630,8 @@
 		"method": "get",
 		"upload": false,
 		"swaggerDoc": "",
-		"x": 264.3666687011719,
-		"y": 1316.5,
+		"x": 291.3666687011719,
+		"y": 1779.5000610351562,
 		"wires": [["1f38697a.6db277"]]
 	}, {
 		"id": "c501bde2.42963",
@@ -683,8 +641,8 @@
 		"func": "msg.payload = [{\n\t\t\"id\": \"3fb#23EV72uAr&FAA@fy\",\n\t\t\"type\": \"CT200H\",\n\t\t\"vehicle_id\": \"ABZ-1234\",\n\t\t\"name\": \"王大明\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 2,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"是的\",\n\t\t\t\t\"time\": \"2019/09/20 10:11:50\"\n\t\t\t}\n\t\t],\n\t\t\"note\": [{\n\t\t\t\t\"msg\": \"生日\"\n\t\t\t}\n\t\t]\n\t}, {\n\t\t\"id\": \"B%UnVWu7&*7tatpL4KHr\",\n\t\t\"type\": \"ES200\",\n\t\t\"vehicle_id\": \"ABE-1234\",\n\t\t\"name\": \"陳大為\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 4,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"謝謝！！\",\n\t\t\t\t\"time\": \"2019/09/18 14:05:03\"\n\t\t\t}\n\t\t],\n\t\t\"note\": [{\n\t\t\t\t\"msg\": \"保險到期日09/26\"\n\t\t\t}\n\t\t]\n\t}, {\n\t\t\"id\": \"UWtqzPU9@&smq9b&KVvf\",\n\t\t\"type\": \"RX450H\",\n\t\t\"vehicle_id\": \"ACE-8866\",\n\t\t\"name\": \"林小東\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 0,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"感謝您！\",\n\t\t\t\t\"time\": \"2019/09/21 08:05:15\"\n\t\t\t}\n\t\t],\n\t\t\"note\": []\n\t}, {\n\t\t\"id\": \"KEpz5bFFx&mnzd5UZfZf\",\n\t\t\"type\": \"GS300\",\n\t\t\"vehicle_id\": \"LXS-8888\",\n\t\t\"name\": \"吳小涵\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 0,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"了解\",\n\t\t\t\t\"time\": \"2019/09/15 18:35:07\"\n\t\t\t}\n\t\t],\n\t\t\"note\": []\n\t}, {\n\t\t\"id\": \"Qr8zrWexwdXtbHQkV5bY\",\n\t\t\"type\": \"NX200\",\n\t\t\"vehicle_id\": \"AAA-0000\",\n\t\t\"name\": \"李小龍\",\n\t\t\"avatar\": \"/images/avatar.png\",\n\t\t\"unread\": 0,\n\t\t\"latest_msg\": [{\n\t\t\t\t\"msg\": \"您已寄出一張圖片\",\n\t\t\t\t\"time\": \"2019/09/17 12:00:44\"\n\t\t\t}\n\t\t],\n\t\t\"note\": []\n\t}\n]\n\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 566.36669921875,
-		"y": 1363,
+		"x": 593.36669921875,
+		"y": 1826.0000610351562,
 		"wires": [["770e744f.10202c"]]
 	}, {
 		"id": "7776e800.e7c17",
@@ -695,8 +653,8 @@
 		"method": "get",
 		"upload": false,
 		"swaggerDoc": "",
-		"x": 282.75,
-		"y": 1363.25,
+		"x": 309.75,
+		"y": 1826.2500610351562,
 		"wires": [["c501bde2.42963"]]
 	}, {
 		"id": "1f38697a.6db277",
@@ -706,8 +664,8 @@
 		"func": "msg.payload = {\n    \"成功與否\":\"success\",\n    \"ht_id\":\"SA0001\",\n    \"type\":\"Sales\",\n    \"經銷商\":\"AAA\",\n    \"據點別\":\"AAA\",\n    \"品牌\":\"AAA\",\n    \"帳號\":\"AAA\",\n    \"姓名\":\"AAA\"\n};\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 554.75,
-		"y": 1315.75,
+		"x": 581.75,
+		"y": 1778.7500610351562,
 		"wires": [["9bed329a.06b0a"]]
 	}, {
 		"id": "9bed329a.06b0a",
@@ -716,8 +674,8 @@
 		"name": "",
 		"statusCode": "",
 		"headers": {},
-		"x": 784.36669921875,
-		"y": 1315.75,
+		"x": 811.36669921875,
+		"y": 1778.7500610351562,
 		"wires": []
 	}, {
 		"id": "770e744f.10202c",
@@ -726,8 +684,8 @@
 		"name": "",
 		"statusCode": "",
 		"headers": {},
-		"x": 792.36669921875,
-		"y": 1362.75,
+		"x": 819.36669921875,
+		"y": 1825.7500610351562,
 		"wires": []
 	}, {
 		"id": "d7d43f31.7dc92",
@@ -737,8 +695,8 @@
 		"func": "msg.payload = {\n\t\"address\": \"AAA\",\n\t\"tel\": \"AAA\",\n\t\"生日\": \"AAA\",\n\t\"車名 SFX\": \"AAA\",\n\t\"新車交車日\": \"AAA\",\n\t\"強制任意險到期日\": \"AAA\",\n\t\"上一次待修建議\": \"AAA\",\n\t\"上一次維修紀錄\": {}\n};\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 569.61669921875,
-		"y": 1410.25,
+		"x": 596.61669921875,
+		"y": 1873.2500610351562,
 		"wires": [["751902f6.017fec"]]
 	}, {
 		"id": "f2dbad68.27f2",
@@ -749,8 +707,8 @@
 		"method": "get",
 		"upload": false,
 		"swaggerDoc": "",
-		"x": 256,
-		"y": 1410.5,
+		"x": 283,
+		"y": 1873.5000610351562,
 		"wires": [["d7d43f31.7dc92"]]
 	}, {
 		"id": "751902f6.017fec",
@@ -759,8 +717,8 @@
 		"name": "",
 		"statusCode": "",
 		"headers": {},
-		"x": 795.61669921875,
-		"y": 1410,
+		"x": 822.61669921875,
+		"y": 1873.0000610351562,
 		"wires": []
 	}, {
 		"id": "75fac16d.d7c63",
@@ -770,8 +728,8 @@
 		"func": "msg.payload = {};\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 568.61669921875,
-		"y": 1459.25,
+		"x": 595.61669921875,
+		"y": 1922.2500610351562,
 		"wires": [["6f4e1cc9.98d81c"]]
 	}, {
 		"id": "a3e20106.98852",
@@ -782,8 +740,8 @@
 		"method": "get",
 		"upload": false,
 		"swaggerDoc": "",
-		"x": 245,
-		"y": 1459.5,
+		"x": 272,
+		"y": 1922.5000610351562,
 		"wires": [["75fac16d.d7c63"]]
 	}, {
 		"id": "6f4e1cc9.98d81c",
@@ -792,8 +750,8 @@
 		"name": "",
 		"statusCode": "",
 		"headers": {},
-		"x": 794.61669921875,
-		"y": 1459,
+		"x": 821.61669921875,
+		"y": 1922.0000610351562,
 		"wires": []
 	}, {
 		"id": "c840f08e.f1f9f8",
@@ -801,8 +759,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "台北數位API (未完成)",
 		"info": "",
-		"x": 120.36666870117188,
-		"y": 1234.5,
+		"x": 147.36666870117188,
+		"y": 1697.5000610351562,
 		"wires": []
 	}, {
 		"id": "fafb17b5.e22db",
@@ -810,8 +768,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "資料庫會做的事(未完成)",
 		"info": "預計接在 socket 後的 checkEvent 之後",
-		"x": 130.75,
-		"y": 1553.75,
+		"x": 157.75,
+		"y": 2016.7500610351562,
 		"wires": []
 	}, {
 		"id": "51c5fe01.aeb88",
@@ -849,8 +807,8 @@
 		"checkall": "true",
 		"repair": false,
 		"outputs": 6,
-		"x": 234.36666870117188,
-		"y": 1678,
+		"x": 261.3666687011719,
+		"y": 2141.0000610351562,
 		"wires": [["66852488.f707fc"], ["ae634843.a4483"], ["cb492865.e7efa8"], ["62b54256.e863cc"], ["e2733ef0.e4a4"], ["96ac4787.2dafd8"]]
 	}, {
 		"id": "66852488.f707fc",
@@ -860,8 +818,8 @@
 		"func": "\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 485.36669921875,
-		"y": 1559.5,
+		"x": 512.36669921875,
+		"y": 2022.5000610351562,
 		"wires": [[]]
 	}, {
 		"id": "ae634843.a4483",
@@ -871,8 +829,8 @@
 		"func": "\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 555.36669921875,
-		"y": 1602.5,
+		"x": 582.36669921875,
+		"y": 2065.5000610351562,
 		"wires": [[]]
 	}, {
 		"id": "cb492865.e7efa8",
@@ -882,8 +840,8 @@
 		"func": "\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 527.75,
-		"y": 1646.75,
+		"x": 554.75,
+		"y": 2109.7500610351562,
 		"wires": [[]]
 	}, {
 		"id": "62b54256.e863cc",
@@ -893,8 +851,8 @@
 		"func": "\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 537.75,
-		"y": 1689.75,
+		"x": 564.75,
+		"y": 2152.7500610351562,
 		"wires": [[]]
 	}, {
 		"id": "e2733ef0.e4a4",
@@ -904,8 +862,8 @@
 		"func": "\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 537.75,
-		"y": 1736.75,
+		"x": 564.75,
+		"y": 2199.7500610351562,
 		"wires": [[]]
 	}, {
 		"id": "96ac4787.2dafd8",
@@ -915,9 +873,317 @@
 		"func": "\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 527.75,
-		"y": 1779.75,
+		"x": 554.75,
+		"y": 2242.7500610351562,
 		"wires": [[]]
+	}, {
+		"id": "a9dfd5c0.c27ac",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "DB SELECT - A",
+		"links": ["790015ce.d657ec"],
+		"x": 839.5665893554688,
+		"y": 1393.36669921875,
+		"wires": []
+	}, {
+		"id": "790015ce.d657ec",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "DB SELECT - B",
+		"links": ["a9dfd5c0.c27ac", "57a56582.e7fcdc"],
+		"x": 99.33334350585938,
+		"y": 1485.533203125,
+		"wires": [["c6971c91.d6fa6"]]
+	}, {
+		"id": "f9f20479.2a0bc",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties.service_id:service_id;\nservice_id = msg.socketIOStaticProperties?msg.socketIOStaticProperties.service_id:service_id;\n\nmsg.topic = \"call sp_select_manager_list('\"+service_id+\"');\";\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 485.99993896484375,
+		"y": 1534.333251953125,
+		"wires": [["87ad18f2.340e"]]
+	}, {
+		"id": "87ad18f2.340e",
+		"type": "mysql",
+		"z": "da8f7bde.d2b408",
+		"mydb": "fb5eb74c.718c8",
+		"name": "",
+		"x": 647.75,
+		"y": 1534.749755859375,
+		"wires": [["41f64715.cbdd"]]
+	}, {
+		"id": "8bacea17.8db53",
+		"type": "mqtt out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "socket_server_in",
+		"qos": "",
+		"retain": "",
+		"broker": "6fbdd64d.932d48",
+		"x": 493.75,
+		"y": 405.75,
+		"wires": []
+	}, {
+		"id": "3e72187a.2ba16",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nmsg.flow_config = {\n    \n    //\"HT_image_space\":\"https://s3-api.us-geo.objectstorage.softlayer.net/tytimage/LINE_images_test/\",\n    \"watson_config\": [{\n        \"name\":\"LexusBot\",\n        \"workspaceId\": \"234bf172-8356-42cc-8ec3-cb0a3dc69a0c\",\n        \"username\": \"4003aefc-79f8-4c14-a497-f720829da4f0\",\n        \"password\": \"ZYqZvVngtxaX\"\n    }],\n    \"time_record\":{\n        request_time: Date.now()\n    }\n};\nreturn {\n    payload:msg\n};\n",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 304.81671142578125,
+		"y": 405.7166442871094,
+		"wires": [["8bacea17.8db53", "7330bee2.170ed"]]
+	}, {
+		"id": "a9e46035.a4aca8",
+		"type": "mqtt in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "socket_server_in",
+		"qos": "2",
+		"broker": "6fbdd64d.932d48",
+		"x": 265.25,
+		"y": 467.3332824707031,
+		"wires": [["add17c47.5e86b", "7f1304a9.9d0f94"]]
+	}, {
+		"id": "add17c47.5e86b",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn JSON.parse(msg.payload) ;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 437.81671142578125,
+		"y": 467.716552734375,
+		"wires": [["25998a28.5db1d6"]]
+	}, {
+		"id": "2f60690b.48d72e",
+		"type": "mqtt in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "refresh_list",
+		"qos": "2",
+		"broker": "6fbdd64d.932d48",
+		"x": 190.33338928222656,
+		"y": 1534.3331909179688,
+		"wires": [["53f354c1.71475c"]]
+	}, {
+		"id": "53f354c1.71475c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn JSON.parse(msg.payload) ;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 344.9001007080078,
+		"y": 1534.7164611816406,
+		"wires": [["f9f20479.2a0bc"]]
+	}, {
+		"id": "b8cbd44b.81017",
+		"type": "mqtt out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "refresh_list",
+		"qos": "",
+		"retain": "",
+		"broker": "6fbdd64d.932d48",
+		"x": 390.83338928222656,
+		"y": 1485.7499084472656,
+		"wires": []
+	}, {
+		"id": "c6971c91.d6fa6",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn {\n    payload:msg\n};",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 211.9001007080078,
+		"y": 1485.716552734375,
+		"wires": [["b8cbd44b.81017"]]
+	}, {
+		"id": "e272f61b.67cf68",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "To DB message",
+		"func": "let message_item = msg.payload;\n\nlet message_type = message_item.message.type;\nlet content = message_type==\"text\" ? message_item.message.text : message_item.message.url;\ncontent = content.replace(/,/g,\"\\,\").replace(/\"/g,'\\\"');\nlet time = message_item.time;\nlet intent_str = message_item.intents?JSON.stringify(message_item.intents):\"\";\nlet recognition_result = message_item.recognitionResult?message_item.recognitionResult:\"\";\n\nlet direction = message_item.type;\nlet from_id = message_item.from.id;\nlet to_id = message_item.to.id;\n\nlet sql_cmd = \"call sp_send_message('\"+message_type+\"','\"+content+\"','\"+intent_str+\"','\"+recognition_result+\"','\"+time+\"','\"+direction+\"','\"+from_id+\"','\"+to_id+\"');\";\nmsg.topic = sql_cmd;\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 511.99993896484375,
+		"y": 1393.333251953125,
+		"wires": [["1ae8d72c.8133d1"]]
+	}, {
+		"id": "1ae8d72c.8133d1",
+		"type": "mysql",
+		"z": "da8f7bde.d2b408",
+		"mydb": "fb5eb74c.718c8",
+		"name": "",
+		"x": 706.4998779296875,
+		"y": 1394.2499084472656,
+		"wires": [["a9dfd5c0.c27ac"]]
+	}, {
+		"id": "7330bee2.170ed",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "TO mqtt",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 460.33331298828125,
+		"y": 351.3333435058594,
+		"wires": []
+	}, {
+		"id": "7f1304a9.9d0f94",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "FROM mqtt",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 458.75,
+		"y": 512.75,
+		"wires": []
+	}, {
+		"id": "6579975e.23f748",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "To DB - B",
+		"links": ["e73955f.a0daf28"],
+		"x": 98.76654052734375,
+		"y": 1345.6999206542969,
+		"wires": [["a00bebdf.2a3f28"]]
+	}, {
+		"id": "e73955f.a0daf28",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "To DB - A",
+		"links": ["6579975e.23f748"],
+		"x": 1363.7666015625,
+		"y": 797.6833190917969,
+		"wires": []
+	}, {
+		"id": "3186f49a.7a9a8c",
+		"type": "mqtt out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "to_db",
+		"qos": "",
+		"retain": "",
+		"broker": "6fbdd64d.932d48",
+		"x": 350.41668701171875,
+		"y": 1345.4165954589844,
+		"wires": []
+	}, {
+		"id": "a00bebdf.2a3f28",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn {\n    payload:msg\n};",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 191.4833984375,
+		"y": 1345.3832397460938,
+		"wires": [["3186f49a.7a9a8c"]]
+	}, {
+		"id": "617cbca0.3f0ef4",
+		"type": "mqtt in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "to_db",
+		"qos": "2",
+		"broker": "6fbdd64d.932d48",
+		"x": 149.91668701171875,
+		"y": 1392.9998779296875,
+		"wires": [["cc914187.b5e2c"]]
+	}, {
+		"id": "cc914187.b5e2c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn JSON.parse(msg.payload) ;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 324.4833984375,
+		"y": 1393.3831481933594,
+		"wires": [["e272f61b.67cf68"]]
+	}, {
+		"id": "da8710c2.1128f8",
+		"type": "socketio-out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "d5c1b5fd.4dfad8",
+		"x": 1074.3333740234375,
+		"y": 1534.2666625976562,
+		"wires": []
+	}, {
+		"id": "41f64715.cbdd",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "BroadCast List to Room",
+		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"update conversatoin list\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\n\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 866.4332885742188,
+		"y": 1535.0332946777344,
+		"wires": [["da8710c2.1128f8"]]
+	}, {
+		"id": "57a56582.e7fcdc",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "DB SELECT - A",
+		"links": ["790015ce.d657ec"],
+		"x": 1097,
+		"y": 411,
+		"wires": []
+	}, {
+		"id": "80a809bc.3b29d8",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "DB dealing",
+		"info": "",
+		"x": 155.5,
+		"y": 1256,
+		"wires": []
+	}, {
+		"id": "18e8a0af.9bf46f",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "###ERROR###",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "error",
+		"x": 459.566650390625,
+		"y": 226.56666564941406,
+		"wires": []
+	}, {
+		"id": "40a4725f.3009cc",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "register service",
+		"func": "let service_id = msg.payload.service_id;\n\nmsg.payload = {\n    room: service_id\n};\nmsg.socketIOAddStaticProperties = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties:{};\nmsg.socketIOAddStaticProperties.service_id = service_id;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 968.3333129882812,
+		"y": 376.73333740234375,
+		"wires": [["2764b3f4.fc8cf4", "57a56582.e7fcdc"]]
+	}, {
+		"id": "2764b3f4.fc8cf4",
+		"type": "socketio-join",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"server": "4419a078.23234",
+		"x": 1165.9500122070312,
+		"y": 376.9833984375,
+		"wires": []
 	}, {
 		"id": "d5c1b5fd.4dfad8",
 		"type": "socketio-config",
@@ -934,6 +1200,14 @@
 		"sendClient": "true",
 		"path": "/socket.io",
 		"bindToNode": true
+	}, {
+		"id": "fb5eb74c.718c8",
+		"type": "MySQLdatabase",
+		"z": "",
+		"host": "127.0.0.1",
+		"port": "3306",
+		"db": "db_lexus_cs",
+		"tz": ""
 	}, {
 		"id": "6fbdd64d.932d48",
 		"type": "mqtt-broker",

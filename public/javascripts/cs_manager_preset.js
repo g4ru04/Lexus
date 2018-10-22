@@ -25,13 +25,17 @@ function set_manager_socket(){
 	
 	Connection.init = function(){
 		Connection.socket = io('http://localhost:1880/');
-		Connection.customer_name = null;
-		Connection.room_name = null;
-		Connection.service_name = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
+		Connection.client_id = null;
+		//Connection.room_name = null;
+		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		
 		Connection.end_point = "service" ;
 		Connection.conn = false ;
 		Connection.set_listener();
+		Connection.socket.emit("register service",{
+			type : Connection.end_point,
+			service_id : Connection.service_id,
+		});
 	}
 	
 	Connection.is_connect = function(){
@@ -41,6 +45,7 @@ function set_manager_socket(){
 	Connection.set_listener = function(){
 		
 		Connection.socket.on('message', function (data) {
+			console.log(data);
 			reiceive_msg(data);
 		});
 		
@@ -48,42 +53,56 @@ function set_manager_socket(){
 			reiceive_msg('已斷線');
 		});
 		
-		Connection.socket.on('enter', function () {
+		Connection.socket.on('enter', function (data) {
 			Connection.conn = true;
-			reiceive_msg("與 '"+Connection.customer_name+"' 連線成功");
+			reiceive_msg("與 '"+Connection.client_id+"' 連線成功");
 		});
 		
 		Connection.socket.on('reconnect', function () {
 			Connection.conn = true;
 			reiceive_msg("重新連接");
-			reiceive_msg(Connection.room_name);
-			Connection.socket.emit("enter", Connection.room_name);
+			//reiceive_msg(Connection.room_name);
+			Connection.socket.emit("enter",{
+				type : Connection.end_point,
+				client_id : Connection.client_id,
+				service_id : Connection.service_id,
+			});
 		});
 		
 		Connection.socket.on('leave', function () {
-			console.log("leave");
-			console.log(Connection.next_customer_name);
-			console.log(Connection.customer_name);
-			if(Connection.next_customer_name){
-				Connection.room_name = Connection.next_customer_name+"_"+Connection.service_name
-				Connection.socket.emit("enter", Connection.room_name);
+			console.log("leave: "+Connection.client_id);
+			console.log("join: "+Connection.next_client_id);
+			if(Connection.next_client_id){
+				//Connection.room_name = Connection.next_client_id+"_"+Connection.service_id;
+				Connection.socket.emit("enter", {
+					type : Connection.end_point,
+					client_id : Connection.next_client_id,
+					service_id : Connection.service_id
+				});
 			}
-			Connection.customer_name = Connection.next_customer_name;
-			Connection.next_customer_name = null;
+			Connection.client_id = Connection.next_client_id;
+			Connection.next_client_id = null;
+		});
+		
+		Connection.socket.on('update conversatoin list', function (data) {
+			setTimeout(function(){
+				update_conversatoin_list(data[0]);
+			},100);
+			
 		});
 		
 	}
 	
 	Connection.send_text = function(message){
-		if(Connection.customer_name){
+		if(Connection.client_id){
 			Connection.socket.emit("message", {
 				"type": Connection.end_point,
 				"from": {
-					"name": Connection.service_name,
+					"id": Connection.service_id,
 					"avatar":"/images/avatar.png"
 				},
 				"to": {
-					"name": Connection.customer_name,
+					"id": Connection.client_id,
 					"avatar":"/images/avatar.png"
 				},
 				"time": Date.now(),
@@ -98,10 +117,14 @@ function set_manager_socket(){
 		}
 	}
 	
-	Connection.change_customer = function(customer_id){
-		console.log(customer_id);
-		Connection.next_customer_name = customer_id;
-		Connection.socket.emit('leave',Connection.room_name);
+	Connection.change_customer = function(client_id){
+		console.log(client_id);
+		Connection.next_client_id = client_id;
+		Connection.socket.emit('leave',{
+			type : Connection.end_point,
+			client_id : Connection.client_id,
+			service_id : Connection.service_id
+		});
 	}
 	
 	Connection.get_history_unread = function(){
@@ -117,6 +140,43 @@ function set_manager_socket(){
 	}
 	
 	Connection.init();
+}
+
+function update_conversatoin_list(conversatoin_data){
+	console.log("draw_conversatoin_list");
+	let div_html = conversatoin_data.reduce(function(div_html,item){
+		let note = item.note &&  item.note.length>0
+								?"<div class='note' title=''>"
+									+"<div class='tooltip'>重要提醒"
+										+"<span class='tooltiptext'>"
+											+item.note.map(function(item){return item.msg;})+
+										+"</span>"
+									+"</div>"
+								+"</div>"
+								:"";
+		
+		div_html +=
+				`<div class='list_element' customer_id='${item.customer_id}'>
+						<div class="img" alt="">
+							<img src="${item.avator}" alt="">
+						</div>
+						<div class='chat_body'>
+							<div class="title">
+								${item.conversation_title}
+							</div>
+							<div class="msg">
+								${item.last_message}
+							</div>
+						</div>
+						${item.unread?"<div class='unread'>"+item.unread+"</div>":""}
+						${note}
+					</div>`;
+		return div_html;
+	},"");
+	
+	$(".cs_manager_list_container").html(div_html);
+	console.log(conversatoin_data);
+	console.log(div_html);
 }
 
 //金牌話術

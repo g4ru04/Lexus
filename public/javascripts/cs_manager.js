@@ -26,13 +26,13 @@ $( function() {
 		$(".cs_manager_list").toggleClass("hide_view");
 		$(".cs_manager_dialog").toggleClass("hide_view");
 	});
-	
-	$(".list_element").click(function(){
-		
+	$( ".cs_manager_list_container" ).delegate( ".list_element", "click", function() {
+
 		let customer_id = $(this).attr("customer_id");
 		let customer_name = $(this).find(".title").text().split("/").pop();
-		Connection.change_customer(customer_id);
-		
+		if(Connection.client_id!=customer_id){
+			Connection.change_customer(customer_id);
+		}
 		$(".cs_manager_list").toggleClass("current_view");
 		$(".cs_manager_dialog").toggleClass("current_view");
 		$(".cs_manager_list").toggleClass("hide_view");
