@@ -5,14 +5,9 @@ $( function() {
 	emotion_setting();
 	menu_setting();
 	
-	fetch('api/json/tl')
-		.then(function(response) {
-			return response.json();
-		}).then(function(myJson) {
-			talk_tricks_setting(myJson);
-		}).catch(function(error) {
-			console.log(error);
-		});
+	$.getJSON( "/api/json/tl", function( data ) {
+		talk_tricks_setting(data);
+	});
 	
 	set_manager_socket();
 	
@@ -156,21 +151,21 @@ function update_conversatoin_list(conversatoin_data){
 								:"";
 		
 		div_html +=
-				`<div class='list_element' customer_id='${item.customer_id}'>
-						<div class="img" alt="">
-							<img src="${item.avator}" alt="">
-						</div>
-						<div class='chat_body'>
-							<div class="title">
-								${item.conversation_title}
-							</div>
-							<div class="msg">
-								${item.last_message}
-							</div>
-						</div>
-						${item.unread?"<div class='unread'>"+item.unread+"</div>":""}
-						${note}
-					</div>`;
+				"<div class='list_element' customer_id='"+item.customer_id+"'>"
+				+'		<div class="img" alt="">'
+				+'			<img src="'+item.avator+'" alt="">'
+				+'		</div>'
+				+'		<div class="chat_body">'
+				+'			<div class="title">'
+				+					item.conversation_title
+				+'			</div>'
+				+'			<div class="msg">'
+				+					item.last_message
+				+'			</div>'
+				+'		</div>'
+				+			(item.unread?"<div class='unread'>"+item.unread+"</div>":"")
+				+			note
+				+'	</div>';
 		return div_html;
 	},"");
 	
@@ -183,7 +178,7 @@ function update_conversatoin_list(conversatoin_data){
 function talk_tricks_setting(data){
 	
 	let talk_tricks_str = data.map(function(item){
-		return `<a class='talk_trick'>${item}</a>`;
+		return "<a class='talk_trick'>"+item+"</a>";
 	}).join("");
 	
 	$("#talk_tricks_container").html(talk_tricks_str);
@@ -215,7 +210,7 @@ function menu_setting(){
 				
 			}else{
 				navigator.mediaDevices.getUserMedia({ video: true}).
-					then((stream) => { 
+					then(function(stream) { 
 						window.stream = stream;
 						document.querySelector('video').srcObject = stream;
 					});	

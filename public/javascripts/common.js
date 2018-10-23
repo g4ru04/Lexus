@@ -3,9 +3,9 @@ function emotion_setting(){
 	let emotion_icon_list=['1f60a.png','1f60c.png','1f60d.png','1f60f.png','1f61a.png',
 							'1f61c.png','1f61d.png','1f61e.png','1f62a.png','1f62d.png']
 	let emotion_str = emotion_icon_list.map(function(icon_name){
-		return `<a href='#' onclick="alert(\'${icon_name}\')">
-			<img src='/images/${icon_name}'>
-		</a>`;
+		return '<a href="#" onclick="alert(\''+icon_name+'\')">'
+			+'<img src="/images/'+icon_name+'">'
+		+'</a>';
 	})
 	$("#emoticon_container").html(emotion_str);
 	
@@ -58,21 +58,21 @@ function produce_dialog_element(message) {
 	}
 	
 	
-	return `<div class="dialog dialog--${message.type} clearfix">
-		<div class="dialog__profile">
-			<div class="dialog__profileImage"><img src="${message.from.avatar}"></div>
-			<div class="dialog__profileName">${message.from.id}</div>
-		</div>
-		<div class="dialog__content">
-			<div class="dialogPop">
-				<p class="dialogPop__comment">${message_str}</p>
-			</div>
-			<div class="dialogTips">
-				<div class="dialogTips__read"></div>
-				<div class="dialogTips__time">${the_time.getHours()}:${the_time.getMinutes()}</div>
-			</div>
-		</div>
-	</div>`;
+	return '<div class="dialog dialog--'+message.type+' clearfix">'
+		+'<div class="dialog__profile">'
+		+'	<div class="dialog__profileImage"><img src="'+message.from.avatar+'"></div>'
+		+'	<div class="dialog__profileName">'+message.from.id+'</div>'
+		+'	</div>'
+		+'	<div class="dialog__content">'
+		+'		<div class="dialogPop">'
+		+'			<p class="dialogPop__comment">'+message_str+'</p>'
+		+'		</div>'
+		+'		<div class="dialogTips">'
+		+'			<div class="dialogTips__read"></div>'
+		+'			<div class="dialogTips__time">'+the_time.getHours()+":"+the_time.getMinutes()+'</div>'
+		+'		</div>'
+		+'	</div>'
+		+'</div>';
 }
 
 //click or event 使用
@@ -103,11 +103,10 @@ function send_image_msg(url){
 }
 
 function set_dialog(){
-	let loading_bar = `
-		<div class="loading_div">
-			<img src="/images/loading.gif" />
-		</div>
-	`;
+	let loading_bar = 
+		'<div class="loading_div">'
+			'<img src="/images/loading.gif" />'
+		'</div>';
 	$("#console").html(loading_bar);
 	$("#console").on("touchstart", function(e) {
 		// 判断默认行为是否可以被禁用
