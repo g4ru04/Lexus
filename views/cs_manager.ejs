@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="/stylesheets/common.css">
 		
 		<script>
+			var socket_server_ip = '<%= socket_server_ip  %>';
 		</script>
 	</head>
 	<body>
@@ -24,7 +25,7 @@
 			</div>
 			<div class='cs_manager_list_container'>
 				<% list_data.forEach(function (item) { %>
-					<div class='list_element' customer_id='<%= item.id %>'>
+					<div class='list_element' customer_id='<%= item.id %>' style='opacity:0.2;'>
 						<div class="img" alt="">
 							<img src="<%= item.avatar %>" alt="">
 						</div>

@@ -14,7 +14,7 @@ function set_customer_socket(){
 	Connection = {}
 	
 	Connection.init = function(){
-		Connection.socket = io('http://localhost:1880/');
+		Connection.socket = io(socket_server_ip);
 		Connection.client_id  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
 		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		//Connection.room_name = Connection.client_id+"_"+Connection.service_name;

@@ -19,7 +19,7 @@ function set_manager_socket(){
 	Connection = {}
 	
 	Connection.init = function(){
-		Connection.socket = io('http://localhost:1880/');
+		Connection.socket = io(socket_server_ip);
 		Connection.client_id = null;
 		//Connection.room_name = null;
 		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
@@ -170,8 +170,7 @@ function update_conversatoin_list(conversatoin_data){
 	},"");
 	
 	$(".cs_manager_list_container").html(div_html);
-	console.log(conversatoin_data);
-	console.log(div_html);
+	
 }
 
 //金牌話術
