@@ -20,55 +20,31 @@ function set_manager_socket(){
 	
 	Connection.init = function(){
 		Connection.socket = io(socket_server_ip);
-		Connection.client_id = null;
-		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		
 		Connection.end_point = "service" ;
+		Connection.client_id  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
+		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		Connection.conn = false ;
-		
 		Connection.talks = [];
 		Connection.talks_history_cursor = 0;
 		
 		Connection.set_listener();
+		
+		common_conn_setting(Connection);
+		
 		Connection.socket.emit("register service",{
 			type : Connection.end_point,
 			service_id : Connection.service_id,
 		});
 	}
 	
-	Connection.is_connect = function(){
-		return Connection.socket.connected;
-	}
-	
 	Connection.set_listener = function(){
-		
-		Connection.socket.on('message', function (data) {
-			console.log(data);
-			Connection.talks_history_cursor += 1;
-			Connection.talks.push(data);
-			reiceive_msg(data);
-		});
-		
-		Connection.socket.on('disconnect', function () {
-			reiceive_msg('已斷線');
-		});
-		
 		Connection.socket.on('enter', function (data) {
 			Connection.conn = true;
-			reiceive_msg("與 '"+Connection.client_id+"' 連線成功");
+			reiceive_msg("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
 			Connection.socket.emit("get history",{});
 		});
-		
-		Connection.socket.on('reconnect', function () {
-			Connection.conn = true;
-			reiceive_msg("重新連接");
-			Connection.socket.emit("enter",{
-				type : Connection.end_point,
-				client_id : Connection.client_id,
-				service_id : Connection.service_id,
-			});
-		});
-		
+	
 		Connection.socket.on('leave', function () {
 			console.log("leave: "+Connection.client_id);
 			console.log("join: "+Connection.next_client_id);
@@ -83,48 +59,19 @@ function set_manager_socket(){
 			Connection.next_client_id = null;
 		});
 		
-		Connection.socket.on('update conversatoin list', function (data) {
-			setTimeout(function(){
-				update_conversatoin_list(data[0]);
-			},100);
-		});
-		
-		Connection.socket.on('get history', function (data) {
-			
-			Connection.talks_history_cursor += data.data.length;
-			Connection.talks = Connection.talks.concat(data.data);
-			//此為補上歷史資料
-			data.data.sort(function(a,b){
-				return b.time - a.time;
+		Connection.socket.on('reconnect', function () {
+			Connection.conn = true;
+			reiceive_msg("重新連接");
+			Connection.socket.emit("enter",{
+				type : Connection.end_point,
+				client_id : Connection.client_id,
+				service_id : Connection.service_id,
 			});
-			
-			smoothly_set_history(JSON.parse(JSON.stringify(data.data)));
-
-		});
-
-	}
-	
-	Connection.send_text = function(message){
-		if(Connection.client_id){
-			Connection.socket.emit("message", {
-				"type": Connection.end_point,
-				"from": {
-					"id": Connection.service_id,
-					"avatar":"/images/avatar.png"
-				},
-				"to": {
-					"id": Connection.client_id,
-					"avatar":"/images/avatar.png"
-				},
-				"time": Date.now(),
-				"message": {
-					"type": "text",
-					"text": message
-				}
+			Connection.socket.emit("register service",{
+				type : Connection.end_point,
+				service_id : Connection.service_id,
 			});
-		}else{
-			alert('無對象');
-		}
+		});
 	}
 	
 	Connection.change_customer = function(client_id){
@@ -135,18 +82,6 @@ function set_manager_socket(){
 			client_id : Connection.client_id,
 			service_id : Connection.service_id
 		});
-	}
-	
-	Connection.get_history = function(num){
-		num = num?num:10;
-		if(!Connection.getting_history){
-			Connection.getting_history = true;
-			$("#console .loading_div").addClass("active");
-			Connection.socket.emit("get history",{
-				"skip": Connection.talks_history_cursor,
-				"limit":num
-			});
-		}
 	}
 	
 	Connection.init();

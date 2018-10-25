@@ -1,4 +1,106 @@
 
+function common_conn_setting(conn){
+	
+	Connection.client_id = 
+			Connection.client_id || getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
+	Connection.service_id = 
+		Connection.service_id || getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
+	Connection.conn = 
+		Connection.conn || false ;
+	Connection.talks = 
+		Connection.talk || [];
+	Connection.talks_history_cursor = 
+		Connection.talks_history_cursor || 0;
+	
+	conn.is_connect = function(){
+		return conn.socket.connected;
+	}
+	conn.socket.on('disconnect', function () {
+		reiceive_msg('已斷線');
+	});
+	
+	conn.socket.on('message', function (data) {
+		console.log("socket_event: message")
+		console.log(data);
+		conn.talks_history_cursor += 1;
+		conn.talks.push(data);
+		reiceive_msg(data);
+	});
+	
+	conn.socket.on('update conversatoin list', function (data) {
+		setTimeout(function(){
+			update_conversatoin_list(data[0]);
+		},100);
+	});
+	
+	conn.socket.on('get history', function (data) {
+		
+		conn.talks_history_cursor += data.data.length;
+		conn.talks = conn.talks.concat(data.data);
+		//此為補上歷史資料
+		data.data.sort(function(a,b){
+			return b.time - a.time;
+		});
+		
+		smoothly_set_history(JSON.parse(JSON.stringify(data.data)));
+
+	});
+	
+	conn.send_text = function(message){
+		if(conn.client_id){
+			conn.socket.emit("message", {
+				"type": conn.end_point,
+				"from": {
+					"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
+					"avatar":"/images/avatar.png"
+				},
+				"to": {
+					"id": (conn.end_point=="service"?conn.client_id:conn.service_id),
+					"avatar":"/images/avatar.png"
+				},
+				"time": Date.now(),
+				"message": {
+					"type": "text",
+					"text": message
+				}
+			});
+		}else{
+			alert('無對象');
+		}
+	}
+	
+	conn.send_image = function(url){
+		conn.socket.emit("message", {
+			"type": conn.end_point,
+			"from": {
+				"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
+				"avatar":"/images/avatar.png"
+			},
+			"to": {
+				"id": (conn.end_point=="service"?conn.client_id:conn.service_id),
+				"avatar":"/images/avatar.png"
+			},
+			"time": Date.now(),
+			"message": {
+				"type": "image",
+				"url": url
+			}
+		});
+	}
+	
+	conn.get_history = function(num){
+		num = num?num:10;
+		if(!conn.getting_history){
+			conn.getting_history = true;
+			$("#console .loading_div").addClass("active");
+			conn.socket.emit("get history",{
+				"skip": conn.talks_history_cursor,
+				"limit":num
+			});
+		}
+	}
+}
+
 function emotion_setting(){
 	let emotion_icon_list=['1f60a.png','1f60c.png','1f60d.png','1f60f.png','1f61a.png',
 							'1f61c.png','1f61d.png','1f61e.png','1f62a.png','1f62d.png']
