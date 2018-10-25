@@ -17,15 +17,17 @@ function set_customer_socket(){
 		Connection.socket = io(socket_server_ip);
 		Connection.client_id  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
 		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
-		//Connection.room_name = Connection.client_id+"_"+Connection.service_name;
 		Connection.end_point = "client" ;
 		Connection.conn = false ;
 		Connection.set_listener();
+		Connection.talks = [];
+		Connection.talks_history_cursor = 0;
 		Connection.socket.emit("enter", {
 			type : Connection.end_point,
 			client_id : Connection.client_id,
 			service_id : Connection.service_id
 		});
+		
 	}
 	
 	Connection.is_connect = function(){
@@ -36,6 +38,8 @@ function set_customer_socket(){
 		
 		Connection.socket.on('message', function (data) {
 			console.log(data);
+			Connection.talks_history_cursor += 1;
+			Connection.talks.push(data);
 			reiceive_msg(data);
 		});
 		
@@ -46,6 +50,8 @@ function set_customer_socket(){
 		Connection.socket.on('enter', function () {
 			Connection.conn = true;
 			reiceive_msg("與 '"+Connection.service_id+"' 連線成功");
+			Connection.socket.emit("register client",{});
+			Connection.socket.emit("get history",{});
 		});
 		
 		Connection.socket.on('reconnect', function () {
@@ -58,6 +64,17 @@ function set_customer_socket(){
 			});
 		});
 		
+		Connection.socket.on('get history', function (data) {
+			console.log(data);
+			Connection.talks_history_cursor += data.data.length;
+			Connection.talks = Connection.talks.concat(data.data);
+			//此為補上歷史資料
+			data.data.sort(function(a,b){
+				return b.time - a.time;
+			});
+			smoothly_set_history(JSON.parse(JSON.stringify(data.data)));
+
+		});
 	}
 	
 	Connection.send_text = function(message){
@@ -75,8 +92,7 @@ function set_customer_socket(){
 			"message": {
 				"type": "text",
 				"text": message
-			},
-			//"command": []
+			}
 		});
 	}
 	
@@ -95,17 +111,20 @@ function set_customer_socket(){
 			"message": {
 				"type": "image",
 				"url": url
-			},
-			//"command": []
+			}
 		});
 	}
 	
-	Connection.get_history = function(){
-		
-	}
-	
-	Connection.get_history_last = function(){
-		
+	Connection.get_history = function(num){
+		num = num?num:10;
+		if(!Connection.getting_history){
+			Connection.getting_history = true;
+			$("#console .loading_div").addClass("active");
+			Connection.socket.emit("get history",{
+				"skip": Connection.talks_history_cursor,
+				"limit":num
+			});
+		}
 	}
 	
 	Connection.init();

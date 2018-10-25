@@ -26,21 +26,25 @@ $( function() {
 		$(".cs_manager_list").toggleClass("hide_view");
 		$(".cs_manager_dialog").toggleClass("hide_view");
 	});
+	
 	$( ".cs_manager_list_container" ).delegate( ".list_element", "click", function() {
 
+		$(".list_element").removeClass("active");
+		$(this).addClass("active");
 		let customer_id = $(this).attr("customer_id");
 		let customer_name = $(this).find(".title").text().split("/").pop();
-		if(Connection.client_id!=customer_id){
-			Connection.change_customer(customer_id);
-		}
 		$(".cs_manager_list").toggleClass("current_view");
 		$(".cs_manager_dialog").toggleClass("current_view");
 		$(".cs_manager_list").toggleClass("hide_view");
 		$(".cs_manager_dialog").toggleClass("hide_view");
-	
-		$(".dialog--client .dialog__profileName").text(customer_name);
-		$(".header_content .txt").html(customer_name);
-		
+		if(Connection.client_id!=customer_id){
+			Connection.change_customer(customer_id);
+			$(".header_content .txt").html(customer_name);
+			$("#console").html(
+				'<div class="loading_div">'+
+					'<img src="/images/loading.gif" />'+
+				'</div>');
+		}	
 	});
-	
+	set_dialog_trigger();
 } );

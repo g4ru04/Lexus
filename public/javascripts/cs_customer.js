@@ -2,7 +2,7 @@
 
 $( function() {
 	
-	set_dialog();
+	set_dialog_trigger();
 	
 	$(".btn-search").click(function(){
 		send_text_msg();

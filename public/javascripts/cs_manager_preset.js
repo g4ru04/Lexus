@@ -21,11 +21,14 @@ function set_manager_socket(){
 	Connection.init = function(){
 		Connection.socket = io(socket_server_ip);
 		Connection.client_id = null;
-		//Connection.room_name = null;
 		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		
 		Connection.end_point = "service" ;
 		Connection.conn = false ;
+		
+		Connection.talks = [];
+		Connection.talks_history_cursor = 0;
+		
 		Connection.set_listener();
 		Connection.socket.emit("register service",{
 			type : Connection.end_point,
@@ -41,6 +44,8 @@ function set_manager_socket(){
 		
 		Connection.socket.on('message', function (data) {
 			console.log(data);
+			Connection.talks_history_cursor += 1;
+			Connection.talks.push(data);
 			reiceive_msg(data);
 		});
 		
@@ -51,12 +56,12 @@ function set_manager_socket(){
 		Connection.socket.on('enter', function (data) {
 			Connection.conn = true;
 			reiceive_msg("與 '"+Connection.client_id+"' 連線成功");
+			Connection.socket.emit("get history",{});
 		});
 		
 		Connection.socket.on('reconnect', function () {
 			Connection.conn = true;
 			reiceive_msg("重新連接");
-			//reiceive_msg(Connection.room_name);
 			Connection.socket.emit("enter",{
 				type : Connection.end_point,
 				client_id : Connection.client_id,
@@ -68,7 +73,6 @@ function set_manager_socket(){
 			console.log("leave: "+Connection.client_id);
 			console.log("join: "+Connection.next_client_id);
 			if(Connection.next_client_id){
-				//Connection.room_name = Connection.next_client_id+"_"+Connection.service_id;
 				Connection.socket.emit("enter", {
 					type : Connection.end_point,
 					client_id : Connection.next_client_id,
@@ -83,9 +87,21 @@ function set_manager_socket(){
 			setTimeout(function(){
 				update_conversatoin_list(data[0]);
 			},100);
-			
 		});
 		
+		Connection.socket.on('get history', function (data) {
+			
+			Connection.talks_history_cursor += data.data.length;
+			Connection.talks = Connection.talks.concat(data.data);
+			//此為補上歷史資料
+			data.data.sort(function(a,b){
+				return b.time - a.time;
+			});
+			
+			smoothly_set_history(JSON.parse(JSON.stringify(data.data)));
+
+		});
+
 	}
 	
 	Connection.send_text = function(message){
@@ -104,8 +120,7 @@ function set_manager_socket(){
 				"message": {
 					"type": "text",
 					"text": message
-				},
-				//"command": []
+				}
 			});
 		}else{
 			alert('無對象');
@@ -122,16 +137,16 @@ function set_manager_socket(){
 		});
 	}
 	
-	Connection.get_history_unread = function(){
-		
-	}
-	
-	Connection.get_history_last = function(){
-		
-	}
-	
-	Connection.get_history_unread = function(){
-		
+	Connection.get_history = function(num){
+		num = num?num:10;
+		if(!Connection.getting_history){
+			Connection.getting_history = true;
+			$("#console .loading_div").addClass("active");
+			Connection.socket.emit("get history",{
+				"skip": Connection.talks_history_cursor,
+				"limit":num
+			});
+		}
 	}
 	
 	Connection.init();
@@ -151,7 +166,8 @@ function update_conversatoin_list(conversatoin_data){
 								:"";
 		
 		div_html +=
-				"<div class='list_element' customer_id='"+item.customer_id+"'>"
+				"<div class='list_element "+(Connection.client_id == item.customer_id?"active":"")+"'"
+				+"		 customer_id='"+item.customer_id+"'>"
 				+'		<div class="img" alt="">'
 				+'			<img src="'+item.avator+'" alt="">'
 				+'		</div>'
@@ -163,6 +179,7 @@ function update_conversatoin_list(conversatoin_data){
 				+					item.last_message
 				+'			</div>'
 				+'		</div>'
+				+			"<div class='timestamp'>"+displayChatTime(item.last_talk_time)+"&nbsp;</div>"
 				+			(item.unread?"<div class='unread'>"+item.unread+"</div>":"")
 				+			note
 				+'	</div>';

@@ -15,7 +15,6 @@ function emotion_setting(){
 }
 
 function produce_dialog_element(message) {
-	console.log(message);
 	if(message.from==null || message.message==null){
 		return JSON.stringify(message,null,"    ")
 				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")
@@ -69,15 +68,31 @@ function produce_dialog_element(message) {
 		+'		</div>'
 		+'		<div class="dialogTips">'
 		+'			<div class="dialogTips__read"></div>'
-		+'			<div class="dialogTips__time">'+the_time.getHours()+":"+the_time.getMinutes()+'</div>'
+		+'			<div class="dialogTips__time">'
+		+				displayChatTime(the_time)
+		+'			</div>'
 		+'		</div>'
 		+'	</div>'
 		+'</div>';
 }
 
+function smoothly_set_history(data){
+	if(data.length>0){
+		setTimeout(function(){
+			let item = data.shift();
+			$("#console .loading_div").after(
+				produce_dialog_element(item)
+			);
+			smoothly_set_history(data)
+		},100);
+	}else{
+		Connection.getting_history = false;
+		$("#console .loading_div").removeClass("active")
+	}
+}
+
 //click or event 使用
 function reiceive_msg(message){
-	console.log(message);
 	$("#console").append(produce_dialog_element(message));
 	$("#console").scrollTop($('#console')[0].scrollHeight);
 }
@@ -85,7 +100,7 @@ function reiceive_msg(message){
 //click or event 使用
 function send_text_msg(){
 	
-	if(Connection){
+	if(Connection&&$("input.input.msg").val().length>0){
 		Connection.send_text($("input.input.msg").val());
 		$("input.input.msg").val('');
 	}
@@ -102,12 +117,22 @@ function send_image_msg(url){
 	
 }
 
-function set_dialog(){
-	let loading_bar = 
-		'<div class="loading_div">'
-			'<img src="/images/loading.gif" />'
-		'</div>';
-	$("#console").html(loading_bar);
+function set_dialog_trigger(){
+	//讀歷史紀錄trigger
+	let element = document.getElementById("console");
+	if(navigator.userAgent.indexOf("Firefox") !== -1){
+		element.addEventListener("DOMMouseScroll",wheelHandler,false);
+	}
+	element.onmousewheel = wheelHandler;
+
+	function wheelHandler(event){ 
+		event = event || window.event; 
+		var delta = event.wheelDelta || event.detail*-30;
+		if(delta>0 && $("#console").scrollTop()==0){
+			Connection.get_history();
+		}
+	}
+	
 	$("#console").on("touchstart", function(e) {
 		// 判断默认行为是否可以被禁用
 		if (e.cancelable) {
@@ -132,13 +157,11 @@ function set_dialog(){
 		X = moveEndX - startX,
 		Y = moveEndY - startY;
 		if ( Y > 0 ) {
-			$("#console .loading_div").addClass("active");
-			setTimeout(function(){
-				$("#console .loading_div").removeClass("active")
-			},2000);  
+			Connection.get_history();
 		}
 		
 	});
+	
 }
 
 function warningMsg(title, msg) {
@@ -153,6 +176,11 @@ function warningMsg(title, msg) {
 			}
 		}]
 	});
+}
+
+function displayChatTime(time){
+	let the_time = new Date(time);
+	return (Array(2).join("0") +the_time.getHours()).slice(-2) +":"+ (Array(2).join("0") +the_time.getMinutes()).slice(-2)
 }
 
 function getUrlParameter(name, url) {
