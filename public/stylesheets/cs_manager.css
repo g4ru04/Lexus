@@ -41,7 +41,7 @@
 .cs_manager_list{
 	width:calc(30vw);
 	float:left;
-	transition: width 0.3s;
+	/*transition: width 0.3s;*/
 	height: calc( 100vh - 50px );
 	min-width:340px;
 }
@@ -54,8 +54,9 @@
 .cs_manager_dialog{
 	width:calc(60vw);
 	float:left;
-	transition: width 0.3s;
+	/*transition: width 0.3s;*/
 	overflow:hidden;
+	max-width: calc( 100vw - 380px);
 }
 .dialog__profileImage > img {
     max-width: 60px;
@@ -66,6 +67,9 @@
 	display: block;
 	width: 100%;
 	border: 1px solid #ddd;
+}
+.list_element.active{
+	background-color:#fef;
 }
 .img{
 	text-align: center;
@@ -111,7 +115,12 @@
 	padding:4px;
 	margin: 4px;
 }
-
+.timestamp{
+	position: relative;
+	top: calc( 100% - 20px );
+	text-align: right;
+	height: 0px;
+}
 /* 
 	CTBC style for dialog
 	from view-source:https://webchat.ctbcbank.com/webchat/resources/css/main.css
@@ -123,6 +132,7 @@
 	float: left;
 	margin-left: 20px;
 	border-top-left-radius: 0;
+	background-color: #D6D6D6;
 }
 .dialog--client .dialog__content:after {
 	left: -15px;
@@ -288,6 +298,9 @@ ul.select-line hr {
 	.dialog--service .dialog__profile {
 		right: -70px;
 	}
+	.cs_manager_dialog{
+		max-width:none;
+	}
 }
 @media (max-width: 768px) {
 	.current_view{
@@ -313,5 +326,8 @@ ul.select-line hr {
 	}
 	.dialog--service .dialog__profile {
 		right: -70px;
+	}
+	.cs_manager_dialog{
+		max-width:none;
 	}
 }

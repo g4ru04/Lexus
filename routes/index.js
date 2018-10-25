@@ -33,6 +33,22 @@ router.get('/serv_fin.do', function(req, res, next) {
   res.render('cs_manager_fin');
 });
 
+router.get('/demo.do', function(req, res, next) {
+  res.send(`<html>
+		<head>
+			<title>Frames</title>
+		</head>
+		<frameset cols="*,500px,500px,500px">
+			<frame>
+			<frame name="upper_right" src="/cust.do?c=QzAwMDM=&s=U0UwMDAx">
+			<frame name="upper_right" src="/cust.do?c=QzAwMDE=&s=U0UwMDAx">
+			<frame name="lower_right" src="/serv.do">
+		</frameset> 
+	</html>`);
+});
+
+
+
 router.get('/api/json/sl', common.getSl);
 router.get('/api/json/dl', common.getDl);
 router.get('/api/json/tl', common.getTl);
