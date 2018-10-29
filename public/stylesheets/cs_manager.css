@@ -74,6 +74,8 @@
 .img{
 	text-align: center;
 	height: inherit;
+	max-height:100%;
+	width:60px;
 }
 .chat_body .title{
 	padding-top:6px;
@@ -248,16 +250,31 @@ ul.select-line hr {
 	height:0px;
 	overflow: hidden;
 	transition: height 0.3s;
+	background-color: rgba(255, 200, 200, .4);
 }
 #talk_tricks_container.enable{
-	height:50px;
+	height:auto;
 	line-height:50px;
+	border-bottom: 1px solid #ddd;
+}
+#talk_tricks_container.enable .talk_tricks_edit{
+	float:right;
+	width: 30px;
+	height: 30px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-image:url(/images/edit.png);
+	cursor: pointer;
+	margin-right: 15px;
 }
 .talk_trick{
-	margin:8px;
+	margin:4px;
 	border: 2px solid #ccc;
-    border-radius: 16px;
-	padding: 10px;
+    border-radius: 7px;
+	padding: 6px;
+	background-color: #eee;
+	line-height: 20px;
+	float:left;
 }
 .heder_service {
     position: relative;

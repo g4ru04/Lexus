@@ -94,7 +94,8 @@
 					
 					<!-- 金牌話術(隱) -->
 					<div>
-						<div id='talk_tricks_container'></div>
+						<div id='talk_tricks_container'>
+						</div>
 					</div>
 					<!-- 表情符號(隱) -->
 					<div>
@@ -107,6 +108,8 @@
 							</a>
 							<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
 							</a>
+							<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
+							<a id='dial_phone' href="tel:+886-919863010" style='display:none;'>0919863010</a>
 							<input class="input msg" placeholder="你想問什麼？" maxlength="30" avalon-events="" type="text">
 							<a href="javascript:void(0)" class="btn-mic" avalon-events="">
 								<span class="btn-search">
@@ -122,6 +125,8 @@
 			<!-- Div After click "相機"-->
 			<div id='video_container'>
 				<video autoplay></video>
+			</div>
+			<div id='talk_tricks_editor'>
 			</div>
 		</div>
 		

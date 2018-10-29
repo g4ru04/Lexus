@@ -17,7 +17,7 @@ router.get('/serv.do', function(req, res, next) {
   if(req.query.s==null){
 	  res.render('cs_manager_login');
   }else{
-    let func_list =["金牌話術","訊息推播","照片","相機","撥打","出價","車主資料","常用訊息"];
+    let func_list =["金牌話術","_訊息推播","照片","相機","撥打電話","_預約","_車主資料"/*,"常用訊息"*/];
   
     let list_data = require('../service/specialist.json', 'utf-8');
     res.render('cs_manager',{

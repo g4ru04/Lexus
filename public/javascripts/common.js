@@ -1,22 +1,28 @@
 
 function common_conn_setting(conn){
 	
-	Connection.client_id = 
-			Connection.client_id || getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
-	Connection.service_id = 
-		Connection.service_id || getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
-	Connection.conn = 
-		Connection.conn || false ;
-	Connection.talks = 
-		Connection.talk || [];
-	Connection.talks_history_cursor = 
-		Connection.talks_history_cursor || 0;
+	conn.client_id = 
+			conn.client_id || (getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID());
+	conn.service_id = 
+		conn.service_id || (getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID());
+	conn.conn = 
+		conn.conn || (false) ;
+	conn.talks = 
+		conn.talk || ([]);
+	conn.talks_history_cursor = 
+		conn.talks_history_cursor || (0);
+	
+	conn.reiceive_msg =
+		conn.reiceive_msg || function (message){
+								$("#console").append(produce_dialog_element(message));
+								$("#console").scrollTop($('#console')[0].scrollHeight);
+							}
 	
 	conn.is_connect = function(){
 		return conn.socket.connected;
 	}
 	conn.socket.on('disconnect', function () {
-		reiceive_msg('已斷線');
+		my_console('已斷線');
 	});
 	
 	conn.socket.on('message', function (data) {
@@ -24,7 +30,7 @@ function common_conn_setting(conn){
 		console.log(data);
 		conn.talks_history_cursor += 1;
 		conn.talks.push(data);
-		reiceive_msg(data);
+		conn.reiceive_msg(data);
 	});
 	
 	conn.socket.on('update conversatoin list', function (data) {
@@ -47,16 +53,18 @@ function common_conn_setting(conn){
 	});
 	
 	conn.send_text = function(message){
+		let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
+		let client_icon = "/images/avatar.png";
 		if(conn.client_id){
 			conn.socket.emit("message", {
 				"type": conn.end_point,
 				"from": {
 					"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
-					"avatar":"/images/avatar.png"
+					"avatar":(conn.end_point=="service"?service_icon:client_icon)
 				},
 				"to": {
 					"id": (conn.end_point=="service"?conn.client_id:conn.service_id),
-					"avatar":"/images/avatar.png"
+					"avatar":(conn.end_point=="service"?service_icon:client_icon)
 				},
 				"time": Date.now(),
 				"message": {
@@ -70,15 +78,17 @@ function common_conn_setting(conn){
 	}
 	
 	conn.send_image = function(url){
+		let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
+		let client_icon = "/images/avatar.png";
 		conn.socket.emit("message", {
 			"type": conn.end_point,
 			"from": {
 				"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
-				"avatar":"/images/avatar.png"
+				"avatar":(conn.end_point=="service"?service_icon:client_icon)
 			},
 			"to": {
 				"id": (conn.end_point=="service"?conn.client_id:conn.service_id),
-				"avatar":"/images/avatar.png"
+				"avatar":(conn.end_point=="service"?service_icon:client_icon)
 			},
 			"time": Date.now(),
 			"message": {
@@ -105,10 +115,15 @@ function emotion_setting(){
 	let emotion_icon_list=['1f60a.png','1f60c.png','1f60d.png','1f60f.png','1f61a.png',
 							'1f61c.png','1f61d.png','1f61e.png','1f62a.png','1f62d.png']
 	let emotion_str = emotion_icon_list.map(function(icon_name){
-		return '<a href="#" onclick="alert(\''+icon_name+'\')">'
+		return '<a href="#" class="emotion_icon" icon_name="'+icon_name+'">'
 			+'<img src="/images/'+icon_name+'">'
 		+'</a>';
 	})
+	$("#emoticon_container").delegate( ".emotion_icon", "click", function() {
+		Connection.send_image(location.origin+'/images/'+$(this).attr("icon_name"));
+		$("#emoticon_container").toggleClass("emotionIconOn"); 
+	});
+
 	$("#emoticon_container").html(emotion_str);
 	
 	$(".btn-laugh").click(function(){
@@ -193,8 +208,7 @@ function smoothly_set_history(data){
 	}
 }
 
-//click or event 使用
-function reiceive_msg(message){
+function my_console(message){
 	$("#console").append(produce_dialog_element(message));
 	$("#console").scrollTop($('#console')[0].scrollHeight);
 }
@@ -207,6 +221,44 @@ function send_text_msg(){
 		$("input.input.msg").val('');
 	}
 	
+}
+
+function save_picture(){
+	
+	let file_val = $('#upload_picture').val();
+	let validExts = [".png",".jpg",".jpeg",".gif",".bmp"];
+	let file_ext = file_val.substring(file_val.lastIndexOf('.'))
+	if (validExts.indexOf(file_ext.toLowerCase()) < 0) {
+		$('#upload_picture').val('');
+		alert("只接受此類圖片檔案：" + validExts.join(", "));
+		return ;
+	}
+	
+	var data = new FormData();
+    $.each($('#upload_picture')[0].files, function(i, file) {
+        data.append('file-'+i, file);
+    });
+	$.ajax({
+		url: '/upload',
+		type: 'POST',
+		data: data,
+		cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+		success: function(data){
+			if(data.status=="success"){
+				send_image_msg(data.url);
+			}else{
+				alert("檔案上傳失敗");
+			}
+		},
+		error: function(xhr, status, error) {
+			console.log(xhr);
+			console.log(status);
+			console.log(error);
+		}
+	});
 }
 
 //click or event 使用

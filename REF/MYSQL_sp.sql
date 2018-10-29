@@ -65,7 +65,7 @@ BEGIN
 	
 END $$
 
-
+-- ###################################### --
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_select_manager_list $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_manager_list`(
@@ -80,7 +80,7 @@ BEGIN
 	
 END $$
 
-
+-- ###################################### --
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_bind_client $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_bind_client`(
@@ -113,7 +113,7 @@ BEGIN
 	
 END $$
 
-
+-- ###################################### --
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_select_talk_history $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_talk_history`(
@@ -153,7 +153,7 @@ BEGIN
 	
 END $$
 
-
+-- ###################################### --
 DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_select_talk_tricks $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_talk_tricks`(
@@ -174,3 +174,24 @@ BEGIN
 END $$
 
 
+-- ###################################### --
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_talk_tricks $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_talk_tricks`(
+	IN p_manager_id VARCHAR(50) , 
+	IN p_type VARCHAR(50) , 
+	IN p_dialog_id VARCHAR(20),
+	IN p_talk_tricks VARCHAR(2000)
+)
+BEGIN
+	/* 20181022 By Ben */
+	/* call sp_update_talk_tricks("SE0001","dialog","D0002",'["息怒","妳個混帳","我也是笑笑"]'); */
+	IF EXISTS (
+		SELECT talk_tricks FROM tb_talk_tricks WHERE manager_id = p_manager_id AND dialog_id = p_dialog_id
+	)THEN
+		UPDATE tb_talk_tricks SET talk_tricks = p_talk_tricks WHERE manager_id = p_manager_id AND dialog_id = p_dialog_id;
+	ELSE 
+		INSERT INTO tb_talk_tricks ( `type`, `manager_id`, `dialog_id`, `talk_tricks`) VALUES (p_type,p_manager_id,p_dialog_id,p_talk_tricks);
+	END IF;
+	
+END $$

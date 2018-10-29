@@ -38,20 +38,26 @@ function set_customer_socket(){
 		
 		Connection.socket.on('enter', function () {
 			Connection.conn = true;
-			reiceive_msg("與 '"+Connection.service_id+"' 連線成功");
+			my_console("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
 			Connection.socket.emit("register client",{});
 			Connection.socket.emit("get history",{});
 		});
 		
 		Connection.socket.on('reconnect', function () {
 			Connection.conn = true;
-			reiceive_msg("重新連接");
+			my_console("重新連接");
+			$("#console").html('<div class="loading_div"><img src="/images/loading.gif" /></div>');
 			Connection.socket.emit("enter", {
 				type : Connection.end_point,
 				client_id : Connection.client_id,
 				service_id : Connection.service_id
 			});
 		});
+	}
+	
+	Connection.reiceive_msg = function (message){
+		$("#console").append(produce_dialog_element(message));
+		$("#console").scrollTop($('#console')[0].scrollHeight);
 	}
 	
 	Connection.init();

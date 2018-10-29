@@ -29,9 +29,11 @@
 				"v": "leave"
 			}, {
 				"v": "get history"
+			}, {
+				"v": "update talk trick"
 			}
 		],
-		"x": 173.33331298828125,
+		"x": 163.33331298828125,
 		"y": 405.33331298828125,
 		"wires": [["3e72187a.2ba16"]]
 	}, {
@@ -77,14 +79,18 @@
 				"t": "eq",
 				"v": "get history",
 				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "update talk trick",
+				"vt": "str"
 			}
 		],
 		"checkall": "false",
 		"repair": false,
-		"outputs": 9,
+		"outputs": 10,
 		"x": 760.3332824707031,
 		"y": 466.3332977294922,
-		"wires": [["811411b9.d1e678"], ["40a4725f.3009cc"], ["26bbcf3e.b45328"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], ["f7ab24b2.60eaf"]]
+		"wires": [["811411b9.d1e678"], ["40a4725f.3009cc"], ["26bbcf3e.b45328"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], ["f7ab24b2.60eaf"], ["40b8e0b.9f346a"]]
 	}, {
 		"id": "ffd27283.5745f8",
 		"type": "function",
@@ -158,8 +164,8 @@
 		"type": "socketio-join",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"server": "4419a078.23234",
-		"x": 1162.699951171875,
+		"server": "d5c1b5fd.4dfad8",
+		"x": 1152.699951171875,
 		"y": 445.3333282470703,
 		"wires": []
 	}, {
@@ -167,7 +173,7 @@
 		"type": "socketio-leave",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"server": "4419a078.23234",
+		"server": "d5c1b5fd.4dfad8",
 		"x": 1165.63330078125,
 		"y": 483.8000030517578,
 		"wires": []
@@ -188,8 +194,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1163.4668579101562,
-		"y": 521.566650390625,
+		"x": 1151.466796875,
+		"y": 524.5666198730469,
 		"wires": []
 	}, {
 		"id": "bacab9aa.9e48b8",
@@ -291,7 +297,7 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1530.233642578125,
+		"x": 1510.233642578125,
 		"y": 795.5666961669922,
 		"wires": []
 	}, {
@@ -339,7 +345,7 @@
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "Config",
-		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n    3.node-red-node-mongodb\n    4.node-red-node-mysql\n\nConversation:\nHT帳號下=>Develop Assistant\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    X BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n    l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v\n",
+		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n    3.node-red-node-mongodb\n    4.node-red-node-mysql\nnpm i node-red-contrib-socketio\nnpm i node-red-node-watson\nnpm i node-red-node-mysql\nConversation:\nHT帳號下=>Develop Assistant\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    X BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n    l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v\n",
 		"x": 89.00001525878906,
 		"y": 65.66661834716797,
 		"wires": []
@@ -360,9 +366,9 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"scope": ["340efc70.9569dc"],
-		"x": 496.3332977294922,
-		"y": 1028.3332214355469,
-		"wires": [["a85903d8.bf13f8"]]
+		"x": 491.33331298828125,
+		"y": 959.333251953125,
+		"wires": [["d4b56d5f.c879a", "a85903d8.bf13f8"]]
 	}, {
 		"id": "a85903d8.bf13f8",
 		"type": "function",
@@ -371,9 +377,9 @@
 		"func": "let output_msg = \"\";\n/*\nif(msg.watsonerror.indexOf(\"Image size limit exceeded\")!=-1){\n    output_msg=\"這張圖太大了啦 看得我眼睛好痠... 能換換嗎?\";\n}else if(msg.watsonerror.indexOf(\"Key is over transaction limit\")!=-1){\n    output_msg=\"我只是個時薪120的工讀生，剛剛我已經辨識完我的工作份量了喔，今天打烊下次請早。\";\n}else if(msg.watsonerror.indexOf(\"service credentials\")!=-1){\n    output_msg=\"抱歉我看不太懂，可以用文字告訴我嗎？\";\n}else{\n    //已知原因有丟gif檔會得到 An undefined server error occurred.\n    output_msg=\"抱歉我看不太懂，可以換張圖片我看看？\";\n}*/\n\nmsg.recognitionResult = output_msg;\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 656.3332977294922,
-		"y": 1028.3332214355469,
-		"wires": [["f56b8521.8e449"]]
+		"x": 659.3333129882812,
+		"y": 970.333251953125,
+		"wires": [[]]
 	}, {
 		"id": "934c1dd5.279d5",
 		"type": "link in",
@@ -533,7 +539,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "setting",
-		"func": "let workspace = msg.flow_config.watson_config[0];\nmsg.flow_config.time_record.assistant_call = Date.now();\n\nmsg.params = {\n    alternate_intents: true,\n    timeout: 9*1000,\n    \n    workspace_id: workspace.workspaceId,\n    username: workspace.username,\n    password: workspace.password,\n};\n\nmsg.flow_config.usedWorkspace = workspace.workspaceId;\nmsg.flow_config.usedWatsonName = workspace.name;\n\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
+		"func": "let workspace = msg.flow_config.watson_config[0];\nmsg.flow_config.time_record.assistant_call = Date.now();\n\nmsg.params = {\n    //alternate_intents: true,\n    timeout: 9*1000,\n    \n    workspace_id: workspace.workspaceId,\n    username: workspace.username,\n    password: workspace.password,\n};\n\nmsg.flow_config.usedWorkspace = workspace.workspaceId;\nmsg.flow_config.usedWatsonName = workspace.name;\n\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 719.36669921875,
@@ -773,7 +779,7 @@
 		"func": "msg.flow_config.time_record.before_db_log = Date.now();\nlet message_item = msg.payload;\n\nlet message_type = message_item.message.type;\nlet content = message_type==\"text\" ? message_item.message.text : message_item.message.url;\ncontent = content.replace(/,/g,\"\\,\").replace(/\"/g,'\\\"');\nlet time = message_item.time;\nlet intent_str = message_item.intents?JSON.stringify(message_item.intents):\"\";\nlet recognition_result = message_item.recognitionResult?message_item.recognitionResult:\"\";\n\nlet direction = message_item.type;\nlet from_id = message_item.from.id;\nlet to_id = message_item.to.id;\n\nlet time_record = JSON.stringify(msg.flow_config.time_record);\n\nlet sql_cmd = \"call sp_send_message('\"+message_type+\"','\"+content+\"','\"+intent_str+\"','\"+recognition_result+\"','\"+time+\"','\"+direction+\"','\"+from_id+\"','\"+to_id+\"','\"+time_record+\"');\";\nmsg.topic = sql_cmd;\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 498.9999542236328,
+		"x": 488.9999542236328,
 		"y": 1944.333251953125,
 		"wires": [["1ae8d72c.8133d1"]]
 	}, {
@@ -880,7 +886,7 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1178.3333740234375,
+		"x": 1158.3333740234375,
 		"y": 2082.2667846679688,
 		"wires": []
 	}, {
@@ -891,7 +897,7 @@
 		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"update conversatoin list\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\n\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 960.4332885742188,
+		"x": 950.4332885742188,
 		"y": 2083.033416748047,
 		"wires": [["da8710c2.1128f8"]]
 	}, {
@@ -941,8 +947,8 @@
 		"type": "socketio-join",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"server": "4419a078.23234",
-		"x": 1172.949951171875,
+		"server": "d5c1b5fd.4dfad8",
+		"x": 1162.949951171875,
 		"y": 319.9833984375,
 		"wires": []
 	}, {
@@ -1058,7 +1064,7 @@
 		"links": ["1124f23d.19f7b6"],
 		"x": 75.44996643066406,
 		"y": 1763.60009765625,
-		"wires": [["71b3319f.be676"]]
+		"wires": [["71b3319f.be676", "a2133282.acb7d8"]]
 	}, {
 		"id": "1124f23d.19f7b6",
 		"type": "link out",
@@ -1101,8 +1107,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "DB dealing",
 		"info": "",
-		"x": 91.36666870117188,
-		"y": 1471,
+		"x": 108.36666870117188,
+		"y": 1296.9999389648438,
 		"wires": []
 	}, {
 		"id": "8751ad20.8ced38",
@@ -1112,8 +1118,8 @@
 		"func": "let configs = msg.socketIOStaticProperties;\n\nlet skip =  msg.payload && msg.payload.skip?msg.payload.skip:\"null\";\nlet limit =  msg.payload && msg.payload.limit?msg.payload.limit:\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_select_talk_history('\"+configs.type+\"','\"+configs.service_id+\"','\"+configs.client_id+\"',\"+skip+\",\"+limit+\");\";\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 502.18336486816406,
-		"y": 1621.7166137695312,
+		"x": 519.1833648681641,
+		"y": 1447.716552734375,
 		"wires": [["53702728.5f4998"]]
 	}, {
 		"id": "53702728.5f4998",
@@ -1121,8 +1127,8 @@
 		"z": "da8f7bde.d2b408",
 		"mydb": "fb5eb74c.718c8",
 		"name": "",
-		"x": 699.6833038330078,
-		"y": 1620.6332702636719,
+		"x": 716.6833038330078,
+		"y": 1446.6332092285156,
 		"wires": [["feb08d3e.29ac58"]]
 	}, {
 		"id": "3d2f7b05.3c11d4",
@@ -1130,8 +1136,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Get History - B",
 		"links": ["f7ab24b2.60eaf"],
-		"x": 78.94996643066406,
-		"y": 1574.0832824707031,
+		"x": 95.94996643066406,
+		"y": 1400.0832214355469,
 		"wires": [["83901b07.3dab08"]]
 	}, {
 		"id": "4d57d007.8a1e6",
@@ -1142,8 +1148,8 @@
 		"qos": "",
 		"retain": "",
 		"broker": "6fbdd64d.932d48",
-		"x": 350.60011291503906,
-		"y": 1573.7999572753906,
+		"x": 367.60011291503906,
+		"y": 1399.7998962402344,
 		"wires": []
 	}, {
 		"id": "83901b07.3dab08",
@@ -1153,8 +1159,8 @@
 		"func": "\nreturn {\n    payload:msg\n};",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 171.6668243408203,
-		"y": 1573.7666015625,
+		"x": 188.6668243408203,
+		"y": 1399.7665405273438,
 		"wires": [["4d57d007.8a1e6"]]
 	}, {
 		"id": "3ce1225b.d21556",
@@ -1164,8 +1170,8 @@
 		"topic": "get_history",
 		"qos": "2",
 		"broker": "6fbdd64d.932d48",
-		"x": 150.10011291503906,
-		"y": 1621.3832397460938,
+		"x": 167.10011291503906,
+		"y": 1447.3831787109375,
 		"wires": [["2dd4faab.a711e6"]]
 	}, {
 		"id": "2dd4faab.a711e6",
@@ -1175,8 +1181,8 @@
 		"func": "\nreturn JSON.parse(msg.payload) ;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 304.6668243408203,
-		"y": 1621.7665100097656,
+		"x": 321.6668243408203,
+		"y": 1447.7664489746094,
 		"wires": [["8751ad20.8ced38"]]
 	}, {
 		"id": "9fb2a115.df8ed",
@@ -1184,8 +1190,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "get history",
 		"info": "",
-		"x": 218.6833953857422,
-		"y": 1530.38330078125,
+		"x": 235.6833953857422,
+		"y": 1356.3832397460938,
 		"wires": []
 	}, {
 		"id": "c41ebc60.1fe3d8",
@@ -1202,8 +1208,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1120.566650390625,
-		"y": 1620.2332763671875,
+		"x": 1117.566650390625,
+		"y": 1446.2332153320312,
 		"wires": []
 	}, {
 		"id": "feb08d3e.29ac58",
@@ -1213,9 +1219,9 @@
 		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"get history\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"emit\", true);\n\nlet conversations = msg.payload[0].map(function(item){\n    return {\n        \"type\": item.direction_type,\n        \"from\": {\n            \"id\": item.from,\n            \"avatar\": item.avator\n        },\n        \"to\": {\n            \"id\": item.to,\n        },\n        \"time\": new Date(item.time).getTime(),\n        \"intents\": (item.assistant_ans && item.assistant_ans!=\"\" ?JSON.parse(item.assistant_ans):null),\n        \"recognitionResult\":item.visualrecog_ans,\n        \"message\": {\n            \"type\": item.message_type,\n            \"text\": (item.message_type==\"text\"?item.content:null),\n            \"url\": (item.message_type==\"image\"?item.content:null)\n        }\n    };\n});\n\n\nmsg.payload={\n    req_para:msg.ori_paylaod,\n    data: conversations\n};\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 900.566650390625,
-		"y": 1620.2332763671875,
-		"wires": [["65ba8056.5678f", "a7cb0a96.b4fc58"]]
+		"x": 917.566650390625,
+		"y": 1446.2332153320312,
+		"wires": [["65ba8056.5678f"]]
 	}, {
 		"id": "f7ab24b2.60eaf",
 		"type": "link out",
@@ -1224,19 +1230,6 @@
 		"links": ["3d2f7b05.3c11d4"],
 		"x": 904.449951171875,
 		"y": 537.9666748046875,
-		"wires": []
-	}, {
-		"id": "a7cb0a96.b4fc58",
-		"type": "debug",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"active": false,
-		"tosidebar": true,
-		"console": false,
-		"tostatus": false,
-		"complete": "true",
-		"x": 1105.449966430664,
-		"y": 1706.0999908447266,
 		"wires": []
 	}, {
 		"id": "438e11aa.15364",
@@ -1327,7 +1320,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "\n\nlet output_text = msg.payload.output.text.join(\"\");\nlet service_id = msg.socketIOStaticProperties.service_id;\n//call sp_select_talk_tricks(\"SE0001\",\"D0002\");\nif(is_json(output_text)){\n    let ans_obj = JSON.parse(output_text);\n    if(ans_obj && ans_obj.ans_ID){\n        msg.flow_config.time_record.mysql_call = Date.now();\n        msg.topic = \"call sp_select_talk_tricks('\"+service_id+\"','\"+ans_obj.ans_ID+\"');\";\n        return [msg,null];\n    }\n}\nreturn [null,msg];\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
+		"func": "\n\nlet output_text = msg.payload.output.text.join(\"\");\nlet service_id = msg.socketIOStaticProperties.service_id;\n//call sp_select_talk_tricks(\"SE0001\",\"D0002\");\nif(is_json(output_text)){\n    let ans_obj = JSON.parse(output_text);\n    if(ans_obj && ans_obj.ans_ID){\n        msg.flow_config.time_record.mysql_call = Date.now();\n        msg.topic = \"call sp_select_talk_tricks('\"+service_id+\"','\"+ans_obj.ans_ID+\"');\";\n        msg.payload_preserved.ans_ID = ans_obj.ans_ID;\n        return [msg,null];\n    }\n}\nreturn [null,msg];\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
 		"outputs": 2,
 		"noerr": 0,
 		"x": 212,
@@ -1345,6 +1338,137 @@
 		"y": 1748,
 		"wires": [["ace05e75.936928"]]
 	}, {
+		"id": "a2133282.acb7d8",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 191.00001525878906,
+		"y": 1744.36669921875,
+		"wires": []
+	}, {
+		"id": "d4b56d5f.c879a",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "ERROR",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 679.75,
+		"y": 929.5,
+		"wires": []
+	}, {
+		"id": "470bebd3.578e84",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "update",
+		"func": "let configs = msg.socketIOStaticProperties;\n\nlet dialog_id =  msg.payload && msg.payload.dialog_id?msg.payload.dialog_id:\"null\";\nlet talk_tricks =  msg.payload && msg.payload.talk_tricks?JSON.stringify(msg.payload.talk_tricks):\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_update_talk_tricks('\"+configs.service_id+\"','dialog','\"+dialog_id+\"','\"+talk_tricks+\"');\";\n\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 465.1500244140625,
+		"y": 1652.0498657226562,
+		"wires": [["fb9d6e13.9d64d"]]
+	}, {
+		"id": "fb9d6e13.9d64d",
+		"type": "mysql",
+		"z": "da8f7bde.d2b408",
+		"mydb": "fb5eb74c.718c8",
+		"name": "",
+		"x": 635.6499633789062,
+		"y": 1651.966552734375,
+		"wires": [["7eea2c9.f732f54"]]
+	}, {
+		"id": "ce6ab305.739da8",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Update Talk Trick- B",
+		"links": ["40b8e0b.9f346a"],
+		"x": 81.9166259765625,
+		"y": 1604.4165344238281,
+		"wires": [["514fe571.8e558c"]]
+	}, {
+		"id": "a4cb7421.8073c8",
+		"type": "mqtt out",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "update_talk_trick",
+		"qos": "",
+		"retain": "",
+		"broker": "6fbdd64d.932d48",
+		"x": 373.5667724609375,
+		"y": 1604.1332092285156,
+		"wires": []
+	}, {
+		"id": "514fe571.8e558c",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn {\n    payload:msg\n};",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 174.63348388671875,
+		"y": 1604.099853515625,
+		"wires": [["a4cb7421.8073c8"]]
+	}, {
+		"id": "b8de95b5.6389e",
+		"type": "mqtt in",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "update_talk_trick",
+		"qos": "2",
+		"broker": "6fbdd64d.932d48",
+		"x": 173.0667724609375,
+		"y": 1651.7164916992188,
+		"wires": [["2e3d2335.331114"]]
+	}, {
+		"id": "2e3d2335.331114",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nreturn JSON.parse(msg.payload) ;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 307.63348388671875,
+		"y": 1652.0997619628906,
+		"wires": [["470bebd3.578e84"]]
+	}, {
+		"id": "5671c17e.ae5c38",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "update talk tricks",
+		"info": "",
+		"x": 241.65005493164062,
+		"y": 1560.716552734375,
+		"wires": []
+	}, {
+		"id": "40b8e0b.9f346a",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Update Talk Trick- A",
+		"links": ["ce6ab305.739da8"],
+		"x": 905,
+		"y": 573.3333129882812,
+		"wires": []
+	}, {
+		"id": "7eea2c9.f732f54",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 826.75,
+		"y": 1705.25,
+		"wires": []
+	}, {
 		"id": "d5c1b5fd.4dfad8",
 		"type": "socketio-config",
 		"z": "",
@@ -1352,14 +1476,6 @@
 		"sendClient": "true",
 		"path": "/socket.io",
 		"bindToNode": false
-	}, {
-		"id": "4419a078.23234",
-		"type": "socketio-config",
-		"z": "",
-		"port": "1881",
-		"sendClient": "true",
-		"path": "/socket.io",
-		"bindToNode": true
 	}, {
 		"id": "fb5eb74c.718c8",
 		"type": "MySQLdatabase",

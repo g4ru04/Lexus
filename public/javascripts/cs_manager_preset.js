@@ -5,11 +5,70 @@ $( function() {
 	emotion_setting();
 	menu_setting();
 	
-	$.getJSON( "/api/json/tl", function( data ) {
-		talk_tricks_setting(data);
-	});
 	
 	set_manager_socket();
+	$("#talk_tricks_container").delegate( ".talk_trick", "click", function() {
+		$(".input").val($(this).text());
+		$("#talk_tricks_container").toggleClass("enable"); 
+	});
+	$("#talk_tricks_container").delegate( ".talk_tricks_edit", "click", function() {
+		let talk_trick_text = [];
+		$(".talk_tricks_edit").parent().find(".talk_trick").each(function(i,item){
+			talk_trick_text.push($(item).text());
+		});
+		
+		let editor_str = talk_trick_text.map(function(item){
+			return "<div>"+
+				"<input type='text' value='"+item+"' />"+
+				"&nbsp;<span class='del'>DELETE</span>"+
+				"</div>"
+		}).join("<br>");
+		console.log(talk_trick_text);
+		console.log(talk_trick_text);
+		
+		$("#talk_tricks_editor").html(editor_str+"<div class='new'>new</div>");
+		$("#talk_tricks_editor").dialog( "open" );
+		
+		
+		$(".input").val($(this).text());
+		$("#talk_tricks_container").toggleClass("enable"); 
+	});
+	$("#talk_tricks_editor").delegate( ".del", "click", function() {
+		$(this).parent().remove();
+	});
+	$("#talk_tricks_editor").delegate( ".new", "click", function() {
+		$(this).before("<br>");
+		$(this).before(
+			"<div>"+
+			"<input type='text' value='' />"+
+			"&nbsp;<span class='del'>DELETE</span>"+
+			"</div>"
+		)
+		
+	});
+	$("#talk_tricks_editor").dialog({
+			title: "修改相應回答話術",
+			draggable : true, resizable : false, autoOpen : false,
+			height : "auto", width : "600", modal : true,
+			buttons : [{
+				text: "修改", 
+				click: function() { 
+					$(this).dialog("close");
+					let ans_ID = $("#talk_tricks_editor").attr("ans_ID");
+					let talk_tricks = [];
+					$("#talk_tricks_editor").find("input").each(function(i,item){
+						talk_tricks.push($(item).val());
+					})
+
+					Connection.update_talk_tricks(ans_ID,talk_tricks);
+				}
+			},{
+				text: "取消", 
+				click: function() { 
+					$(this).dialog("close");
+				}
+			}]
+		});
 	
 });
 
@@ -22,7 +81,7 @@ function set_manager_socket(){
 		Connection.socket = io(socket_server_ip);
 		
 		Connection.end_point = "service" ;
-		Connection.client_id  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
+		Connection.client_id  = "";
 		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
 		Connection.conn = false ;
 		Connection.talks = [];
@@ -41,7 +100,7 @@ function set_manager_socket(){
 	Connection.set_listener = function(){
 		Connection.socket.on('enter', function (data) {
 			Connection.conn = true;
-			reiceive_msg("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
+			my_console("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
 			Connection.socket.emit("get history",{});
 		});
 	
@@ -61,7 +120,8 @@ function set_manager_socket(){
 		
 		Connection.socket.on('reconnect', function () {
 			Connection.conn = true;
-			reiceive_msg("重新連接");
+			my_console("重新連接");
+			$("#console").html('<div class="loading_div"><img src="/images/loading.gif" /></div>');
 			Connection.socket.emit("enter",{
 				type : Connection.end_point,
 				client_id : Connection.client_id,
@@ -81,6 +141,29 @@ function set_manager_socket(){
 			type : Connection.end_point,
 			client_id : Connection.client_id,
 			service_id : Connection.service_id
+		});
+	}
+	
+	Connection.reiceive_msg = function (message){
+		
+		if(message.ans_ID){
+			$("#talk_tricks_editor").attr("ans_ID",message.ans_ID);
+		}
+		if(message.talk_tricks){
+			talk_tricks_setting(message.talk_tricks);
+			$("#talk_tricks_container").addClass("enable"); 
+		}
+		$("#console").append(produce_dialog_element(message));
+		$("#console").scrollTop($('#console')[0].scrollHeight);
+	}
+	
+	Connection.update_talk_tricks = function(ans_ID,talk_tricks){
+		console.log("update talk trick");
+		console.log(ans_ID);
+		console.log(talk_tricks);
+		Connection.socket.emit('update talk trick',{
+			dialog_id : ans_ID,
+			talk_tricks : talk_tricks
 		});
 	}
 	
@@ -128,15 +211,13 @@ function update_conversatoin_list(conversatoin_data){
 //金牌話術
 function talk_tricks_setting(data){
 	
+	let edit_div = "<div class='talk_tricks_edit'></div>";
 	let talk_tricks_str = data.map(function(item){
-		return "<a class='talk_trick'>"+item+"</a>";
+		return "<div class='talk_trick'><a>"+item+"</a></div>";
 	}).join("");
 	
-	$("#talk_tricks_container").html(talk_tricks_str);
+	$("#talk_tricks_container").html( edit_div + talk_tricks_str );
 	
-	$("#talk_tricks_container").delegate( ".talk_trick", "click", function() {
-		$(".input").val($(this).text());
-	});
 }
 
 //功能選單
@@ -173,9 +254,15 @@ function menu_setting(){
 				at: "left top",
 				of: "#console"
 			});
+		}else if(func_name=="撥打電話"){
+			location.href = 'tel:+886-919863010';
+			
+		}else if(func_name=="照片"){
+			$("#upload_picture").trigger("click"); 
 			
 		}else if(func_name=="金牌話術"){
-			$("#talk_tricks_container").toggleClass("enable"); 
+			$("#talk_tricks_container").toggle();
+
 		}else{
 			alert(func_name);
 		}
