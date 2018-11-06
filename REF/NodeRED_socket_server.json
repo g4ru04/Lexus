@@ -33,7 +33,7 @@
 				"v": "update talk trick"
 			}
 		],
-		"x": 163.33331298828125,
+		"x": 100.33332824707031,
 		"y": 405.33331298828125,
 		"wires": [["3e72187a.2ba16"]]
 	}, {
@@ -345,8 +345,8 @@
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "Config",
-		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n    3.node-red-node-mongodb\n    4.node-red-node-mysql\nnpm i node-red-contrib-socketio\nnpm i node-red-node-watson\nnpm i node-red-node-mysql\nConversation:\nHT帳號下=>Develop Assistant\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    X BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n    l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v\n",
-		"x": 89.00001525878906,
+		"info": "Node需安裝套件:\n    1.node-red-contrib-socketio\n    2.node-red-node-watson\n    3.node-red-node-mongodb\n    4.node-red-node-mysql\n    5.node-red-contrib-scx-ibmiotapp\n    6.@nickcis/node-red-node-cf-cloudant\n\nConversation:\nHT帳號下=>Develop Assistant\n    https://gateway.watsonplatform.net/assistant/api\n    4003aefc-79f8-4c14-a497-f720829da4f0\n    ZYqZvVngtxaX\n    \n    LexusBot\n    234bf172-8356-42cc-8ec3-cb0a3dc69a0c\n\nVisualRecognition:\n    X 8d97c9225169278094c24bee609f93eb31d33220\n    X BTWdTzZJy6ugm65tGHYzOP1qbNYjFADAO2b3SE8MZC6W\n    l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v\n",
+		"x": 94.00001525878906,
 		"y": 65.66661834716797,
 		"wires": []
 	}, {
@@ -366,7 +366,7 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"scope": ["340efc70.9569dc"],
-		"x": 491.33331298828125,
+		"x": 481.33331298828125,
 		"y": 959.333251953125,
 		"wires": [["d4b56d5f.c879a", "a85903d8.bf13f8"]]
 	}, {
@@ -459,7 +459,7 @@
 		"type": "visual-recognition-v3",
 		"z": "da8f7bde.d2b408",
 		"name": "圖片辨識",
-		"apikey": "l_MaXgfCeFMtffqOCYJSmb8g4Rt3pfALzuvTFiUxzL3v",
+		"apikey": "__PWRD__",
 		"vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
 		"image-feature": "classifyImage",
 		"lang": "en",
@@ -542,7 +542,7 @@
 		"func": "let workspace = msg.flow_config.watson_config[0];\nmsg.flow_config.time_record.assistant_call = Date.now();\n\nmsg.params = {\n    //alternate_intents: true,\n    timeout: 9*1000,\n    \n    workspace_id: workspace.workspaceId,\n    username: workspace.username,\n    password: workspace.password,\n};\n\nmsg.flow_config.usedWorkspace = workspace.workspaceId;\nmsg.flow_config.usedWatsonName = workspace.name;\n\n\nif(msg.payload == \"\" || msg.payload == null ){\n    msg.payload = \" \";\n} \nmsg.payload = msg.payload.replace(/[\\t\\n\\r]/g,\"\");\n\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 719.36669921875,
+		"x": 709.36669921875,
 		"y": 705,
 		"wires": [["76e3c330.14a53c", "c85debdb.43b06"]]
 	}, {
@@ -649,38 +649,29 @@
 		"z": "da8f7bde.d2b408",
 		"name": "DB SELECT - A",
 		"links": ["790015ce.d657ec", "dca3626d.9d58a"],
-		"x": 816.5666046142578,
-		"y": 1944.36669921875,
+		"x": 1344.566650390625,
+		"y": 1644.366455078125,
 		"wires": []
 	}, {
 		"id": "790015ce.d657ec",
 		"type": "link in",
 		"z": "da8f7bde.d2b408",
 		"name": "DB SELECT - B",
-		"links": ["a9dfd5c0.c27ac", "57a56582.e7fcdc", "994b9607.8e11f", "1fa41eec.721141"],
-		"x": 75.33334350585938,
-		"y": 2033.533203125,
-		"wires": [["c6971c91.d6fa6"]]
+		"links": ["6ca8b2fd.5749c4", "a9dfd5c0.c27ac"],
+		"x": 87.33334350585938,
+		"y": 1756.5333251953125,
+		"wires": [["f9f20479.2a0bc"]]
 	}, {
 		"id": "f9f20479.2a0bc",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
-		"name": "SELECT responsibility",
-		"func": "\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties.service_id:service_id;\nservice_id = msg.socketIOStaticProperties?msg.socketIOStaticProperties.service_id:service_id;\n\nmsg.topic = \"call sp_select_manager_list('\"+service_id+\"');\";\n\nreturn msg;",
+		"name": "refresh_list",
+		"func": "\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties.service_id:service_id;\nservice_id = msg.socketIOStaticProperties?msg.socketIOStaticProperties.service_id:service_id;\n\nmsg.topic = \"call sp_select_manager_list('\"+service_id+\"');\";\nmsg.mysql_router = \"refresh_list\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 521.9999389648438,
-		"y": 2082.333251953125,
-		"wires": [["87ad18f2.340e"]]
-	}, {
-		"id": "87ad18f2.340e",
-		"type": "mysql",
-		"z": "da8f7bde.d2b408",
-		"mydb": "fb5eb74c.718c8",
-		"name": "",
-		"x": 751.75,
-		"y": 2082.7498779296875,
-		"wires": [["41f64715.cbdd"]]
+		"x": 223.99993896484375,
+		"y": 1757.3333740234375,
+		"wires": [["c72dab4a.0da338"]]
 	}, {
 		"id": "8bacea17.8db53",
 		"type": "mqtt out",
@@ -690,20 +681,20 @@
 		"qos": "",
 		"retain": "",
 		"broker": "6fbdd64d.932d48",
-		"x": 503.75,
-		"y": 405.75,
+		"x": 599.75,
+		"y": 402.75,
 		"wires": []
 	}, {
 		"id": "3e72187a.2ba16",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "\nmsg.flow_config = {\n    \n    //\"HT_image_space\":\"https://s3-api.us-geo.objectstorage.softlayer.net/tytimage/LINE_images_test/\",\n    \"watson_config\": [{\n        \"name\":\"LexusBot\",\n        \"workspaceId\": \"234bf172-8356-42cc-8ec3-cb0a3dc69a0c\",\n        \"username\": \"4003aefc-79f8-4c14-a497-f720829da4f0\",\n        \"password\": \"ZYqZvVngtxaX\"\n    }],\n    \"time_record\":{\n        socket_receive: Date.now()\n    }\n};\nreturn {\n    payload:msg\n};\n",
+		"func": "\nmsg.flow_config = {\n    \"HT_API_host\":\"https://nodered-api-lexus-test.mybluemix.net/ht_api/\",\n    //\"HT_image_space\":\"https://s3-api.us-geo.objectstorage.softlayer.net/tytimage/LINE_images_test/\",\n    \"watson_config\": [{\n        \"name\":\"LexusBot\",\n        \"workspaceId\": \"234bf172-8356-42cc-8ec3-cb0a3dc69a0c\",\n        \"username\": \"4003aefc-79f8-4c14-a497-f720829da4f0\",\n        \"password\": \"ZYqZvVngtxaX\"\n    }],\n    \"time_record\":{\n        socket_receive: Date.now()\n    }\n};\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 304.81671142578125,
+		"x": 241.8167266845703,
 		"y": 405.7166442871094,
-		"wires": [["8bacea17.8db53", "7330bee2.170ed"]]
+		"wires": [["7330bee2.170ed", "25998a28.5db1d6"]]
 	}, {
 		"id": "a9e46035.a4aca8",
 		"type": "mqtt in",
@@ -727,70 +718,16 @@
 		"y": 467.716552734375,
 		"wires": [["25998a28.5db1d6"]]
 	}, {
-		"id": "2f60690b.48d72e",
-		"type": "mqtt in",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "refresh_list",
-		"qos": "2",
-		"broker": "6fbdd64d.932d48",
-		"x": 166.33338928222656,
-		"y": 2082.3331909179688,
-		"wires": [["53f354c1.71475c"]]
-	}, {
-		"id": "53f354c1.71475c",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn JSON.parse(msg.payload) ;",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 320.9001007080078,
-		"y": 2082.7164611816406,
-		"wires": [["f9f20479.2a0bc"]]
-	}, {
-		"id": "b8cbd44b.81017",
-		"type": "mqtt out",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "refresh_list",
-		"qos": "",
-		"retain": "",
-		"broker": "6fbdd64d.932d48",
-		"x": 366.83338928222656,
-		"y": 2033.7499084472656,
-		"wires": []
-	}, {
-		"id": "c6971c91.d6fa6",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn {\n    payload:msg\n};",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 187.9001007080078,
-		"y": 2033.716552734375,
-		"wires": [["b8cbd44b.81017"]]
-	}, {
 		"id": "e272f61b.67cf68",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
-		"name": "INSERT message",
-		"func": "msg.flow_config.time_record.before_db_log = Date.now();\nlet message_item = msg.payload;\n\nlet message_type = message_item.message.type;\nlet content = message_type==\"text\" ? message_item.message.text : message_item.message.url;\ncontent = content.replace(/,/g,\"\\,\").replace(/\"/g,'\\\"');\nlet time = message_item.time;\nlet intent_str = message_item.intents?JSON.stringify(message_item.intents):\"\";\nlet recognition_result = message_item.recognitionResult?message_item.recognitionResult:\"\";\n\nlet direction = message_item.type;\nlet from_id = message_item.from.id;\nlet to_id = message_item.to.id;\n\nlet time_record = JSON.stringify(msg.flow_config.time_record);\n\nlet sql_cmd = \"call sp_send_message('\"+message_type+\"','\"+content+\"','\"+intent_str+\"','\"+recognition_result+\"','\"+time+\"','\"+direction+\"','\"+from_id+\"','\"+to_id+\"','\"+time_record+\"');\";\nmsg.topic = sql_cmd;\n\nreturn msg;",
+		"name": "talk_log",
+		"func": "msg.flow_config.time_record.before_db_log = Date.now();\nlet message_item = msg.payload;\n\nlet message_type = message_item.message.type;\nlet content = message_type==\"text\" ? message_item.message.text : message_item.message.url;\ncontent = content.replace(/,/g,\"\\,\").replace(/\"/g,'\\\"');\nlet time = message_item.time;\nlet intent_str = message_item.intents?JSON.stringify(message_item.intents):\"\";\nlet recognition_result = message_item.recognitionResult?message_item.recognitionResult:\"\";\n\nlet direction = message_item.type;\nlet from_id = message_item.from.id;\nlet to_id = message_item.to.id;\n\nlet time_record = JSON.stringify(msg.flow_config.time_record);\n\nlet sql_cmd = \"call sp_send_message('\"+message_type+\"','\"+content+\"','\"+intent_str+\"','\"+recognition_result+\"','\"+time+\"','\"+direction+\"','\"+from_id+\"','\"+to_id+\"','\"+time_record+\"');\";\nmsg.topic = sql_cmd;\nmsg.mysql_router = \"talk_log\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 488.9999542236328,
-		"y": 1944.333251953125,
-		"wires": [["1ae8d72c.8133d1"]]
-	}, {
-		"id": "1ae8d72c.8133d1",
-		"type": "mysql",
-		"z": "da8f7bde.d2b408",
-		"mydb": "fb5eb74c.718c8",
-		"name": "",
-		"x": 683.4998931884766,
-		"y": 1945.2499084472656,
-		"wires": [["a9dfd5c0.c27ac"]]
+		"x": 206.9999542236328,
+		"y": 1670.3330078125,
+		"wires": [["c72dab4a.0da338"]]
 	}, {
 		"id": "7330bee2.170ed",
 		"type": "debug",
@@ -801,8 +738,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 460.33331298828125,
-		"y": 351.3333435058594,
+		"x": 556.3333129882812,
+		"y": 348.3333435058594,
 		"wires": []
 	}, {
 		"id": "7f1304a9.9d0f94",
@@ -823,9 +760,9 @@
 		"z": "da8f7bde.d2b408",
 		"name": "To DB - B",
 		"links": ["e73955f.a0daf28"],
-		"x": 75.76655578613281,
-		"y": 1896.6999206542969,
-		"wires": [["a00bebdf.2a3f28"]]
+		"x": 87.76655578613281,
+		"y": 1670.69970703125,
+		"wires": [["e272f61b.67cf68"]]
 	}, {
 		"id": "e73955f.a0daf28",
 		"type": "link out",
@@ -836,58 +773,13 @@
 		"y": 840.6833343505859,
 		"wires": []
 	}, {
-		"id": "3186f49a.7a9a8c",
-		"type": "mqtt out",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "log_to_db",
-		"qos": "",
-		"retain": "",
-		"broker": "6fbdd64d.932d48",
-		"x": 337.4167022705078,
-		"y": 1896.4165954589844,
-		"wires": []
-	}, {
-		"id": "a00bebdf.2a3f28",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn {\n    payload:msg\n};",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 168.48341369628906,
-		"y": 1896.3832397460938,
-		"wires": [["3186f49a.7a9a8c"]]
-	}, {
-		"id": "617cbca0.3f0ef4",
-		"type": "mqtt in",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "log_to_db",
-		"qos": "2",
-		"broker": "6fbdd64d.932d48",
-		"x": 136.9167022705078,
-		"y": 1943.9998779296875,
-		"wires": [["cc914187.b5e2c"]]
-	}, {
-		"id": "cc914187.b5e2c",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn JSON.parse(msg.payload) ;",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 301.48341369628906,
-		"y": 1944.3831481933594,
-		"wires": [["e272f61b.67cf68"]]
-	}, {
 		"id": "da8710c2.1128f8",
 		"type": "socketio-out",
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1158.3333740234375,
-		"y": 2082.2667846679688,
+		"x": 1633.3334350585938,
+		"y": 1694.2669372558594,
 		"wires": []
 	}, {
 		"id": "41f64715.cbdd",
@@ -897,26 +789,17 @@
 		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"update conversatoin list\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\n\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 950.4332885742188,
-		"y": 2083.033416748047,
-		"wires": [["da8710c2.1128f8"]]
-	}, {
-		"id": "57a56582.e7fcdc",
-		"type": "link out",
-		"z": "da8f7bde.d2b408",
-		"name": "DB SELECT - A",
-		"links": ["790015ce.d657ec", "dca3626d.9d58a"],
-		"x": 1118,
-		"y": 282,
-		"wires": []
+		"x": 1415.433349609375,
+		"y": 1695.0335693359375,
+		"wires": [["da8710c2.1128f8", "942e4172.4183c"]]
 	}, {
 		"id": "80a809bc.3b29d8",
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "talk log",
 		"info": "",
-		"x": 207.49998474121094,
-		"y": 1853,
+		"x": 191.49998474121094,
+		"y": 1633.999755859375,
 		"wires": []
 	}, {
 		"id": "18e8a0af.9bf46f",
@@ -929,59 +812,50 @@
 		"tostatus": false,
 		"complete": "error",
 		"x": 459.566650390625,
-		"y": 226.56666564941406,
+		"y": 225.56666564941406,
 		"wires": []
 	}, {
 		"id": "40a4725f.3009cc",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "register service",
-		"func": "let service_id = msg.payload.service_id;\n\nmsg.payload = {\n    room: service_id\n};\nmsg.socketIOAddStaticProperties = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties:{};\nmsg.socketIOAddStaticProperties.service_id = service_id;\nreturn msg;",
+		"func": "let service_id = msg.payload.service_id;\n\nmsg.socketIOAddStaticProperties = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties:{};\nmsg.socketIOAddStaticProperties.service_id = service_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 975.333251953125,
-		"y": 319.73333740234375,
-		"wires": [["2764b3f4.fc8cf4", "57a56582.e7fcdc"]]
+		"x": 1001.3331909179688,
+		"y": 360.73333740234375,
+		"wires": [["9f988e2f.e2dbf8", "51305727.5c6d18"]]
 	}, {
 		"id": "2764b3f4.fc8cf4",
 		"type": "socketio-join",
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1162.949951171875,
-		"y": 319.9833984375,
+		"x": 1388.949951171875,
+		"y": 355.9833984375,
 		"wires": []
 	}, {
 		"id": "5c998016.9b7798",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
-		"name": "INSERT responsibility",
-		"func": "let configs = msg.socketIOStaticProperties;\n\nmsg.topic = \"call sp_bind_client('\"+configs.service_id+\"','\"+configs.client_id+\"');\";\n\nreturn msg;",
+		"name": "register_client",
+		"func": "let configs = msg.socketIOStaticProperties;\nlet cust_data = msg.payload.CSINFO[0] ;\n\nmsg.topic = \"call sp_bind_client('\"+configs.service_id+\"','\"+configs.client_id+\"','\"+cust_data.NICKNAME+\"','\"+cust_data.CARNM+\"','\"+cust_data.LICSNO+\"','\"+cust_data.PICURL+\"',NULL,NULL);\";\nmsg.mysql_router = \"register_client\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 524.0000152587891,
-		"y": 2248.7333374023438,
-		"wires": [["bef98abe.0ef1e8"]]
-	}, {
-		"id": "bef98abe.0ef1e8",
-		"type": "mysql",
-		"z": "da8f7bde.d2b408",
-		"mydb": "fb5eb74c.718c8",
-		"name": "",
-		"x": 755.4999389648438,
-		"y": 2248.64990234375,
-		"wires": [["34e09a66.73d436"]]
+		"x": 590,
+		"y": 1929.7335205078125,
+		"wires": [["c72dab4a.0da338"]]
 	}, {
 		"id": "7626329b.3a749c",
 		"type": "mqtt out",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"topic": "register_client",
+		"topic": "mysql_mqtt",
 		"qos": "",
 		"retain": "",
 		"broker": "6fbdd64d.932d48",
-		"x": 352.41676330566406,
-		"y": 2200.816680908203,
+		"x": 795.416748046875,
+		"y": 1524.8170166015625,
 		"wires": []
 	}, {
 		"id": "740a12b9.32524c",
@@ -991,19 +865,19 @@
 		"func": "\nreturn {\n    payload:msg\n};",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 173.4834747314453,
-		"y": 2200.7833251953125,
+		"x": 652.4834594726562,
+		"y": 1524.78369140625,
 		"wires": [["7626329b.3a749c"]]
 	}, {
 		"id": "aa7f48f8.7b036",
 		"type": "mqtt in",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"topic": "register_client",
+		"topic": "mysql_mqtt",
 		"qos": "2",
 		"broker": "6fbdd64d.932d48",
-		"x": 161.91676330566406,
-		"y": 2248.3999633789062,
+		"x": 629.916748046875,
+		"y": 1616.400390625,
 		"wires": [["92222fc1.80de28"]]
 	}, {
 		"id": "92222fc1.80de28",
@@ -1013,17 +887,17 @@
 		"func": "\nreturn JSON.parse(msg.payload) ;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 306.4834747314453,
-		"y": 2248.783233642578,
-		"wires": [["5c998016.9b7798"]]
+		"x": 762.4834594726562,
+		"y": 1616.7836608886719,
+		"wires": [[]]
 	}, {
 		"id": "61309912.2b9158",
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "register client",
 		"info": "",
-		"x": 212.5000762939453,
-		"y": 2158.4005126953125,
+		"x": 207.5000762939453,
+		"y": 1888.40087890625,
 		"wires": []
 	}, {
 		"id": "26bbcf3e.b45328",
@@ -1031,8 +905,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Register Client - A",
 		"links": ["70261159.68ba98"],
-		"x": 914.449951171875,
-		"y": 398.9666748046875,
+		"x": 926.4498901367188,
+		"y": 405.9666748046875,
 		"wires": []
 	}, {
 		"id": "70261159.68ba98",
@@ -1040,31 +914,18 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Register Client - B",
 		"links": ["26bbcf3e.b45328"],
-		"x": 74.44998168945312,
-		"y": 2200.7998962402344,
-		"wires": [["740a12b9.32524c"]]
-	}, {
-		"id": "34e09a66.73d436",
-		"type": "debug",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"active": false,
-		"tosidebar": true,
-		"console": false,
-		"tostatus": false,
-		"complete": "true",
-		"x": 939.449951171875,
-		"y": 2249.1002197265625,
-		"wires": []
+		"x": 83.44996643066406,
+		"y": 1930.80029296875,
+		"wires": [["1870cb52.4b1535"]]
 	}, {
 		"id": "4c09eb55.20619c",
 		"type": "link in",
 		"z": "da8f7bde.d2b408",
 		"name": "Talk Trick  IN - B",
 		"links": ["1124f23d.19f7b6"],
-		"x": 75.44996643066406,
-		"y": 1763.60009765625,
-		"wires": [["71b3319f.be676", "a2133282.acb7d8"]]
+		"x": 93.44996643066406,
+		"y": 1590.60009765625,
+		"wires": [["71b3319f.be676"]]
 	}, {
 		"id": "1124f23d.19f7b6",
 		"type": "link out",
@@ -1079,7 +940,7 @@
 		"type": "link in",
 		"z": "da8f7bde.d2b408",
 		"name": "Talk Trick  OUT - B",
-		"links": ["ace05e75.936928"],
+		"links": ["ace05e75.936928", "9355898f.98a318"],
 		"x": 1163.0333251953125,
 		"y": 754.3668518066406,
 		"wires": [["ffd27283.5745f8"]]
@@ -1089,47 +950,27 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Talk Trick  OUT - A",
 		"links": ["e538fbfb.bb3868"],
-		"x": 647.0333251953125,
-		"y": 1789.133544921875,
+		"x": 1481.033447265625,
+		"y": 1608.133544921875,
 		"wires": []
-	}, {
-		"id": "fce6a840.9804e",
-		"type": "mysql",
-		"z": "da8f7bde.d2b408",
-		"mydb": "fb5eb74c.718c8",
-		"name": "",
-		"x": 361.566650390625,
-		"y": 1748.1666259765625,
-		"wires": [["f505772a.f14158"]]
 	}, {
 		"id": "306be94a.f8abfe",
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "DB dealing",
 		"info": "",
-		"x": 108.36666870117188,
-		"y": 1296.9999389648438,
+		"x": 103.36666870117188,
+		"y": 1271.0000610351562,
 		"wires": []
-	}, {
-		"id": "8751ad20.8ced38",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "SELECT message",
-		"func": "let configs = msg.socketIOStaticProperties;\n\nlet skip =  msg.payload && msg.payload.skip?msg.payload.skip:\"null\";\nlet limit =  msg.payload && msg.payload.limit?msg.payload.limit:\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_select_talk_history('\"+configs.type+\"','\"+configs.service_id+\"','\"+configs.client_id+\"',\"+skip+\",\"+limit+\");\";\n\nreturn msg;",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 519.1833648681641,
-		"y": 1447.716552734375,
-		"wires": [["53702728.5f4998"]]
 	}, {
 		"id": "53702728.5f4998",
 		"type": "mysql",
 		"z": "da8f7bde.d2b408",
 		"mydb": "fb5eb74c.718c8",
 		"name": "",
-		"x": 716.6833038330078,
-		"y": 1446.6332092285156,
-		"wires": [["feb08d3e.29ac58"]]
+		"x": 933.6832885742188,
+		"y": 1596.6331787109375,
+		"wires": [["e5025345.fe2d6"]]
 	}, {
 		"id": "3d2f7b05.3c11d4",
 		"type": "link in",
@@ -1137,70 +978,25 @@
 		"name": "Get History - B",
 		"links": ["f7ab24b2.60eaf"],
 		"x": 95.94996643066406,
-		"y": 1400.0832214355469,
-		"wires": [["83901b07.3dab08"]]
-	}, {
-		"id": "4d57d007.8a1e6",
-		"type": "mqtt out",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "get_history",
-		"qos": "",
-		"retain": "",
-		"broker": "6fbdd64d.932d48",
-		"x": 367.60011291503906,
-		"y": 1399.7998962402344,
-		"wires": []
-	}, {
-		"id": "83901b07.3dab08",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn {\n    payload:msg\n};",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 188.6668243408203,
-		"y": 1399.7665405273438,
-		"wires": [["4d57d007.8a1e6"]]
-	}, {
-		"id": "3ce1225b.d21556",
-		"type": "mqtt in",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "get_history",
-		"qos": "2",
-		"broker": "6fbdd64d.932d48",
-		"x": 167.10011291503906,
-		"y": 1447.3831787109375,
-		"wires": [["2dd4faab.a711e6"]]
-	}, {
-		"id": "2dd4faab.a711e6",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn JSON.parse(msg.payload) ;",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 321.6668243408203,
-		"y": 1447.7664489746094,
-		"wires": [["8751ad20.8ced38"]]
+		"y": 1418.083251953125,
+		"wires": [["ede202c8.61d748"]]
 	}, {
 		"id": "9fb2a115.df8ed",
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
 		"name": "get history",
 		"info": "",
-		"x": 235.6833953857422,
-		"y": 1356.3832397460938,
+		"x": 207.6833953857422,
+		"y": 1372.3832397460938,
 		"wires": []
 	}, {
 		"id": "c41ebc60.1fe3d8",
 		"type": "comment",
 		"z": "da8f7bde.d2b408",
-		"name": "talk trick",
+		"name": "get_talk_trick",
 		"info": "",
 		"x": 213.3333282470703,
-		"y": 1700.3333740234375,
+		"y": 1551.3333740234375,
 		"wires": []
 	}, {
 		"id": "65ba8056.5678f",
@@ -1208,8 +1004,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1117.566650390625,
-		"y": 1446.2332153320312,
+		"x": 1521.566650390625,
+		"y": 1492.233154296875,
 		"wires": []
 	}, {
 		"id": "feb08d3e.29ac58",
@@ -1219,8 +1015,8 @@
 		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"get history\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"emit\", true);\n\nlet conversations = msg.payload[0].map(function(item){\n    return {\n        \"type\": item.direction_type,\n        \"from\": {\n            \"id\": item.from,\n            \"avatar\": item.avator\n        },\n        \"to\": {\n            \"id\": item.to,\n        },\n        \"time\": new Date(item.time).getTime(),\n        \"intents\": (item.assistant_ans && item.assistant_ans!=\"\" ?JSON.parse(item.assistant_ans):null),\n        \"recognitionResult\":item.visualrecog_ans,\n        \"message\": {\n            \"type\": item.message_type,\n            \"text\": (item.message_type==\"text\"?item.content:null),\n            \"url\": (item.message_type==\"image\"?item.content:null)\n        }\n    };\n});\n\n\nmsg.payload={\n    req_para:msg.ori_paylaod,\n    data: conversations\n};\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 917.566650390625,
-		"y": 1446.2332153320312,
+		"x": 1311.566650390625,
+		"y": 1492.233154296875,
 		"wires": [["65ba8056.5678f"]]
 	}, {
 		"id": "f7ab24b2.60eaf",
@@ -1319,13 +1115,13 @@
 		"id": "71b3319f.be676",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\n\nlet output_text = msg.payload.output.text.join(\"\");\nlet service_id = msg.socketIOStaticProperties.service_id;\n//call sp_select_talk_tricks(\"SE0001\",\"D0002\");\nif(is_json(output_text)){\n    let ans_obj = JSON.parse(output_text);\n    if(ans_obj && ans_obj.ans_ID){\n        msg.flow_config.time_record.mysql_call = Date.now();\n        msg.topic = \"call sp_select_talk_tricks('\"+service_id+\"','\"+ans_obj.ans_ID+\"');\";\n        msg.payload_preserved.ans_ID = ans_obj.ans_ID;\n        return [msg,null];\n    }\n}\nreturn [null,msg];\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
+		"name": "get_talk_trick",
+		"func": "\n\nlet output_text = msg.payload.output.text.join(\"\");\nlet service_id = msg.socketIOStaticProperties.service_id;\n\nif(is_json(output_text)){\n    let ans_obj = JSON.parse(output_text);\n    if(ans_obj && ans_obj.ans_ID){\n        msg.flow_config.time_record.mysql_call = Date.now();\n        msg.topic = \"call sp_select_talk_tricks('\"+service_id+\"','\"+ans_obj.ans_ID+\"');\";\n        msg.payload_preserved.ans_ID = ans_obj.ans_ID;\n        msg.mysql_router = \"get_talk_trick\";\n        return [msg,null];\n    }\n}\nreturn [null,msg];\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
 		"outputs": 2,
 		"noerr": 0,
-		"x": 212,
-		"y": 1785,
-		"wires": [["fce6a840.9804e"], ["ace05e75.936928"]]
+		"x": 227.00001525878906,
+		"y": 1591,
+		"wires": [["c72dab4a.0da338"], ["9355898f.98a318"]]
 	}, {
 		"id": "f505772a.f14158",
 		"type": "function",
@@ -1334,22 +1130,9 @@
 		"func": "msg.flow_config.time_record.mysql_return = Date.now();\n\nif(\n    msg.payload[0][0]!=null &&\n    msg.payload[0][0].talk_tricks!=null && \n    is_json(msg.payload[0][0].talk_tricks)\n){\n    msg.payload_preserved.talk_tricks = JSON.parse(msg.payload[0][0].talk_tricks);\n}\nreturn msg;\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 518,
-		"y": 1748,
+		"x": 1377.0001220703125,
+		"y": 1608,
 		"wires": [["ace05e75.936928"]]
-	}, {
-		"id": "a2133282.acb7d8",
-		"type": "debug",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"active": false,
-		"tosidebar": true,
-		"console": false,
-		"tostatus": false,
-		"complete": "true",
-		"x": 191.00001525878906,
-		"y": 1744.36669921875,
-		"wires": []
 	}, {
 		"id": "d4b56d5f.c879a",
 		"type": "debug",
@@ -1367,75 +1150,21 @@
 		"id": "470bebd3.578e84",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
-		"name": "update",
-		"func": "let configs = msg.socketIOStaticProperties;\n\nlet dialog_id =  msg.payload && msg.payload.dialog_id?msg.payload.dialog_id:\"null\";\nlet talk_tricks =  msg.payload && msg.payload.talk_tricks?JSON.stringify(msg.payload.talk_tricks):\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_update_talk_tricks('\"+configs.service_id+\"','dialog','\"+dialog_id+\"','\"+talk_tricks+\"');\";\n\nreturn msg;",
+		"name": "update_talk_trick",
+		"func": "let configs = msg.socketIOStaticProperties;\n\nlet dialog_id =  msg.payload && msg.payload.dialog_id?msg.payload.dialog_id:\"null\";\nlet talk_tricks =  msg.payload && msg.payload.talk_tricks?JSON.stringify(msg.payload.talk_tricks):\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_update_talk_tricks('\"+configs.service_id+\"','dialog','\"+dialog_id+\"','\"+talk_tricks+\"');\";\nmsg.mysql_router = \"update_talk_trick\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 465.1500244140625,
-		"y": 1652.0498657226562,
-		"wires": [["fb9d6e13.9d64d"]]
-	}, {
-		"id": "fb9d6e13.9d64d",
-		"type": "mysql",
-		"z": "da8f7bde.d2b408",
-		"mydb": "fb5eb74c.718c8",
-		"name": "",
-		"x": 635.6499633789062,
-		"y": 1651.966552734375,
-		"wires": [["7eea2c9.f732f54"]]
+		"x": 234.15003967285156,
+		"y": 1511.0498046875,
+		"wires": [["c72dab4a.0da338"]]
 	}, {
 		"id": "ce6ab305.739da8",
 		"type": "link in",
 		"z": "da8f7bde.d2b408",
 		"name": "Update Talk Trick- B",
 		"links": ["40b8e0b.9f346a"],
-		"x": 81.9166259765625,
-		"y": 1604.4165344238281,
-		"wires": [["514fe571.8e558c"]]
-	}, {
-		"id": "a4cb7421.8073c8",
-		"type": "mqtt out",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "update_talk_trick",
-		"qos": "",
-		"retain": "",
-		"broker": "6fbdd64d.932d48",
-		"x": 373.5667724609375,
-		"y": 1604.1332092285156,
-		"wires": []
-	}, {
-		"id": "514fe571.8e558c",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn {\n    payload:msg\n};",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 174.63348388671875,
-		"y": 1604.099853515625,
-		"wires": [["a4cb7421.8073c8"]]
-	}, {
-		"id": "b8de95b5.6389e",
-		"type": "mqtt in",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"topic": "update_talk_trick",
-		"qos": "2",
-		"broker": "6fbdd64d.932d48",
-		"x": 173.0667724609375,
-		"y": 1651.7164916992188,
-		"wires": [["2e3d2335.331114"]]
-	}, {
-		"id": "2e3d2335.331114",
-		"type": "function",
-		"z": "da8f7bde.d2b408",
-		"name": "",
-		"func": "\nreturn JSON.parse(msg.payload) ;",
-		"outputs": 1,
-		"noerr": 0,
-		"x": 307.63348388671875,
-		"y": 1652.0997619628906,
+		"x": 93.9166259765625,
+		"y": 1511.4165344238281,
 		"wires": [["470bebd3.578e84"]]
 	}, {
 		"id": "5671c17e.ae5c38",
@@ -1443,8 +1172,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "update talk tricks",
 		"info": "",
-		"x": 241.65005493164062,
-		"y": 1560.716552734375,
+		"x": 223.65005493164062,
+		"y": 1466.716552734375,
 		"wires": []
 	}, {
 		"id": "40b8e0b.9f346a",
@@ -1456,18 +1185,228 @@
 		"y": 573.3333129882812,
 		"wires": []
 	}, {
-		"id": "7eea2c9.f732f54",
-		"type": "debug",
+		"id": "734801a4.d89c1",
+		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"active": false,
+		"func": "return {\n    payload:msg\n};",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 415.449951171875,
+		"y": 403.86663818359375,
+		"wires": [["8bacea17.8db53"]]
+	}, {
+		"id": "acad0aa2.853e18",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "register manager",
+		"info": "",
+		"x": 217.566650390625,
+		"y": 1803.96630859375,
+		"wires": []
+	}, {
+		"id": "6ca8b2fd.5749c4",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "DB SELECT - A",
+		"links": ["790015ce.d657ec", "dca3626d.9d58a"],
+		"x": 1339.800048828125,
+		"y": 1739.966552734375,
+		"wires": []
+	}, {
+		"id": "12bddfd1.d1707",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "register_manager",
+		"func": "let mysql_cmd = \"SELECT 1; \";\nif(msg.payload.manager_data){\n    let manager_data = msg.payload.manager_data\n    manager_data.PERSONAL_DATA = manager_data.PERSONAL_DATA || \"NULL\";\n    manager_data.PHONE = manager_data.PHONE || \"NULL\";\n    mysql_cmd += 'call sp_update_manager(\"'+manager_data.USERID+'\",\"'+manager_data.ECHOTITLECD+'\",\"'+manager_data.USERNM+'\",\"'+manager_data.PICURL+'\", \"'+manager_data.PHONE+'\",\"'+manager_data.PERSONAL_DATA+'\"); ';\n}\nif(msg.payload.responsibility_data){\n    msg.payload.responsibility_data.forEach(function(item){\n        item.PERSONAL_DATA = item.PERSONAL_DATA || \"NULL\";\n        item.PHONE = item.PHONE || \"NULL\";\n        mysql_cmd += \"call sp_bind_client('\"+item.USERID+\"','\"+item.ENCYID+\"','\"+item.NICKNAME+\"','\"+item.CARNM+\"','\"+item.LICSNO+\"','\"+item.PICURL+\"', '\"+item.MOBILE+\"', '\"+item.PERSONAL_DATA+\"'); \"\n    });\n}\nmsg.topic = mysql_cmd;\nmsg.mysql_router = \"register_manager\";\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 247.2333984375,
+		"y": 1843.93310546875,
+		"wires": [["c72dab4a.0da338"]]
+	}, {
+		"id": "ee631ea9.d9c07",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Register Manager - B",
+		"links": ["57a56582.e7fcdc", "51305727.5c6d18"],
+		"x": 88.00001525878906,
+		"y": 1844.2998046875,
+		"wires": [["12bddfd1.d1707"]]
+	}, {
+		"id": "cdcb200a.d1e07",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "處理 進MQTT 出來 MYSQL 分邊",
+		"info": "",
+		"x": 540.449951171875,
+		"y": 1342.5333862304688,
+		"wires": []
+	}, {
+		"id": "1870cb52.4b1535",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nmsg.url = msg.flow_config.HT_API_host+\"LINE006_Q00\";\nmsg.headers = {\n    \"Content-Type\":\"application/x-www-form-urlencoded\"\n}\n\nmsg.payload = {\n    \"jsonstr\":JSON.stringify({\n        \"ENCYID\": msg.socketIOStaticProperties.client_id,\n        \"FRAN\": \"L\"\n    })\n};\n\nreturn msg;\n\n",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 202.56666564941406,
+		"y": 1930.566650390625,
+		"wires": [["9468857e.4af5f"]]
+	}, {
+		"id": "48c0b195.e370e8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "/*msg.payload = {\n    \"rtnCode\": \"0\",\n    \"rtnMsg\": \"\",\n    \"CSINFO\": [\n        {\n            \"LICSNO\": \"RBD-0021\",\n            \"FRAN\": \"L\",\n            \"CARNM\": \"IS300h\",\n            \"CRCOMPID\": \"AA\",\n            \"CRSALR\": \"AA94453\",\n            \"CRSALRNM\": \"楊建中\",\n            \"SRCOMPID\": \"AA\",\n            \"WHSRVNO\": \"AA94453\",\n            \"WHSRVNM\": \"劉伯溫\",\n            \"NICKNAME\": \"柏廷\",\n            \"PICURL\": \"https://profile.line-scdn.net/0huWZ840ahKnhnQQYLIUFVL1sEJBUQbywwH3IyGhJFJ0FMeGp5Wi9hSkBEI00ad256CCIyGEQVJhpL\"\n        }\n    ]\n}*/\n\nreturn msg;\n",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 421.56666564941406,
+		"y": 1930.566650390625,
+		"wires": [["5c998016.9b7798"]]
+	}, {
+		"id": "9468857e.4af5f",
+		"type": "http request",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"method": "POST",
+		"ret": "obj",
+		"url": "",
+		"tls": "",
+		"x": 361.56666564941406,
+		"y": 1930.566650390625,
+		"wires": [["48c0b195.e370e8"]]
+	}, {
+		"id": "e5025345.fe2d6",
+		"type": "switch",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"property": "mysql_router",
+		"propertyType": "msg",
+		"rules": [{
+				"t": "eq",
+				"v": "get_history",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "update_talk_trick",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "get_talk_trick",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "talk_log",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "refresh_list",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "register_manager",
+				"vt": "str"
+			}, {
+				"t": "eq",
+				"v": "register_client",
+				"vt": "str"
+			}, {
+				"t": "else"
+			}
+		],
+		"checkall": "true",
+		"repair": false,
+		"outputs": 8,
+		"x": 1099.36669921875,
+		"y": 1594.5999755859375,
+		"wires": [["feb08d3e.29ac58"], [], ["f505772a.f14158"], ["a9dfd5c0.c27ac"], ["41f64715.cbdd"], ["6ca8b2fd.5749c4"], [], ["765342f2.ff5a8c"]]
+	}, {
+		"id": "ede202c8.61d748",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "get_history",
+		"func": "let configs = msg.socketIOStaticProperties;\n\nlet skip =  msg.payload && msg.payload.skip?msg.payload.skip:\"null\";\nlet limit =  msg.payload && msg.payload.limit?msg.payload.limit:\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_select_talk_history('\"+configs.type+\"','\"+configs.service_id+\"','\"+configs.client_id+\"',\"+skip+\",\"+limit+\");\";\nmsg.mysql_router = \"get_history\";\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 215.36666870117188,
+		"y": 1418.0999755859375,
+		"wires": [["c72dab4a.0da338"]]
+	}, {
+		"id": "9355898f.98a318",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Talk Trick  OUT - A",
+		"links": ["e538fbfb.bb3868"],
+		"x": 335.33331298828125,
+		"y": 1608.6666259765625,
+		"wires": []
+	}, {
+		"id": "c72dab4a.0da338",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\n//node.warn(msg.mysql_router+\"\\n\"+msg.topic);\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 506,
+		"y": 1547.3333740234375,
+		"wires": [["53702728.5f4998"]]
+	}, {
+		"id": "765342f2.ff5a8c",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "MYSQL類別異常",
+		"active": true,
 		"tosidebar": true,
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 826.75,
-		"y": 1705.25,
+		"x": 1371.9999542236328,
+		"y": 1822.000015258789,
 		"wires": []
+	}, {
+		"id": "51305727.5c6d18",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Register Manager - A",
+		"links": ["ee631ea9.d9c07"],
+		"x": 1138.333251953125,
+		"y": 327.3333435058594,
+		"wires": []
+	}, {
+		"id": "f4a564ba.ea6288",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "refresh list",
+		"info": "",
+		"x": 201.33331298828125,
+		"y": 1720.3333740234375,
+		"wires": []
+	}, {
+		"id": "942e4172.4183c",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "DEBBUG",
+		"active": true,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 1621,
+		"y": 1761.75,
+		"wires": []
+	}, {
+		"id": "9f988e2f.e2dbf8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "let service_id = msg.payload.service_id;\n\nmsg.payload = {\n    room: service_id\n};\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 1172.36669921875,
+		"y": 360,
+		"wires": [["2764b3f4.fc8cf4"]]
 	}, {
 		"id": "d5c1b5fd.4dfad8",
 		"type": "socketio-config",
@@ -1476,14 +1415,6 @@
 		"sendClient": "true",
 		"path": "/socket.io",
 		"bindToNode": false
-	}, {
-		"id": "fb5eb74c.718c8",
-		"type": "MySQLdatabase",
-		"z": "",
-		"host": "127.0.0.1",
-		"port": "3306",
-		"db": "db_lexus_cs",
-		"tz": ""
 	}, {
 		"id": "6fbdd64d.932d48",
 		"type": "mqtt-broker",
@@ -1505,5 +1436,13 @@
 		"willTopic": "",
 		"willQos": "0",
 		"willPayload": ""
+	}, {
+		"id": "fb5eb74c.718c8",
+		"type": "MySQLdatabase",
+		"z": "",
+		"host": "127.0.0.1",
+		"port": "3306",
+		"db": "db_lexus_cs",
+		"tz": ""
 	}
 ]

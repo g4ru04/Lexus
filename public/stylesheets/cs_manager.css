@@ -1,16 +1,36 @@
 
-.list_header{
-	height:50px;
-	margin-left:4px;
+.login_panel {
+	width: 300px;
+	margin: 120px auto;
+	border: 1px solid #000;
+	padding: 10px 20px;
+	background-color:#efefef;
+}
+.after_login{
+	display:none;
 }
 
-.header_logo{
-	width:200px;
-	height:48px;
-	background-image:url(/images/Lexus_logo_long.png);
-	float: left;
-	background-size:contain;
+.cs_manager_list{
+	width:calc(30vw);
+	float:left;
+	/*transition: width 0.3s;*/
+	height: calc( 100vh - 50px );
+	min-width:340px;
 }
+.cs_manager_list_container{
+	overflow-x: hidden;
+	overflow-y: scroll;
+	width:100%;
+	height:100%;
+}
+.cs_manager_dialog{
+	width:calc(60vw);
+	float:left;
+	/*transition: width 0.3s;*/
+	overflow:hidden;
+	max-width: calc( 100vw - 380px);
+}
+
 
 .search_box_container{
 	float:right;
@@ -38,26 +58,19 @@
 	bottom: 5px;
 	z-index:1;
 }
-.cs_manager_list{
-	width:calc(30vw);
-	float:left;
-	/*transition: width 0.3s;*/
-	height: calc( 100vh - 50px );
-	min-width:340px;
+.list_header{
+	height:50px;
+	margin-left:4px;
 }
-.cs_manager_list_container{
-	overflow-x: hidden;
-	overflow-y: scroll;
-	width:100%;
-	height:100%;
+
+.header_logo{
+	width:200px;
+	height:48px;
+	background-image:url(/images/Lexus_logo_long.png);
+	float: left;
+	background-size:contain;
 }
-.cs_manager_dialog{
-	width:calc(60vw);
-	float:left;
-	/*transition: width 0.3s;*/
-	overflow:hidden;
-	max-width: calc( 100vw - 380px);
-}
+
 .dialog__profileImage > img {
     max-width: 60px;
 }

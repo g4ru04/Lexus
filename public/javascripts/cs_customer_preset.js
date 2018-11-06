@@ -17,8 +17,8 @@ function set_customer_socket(){
 		Connection.socket = io(socket_server_ip);
 		
 		Connection.end_point = "client" ;
-		Connection.client_id  = getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID();
-		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
+		Connection.client_id  = client_id_b64?b64DecodeUnicode(client_id_b64):UUID();
+		Connection.service_id = service_id_b64?b64DecodeUnicode(service_id_b64):UUID();
 		Connection.conn = false ;
 		Connection.talks = [];
 		Connection.talks_history_cursor = 0;

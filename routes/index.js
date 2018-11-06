@@ -1,36 +1,44 @@
 var express = require('express');
 var router = express.Router();
 var common = require('../service/common');
+var ht_api = require('../service/ht_api.js');
 const settings = require('../configs.js');
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.post('/api', async function(req, res, next) {
+	res.send(await ht_api.callApi(req.body));
+});
+
 router.get('/cust.do', function(req, res, next) {
+	res.send(`<html>
+		<head>
+			<title>頁面讀取中</title>
+			<script src="/javascripts/common.js"></script>
+		</head>
+		<body>
+			<script>
+				post('/cust.do', {c: getUrlParameter('c'),s: getUrlParameter('s')});
+			</script>
+		</body>
+	</html>`)
+});
+
+router.post('/cust.do', function(req, res, next) {
+  console.log(req.body);
   res.render('cs_customer',{
-	  socket_server_ip:settings.socket_server.ip
+	  socket_server_ip: settings.socket_server.ip,
+	  c: req.body.c,
+	  s: req.body.s
   });
 });
 
 router.get('/serv.do', function(req, res, next) {
-  if(req.query.s==null){
-	  res.render('cs_manager_login');
-  }else{
-    let func_list =["金牌話術","_訊息推播","照片","相機","撥打電話","_預約","_車主資料"/*,"常用訊息"*/];
-  
-    let list_data = require('../service/specialist.json', 'utf-8');
-    res.render('cs_manager',{
-      list_data: list_data,
-	  func_list: func_list,
-	  socket_server_ip:settings.socket_server.ip
-    });
-  }
-});
-
-/* for 金融案例 */
-router.get('/serv_fin.do', function(req, res, next) {
-  res.render('cs_manager_fin');
+	res.render('cs_manager',{
+		socket_server_ip:settings.socket_server.ip
+	});
 });
 
 router.get('/demo.do', function(req, res, next) {
@@ -46,8 +54,6 @@ router.get('/demo.do', function(req, res, next) {
 		</frameset> 
 	</html>`);
 });
-
-
 
 router.get('/api/json/sl', common.getSl);
 router.get('/api/json/dl', common.getDl);

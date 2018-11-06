@@ -1,4 +1,34 @@
 
+function call_hotai_api(api_code,data,callback){
+	$.ajax({
+		type : "POST",
+		url : "/api",
+		cache : false,
+		contentType: 'application/json; charset=UTF-8',
+		data : JSON.stringify({
+			api: api_code,
+			data:data,
+			detail:true
+		}),
+		success: function(data) {
+			if(data.isSuccess && 
+				(data.result.rtnCode=="0"|| data.result.rtnCode=="00")
+			){
+				if(callback){
+					callback(data.result);
+				}
+			}else{
+				alert('API取得失敗');
+				console.log(data);
+			}
+		},error: function (jqXHR, textStatus, errorThrown) {
+			alert('API使用異常');
+			console.log(jqXHR,textStatus,errorThrown);
+		}
+	});
+	
+}
+
 function common_conn_setting(conn){
 	
 	conn.client_id = 
@@ -31,12 +61,6 @@ function common_conn_setting(conn){
 		conn.talks_history_cursor += 1;
 		conn.talks.push(data);
 		conn.reiceive_msg(data);
-	});
-	
-	conn.socket.on('update conversatoin list', function (data) {
-		setTimeout(function(){
-			update_conversatoin_list(data[0]);
-		},100);
 	});
 	
 	conn.socket.on('get history', function (data) {
@@ -364,4 +388,25 @@ function UUID(){
 	    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
 	    return v.toString(16);
 	});
+}
+
+function post(path, params, method) {
+	method = method || "post";
+	var form = document.createElement("form");
+	form.setAttribute("method", method);
+	form.setAttribute("action", path);
+
+	for(var key in params) {
+		if(params.hasOwnProperty(key)) {
+			var hiddenField = document.createElement("input");
+			hiddenField.setAttribute("type", "hidden");
+			hiddenField.setAttribute("name", key);
+			hiddenField.setAttribute("value", params[key]);
+
+			form.appendChild(hiddenField);
+		}
+	}
+
+	document.body.appendChild(form);
+	form.submit();
 }

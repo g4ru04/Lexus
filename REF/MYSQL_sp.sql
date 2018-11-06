@@ -85,13 +85,30 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_bind_client $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_bind_client`(
 	IN `p_manager_id` VARCHAR(50),
-	IN `p_customer_id` VARCHAR(50)
+	IN `p_customer_id` VARCHAR(50),
+	IN `p_customer_name` VARCHAR(20),
+	IN `p_vehicle_type` VARCHAR(20),
+	IN `p_vehicle_number` VARCHAR(20),
+	IN `p_avator` VARCHAR(300),
+	IN `p_telphone` VARCHAR(20),
+	IN `p_personal_data` VARCHAR(2000)
 )
 BEGIN
 	/* 20181022 By Ben */
-	/* call sp_bind_client("SE0001","C0003"); */
+	/* call sp_bind_client("SE0001","C0003","王二明",'CT200H', 'ABZ-1234', 'https://customer-service-xiang.herokuapp.com/images/avatar.png', '0919863010', '{"討厭的維修時間":"平日上班"}'); */
 	DECLARE p_conversation_title varchar(60);
-	DECLARE p_conversation_avator varchar(100);
+	DECLARE p_conversation_avator varchar(300);
+	
+	IF NOT EXISTS (
+		SELECT customer_id FROM tb_customer WHERE ht_id = p_customer_id
+	)THEN
+		INSERT INTO tb_customer
+		(`customer_id`, `ht_id`, `name`, `vehicle_type`, `vehicle_number`, `avator`, `telphone`, `personal_data`, `personal_data_time`, `memo`) 
+		VALUES (UUID(), p_customer_id, p_customer_name, p_vehicle_type, p_vehicle_number, p_avator, p_telphone, p_personal_data, NOW(), NULL);
+	ELSE
+		UPDATE tb_customer SET telphone = p_telphone WHERE ht_id = p_customer_id;	
+	END IF;
+
 	IF NOT EXISTS (
 		SELECT responsibility_id FROM tb_responsibility WHERE manager_id = p_manager_id AND customer_id = p_customer_id
 	)THEN
@@ -105,6 +122,8 @@ BEGIN
 				FROM tb_customer 
 				WHERE ht_id = p_customer_id limit 0,1
 			);
+		SET p_conversation_title = IFNULL(p_conversation_title, CONCAT("未知的使用者: ",p_customer_id));
+		SET p_conversation_avator = IFNULL(p_conversation_avator, "https://customer-service-xiang.herokuapp.com/images/avatar.png");
 		INSERT INTO tb_responsibility 
 		(`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `avator`, `last_talk_time`, `last_message`, `unread`)
 		VALUES
@@ -195,3 +214,27 @@ BEGIN
 	END IF;
 	
 END $$
+
+
+-- ###################################### --
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_update_manager $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_manager`(
+	IN `p_manager_id` VARCHAR(50),
+	IN `p_manager_type` VARCHAR(50),
+	IN `p_manager_name` VARCHAR(20),
+	IN `p_avator` VARCHAR(300),
+	IN `p_telphone` VARCHAR(20),
+	IN `p_personal_data` VARCHAR(2000)
+)
+BEGIN
+	/* 20181022 By Ben */
+	/* call sp_update_manager("SE0001","CostomerService","帥哥志豪",'https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png', '0919863010', '{"討厭的維修時間":"平日上班"}'); */
+	IF NOT EXISTS (
+		SELECT manager_id FROM tb_manager WHERE ht_id = p_manager_id 
+	)THEN
+		INSERT INTO tb_manager (`manager_id`, `ht_id`, `manager_type`, `manager_name`, `avator`, `telphone`, `personal_data`, `personal_data_time`) VALUES (UUID(), p_manager_id, p_manager_type, p_manager_name, p_avator, p_telphone, p_personal_data, NOW());
+	END IF;
+	
+END $$
+

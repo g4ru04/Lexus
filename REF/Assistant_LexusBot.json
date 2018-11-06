@@ -1,0 +1,269 @@
+{
+	"name": "LexusBot",
+	"intents": [{
+			"intent": "睡覺",
+			"examples": [{
+					"text": "我想睡覺"
+				}
+			]
+		}, {
+			"intent": "高興",
+			"examples": [{
+					"text": "感覺很漂亮"
+				}
+			]
+		}, {
+			"intent": "罵髒話",
+			"examples": [{
+					"text": "吃大便啦"
+				}
+			]
+		}, {
+			"intent": "謝謝",
+			"examples": [{
+					"text": "謝謝妳"
+				}
+			]
+		}, {
+			"intent": "打招呼",
+			"examples": [{
+					"text": "早安"
+				}
+			]
+		}, {
+			"intent": "尋求資訊",
+			"examples": [{
+					"text": "還有嗎"
+				}
+			]
+		}, {
+			"intent": "生氣",
+			"examples": [{
+					"text": "覺得不爽"
+				}
+			]
+		}, {
+			"intent": "不想上班",
+			"examples": [{
+					"text": "不想上班"
+				}
+			]
+		}, {
+			"intent": "同情",
+			"examples": [{
+					"text": "辛苦你了"
+				}
+			]
+		}, {
+			"intent": "吃飯",
+			"examples": [{
+					"text": "我想吃飯"
+				}
+			]
+		}
+	],
+	"entities": [{
+			"entity": "品牌活動",
+			"values": [{
+					"type": "synonyms",
+					"value": "覓境食旅",
+					"synonyms": ["覓境食旅", "滄山之嚮", "金瓜石", "向山出發", "百年山城", "旅遊", "優人神鼓", "祕境之旅", "山城之旅", "擊鼓體驗"]
+				}, {
+					"type": "synonyms",
+					"value": "媽媽咪呀",
+					"synonyms": ["媽媽咪呀", "Mamma Mia", "Dancing Queen", "全本音樂劇", "音樂劇", "藝文", "ABBA", "阿巴合唱團", "歌舞劇", "舞台劇"]
+				}, {
+					"type": "synonyms",
+					"value": "精選頂級餐廳",
+					"synonyms": ["精選餐廳", "EZTABLE", "訂位優惠", "保留席", "米其林餐廳", "美食", "車主尊榮保留席", "APP訂位", "頂級餐廳", "保留席訂位"]
+				}
+			]
+		}
+	],
+	"language": "zh-tw",
+	"metadata": {
+		"api_version": {
+			"major_version": "v1",
+			"minor_version": "2018-07-10"
+		}
+	},
+	"description": "",
+	"dialog_nodes": [{
+			"type": "standard",
+			"title": "D0003-吃飯",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0003\",\"ans_text\":\"coffee tea or me\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "#吃飯",
+			"digress_in": "does_not_return",
+			"dialog_node": "node_3_1540449756297",
+			"previous_sibling": "node_1_1540449751706"
+		}, {
+			"type": "standard",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "<? input.text ?>"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "false",
+			"dialog_node": "node_1_1539672262413",
+			"previous_sibling": "node_6_1540449784586"
+		}, {
+			"type": "standard",
+			"title": "D0005-尋求資訊",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0005\",\"ans_text\":\"讓我轉接客服專員?\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "#尋求資訊",
+			"dialog_node": "node_4_1540449758920",
+			"previous_sibling": "node_2_1540449754210"
+		}, {
+			"type": "standard",
+			"title": "D0007-生氣",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0007\",\"ans_text\":\"拍拍 不哭\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "#生氣",
+			"dialog_node": "node_6_1540449784586",
+			"previous_sibling": "node_5_1540449761672"
+		}, {
+			"type": "standard",
+			"title": "D0002-不想上班",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0002\",\"ans_text\":\"那就別上阿 誰逼你了?\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "#不想上班",
+			"dialog_node": "node_1_1540449751706",
+			"previous_sibling": "歡迎"
+		}, {
+			"type": "standard",
+			"title": "D0006-打招呼",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0006\",\"ans_text\":\"哈囉哈囉~\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "#打招呼",
+			"dialog_node": "node_5_1540449761672",
+			"previous_sibling": "node_4_1540449758920"
+		}, {
+			"type": "standard",
+			"title": "D0004-同情",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0004\",\"ans_text\":\"你又算哪根蔥了?\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "#同情",
+			"dialog_node": "node_2_1540449754210",
+			"previous_sibling": "node_3_1540449756297"
+		}, {
+			"type": "standard",
+			"title": "D0008-其他事情",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0008\",\"intent\":\"unknown\",\"ans_text\":\"<? input.text ?>\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "anything_else",
+			"dialog_node": "其他事情",
+			"previous_sibling": "node_1_1539672262413"
+		}, {
+			"type": "standard",
+			"title": "D0001-歡迎",
+			"output": {
+				"generic": [{
+						"values": [{
+								"text": "{\"ans_ID\":\"D0001\",\"ans_text\":\"歡迎妳啊\"}"
+							}
+						],
+						"response_type": "text",
+						"selection_policy": "sequential"
+					}
+				]
+			},
+			"metadata": {},
+			"conditions": "welcome",
+			"dialog_node": "歡迎"
+		}
+	],
+	"workspace_id": "234bf172-8356-42cc-8ec3-cb0a3dc69a0c",
+	"counterexamples": [],
+	"system_settings": {
+		"tooling": {
+			"store_generic_responses": true
+		},
+		"disambiguation": {
+			"prompt": "你是说",
+			"none_of_the_above_prompt": "上述任何一种"
+		},
+		"human_agent_assist": {
+			"prompt": "你是说"
+		}
+	},
+	"learning_opt_out": false
+}

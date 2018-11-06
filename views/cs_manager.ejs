@@ -15,121 +15,100 @@
 	</head>
 	<body>
 	
-		<!-- Left Hand Side-->
-		<div class='cs_manager_list current_view'>
-			<div class='list_header'>
-				<div class='header_logo'></div>
-				<div class="search_box_container">
-					<input type="text" placeholder="搜尋"/>	
-				</div>
-			</div>
-			<div class='cs_manager_list_container'>
-				<% list_data.forEach(function (item) { %>
-					<div class='list_element' customer_id='<%= item.id %>' style='opacity:0.2;'>
-						<div class="img" alt="">
-							<img src="<%= item.avatar %>" alt="">
-						</div>
-						<div class='chat_body'>
-							<div class="title">
-								<%= item.type %>/<%= item.vehicle_id %>/<%= item.name %>
-							</div>
-							<div class="msg">
-								<%= item.latest_msg[0].msg %>
-							</div>
-						</div>
-						<% if (item.unread) { %>
-							<div class="unread">
-								<%= item.unread %>
-							</div>
-						<% } %>
-						<% if (item.note.length>0) { %>
-							<div class="note" title=''>
-								<div class="tooltip">重要提醒
-									<span class="tooltiptext"><%= item.note.map(function(item){return item.msg;}) %></span>
-								</div>
-							</div>
-						<% } %>
-					</div>
-				<% }); %>
-			</div>
+		<!-- 登入前 -->
+		<div class='login_panel'>
+			<h2>登入頁面</h2>
+			<ul>
+				<li>帳號: <input type='text' id='username' value='AA94453'/></li>
+				<li>密碼: <input type='password' id='password' value='ab#1234'/></li>
+			</ul>
+			<button onclick='to_login()'>登入</button>
 		</div>
-		
-		<!-- Right Hand Side-->
-		<div class='cs_manager_dialog hide_view'>
-			<div class="header_content">
-				<div class="heder_service">
-					<img alt="" class="img-responsive" src="/images/back.png">
+		<!-- 登入後 (左) -->
+		<div class='after_login'>
+			<div class='cs_manager_list current_view'>
+				<div class='list_header'>
+					<div class='header_logo'></div>
+					<div class="search_box_container">
+						<input type="text" placeholder="搜尋"/>	
+					</div>
 				</div>
-				<div class="txt">
+				<div class='cs_manager_list_container'>
+					<!-- 預設假底圖 -->
+					 <div class="list_element" customer_id="C0003" style="opacity:0.2;">  <div class="img" alt="">  <img src="/images/avatar.png" alt="">  </div>  <div class="chat_body">  <div class="title">  CT200H/ABZ-1234/王大明  </div>  <div class="msg">  是的  </div>  </div> <div class="unread">  2  </div>   <div class="note" title="">  <div class="tooltip">重要提醒  <span class="tooltiptext">生日</span>  </div>  </div> </div> <div class="list_element" customer_id="C0001" style="opacity:0.2;">  <div class="img" alt="">  <img src="/images/avatar.png" alt="">  </div>  <div class="chat_body">  <div class="title">  ES200/ABE-1234/陳大為  </div>  <div class="msg">  謝謝！！  </div>  </div> <div class="unread">  4  </div>   <div class="note" title="">  <div class="tooltip">重要提醒  <span class="tooltiptext">保險到期日09/26</span>  </div>  </div> </div> <div class="list_element" customer_id="UWtqzPU9@&amp;smq9b&amp;KVvf" style="opacity:0.2;">  <div class="img" alt="">  <img src="/images/avatar.png" alt="">  </div>  <div class="chat_body">  <div class="title">  RX450H/ACE-8866/林小東  </div>  <div class="msg">  感謝您！  </div>  </div>   </div> <div class="list_element" customer_id="KEpz5bFFx&amp;mnzd5UZfZf" style="opacity:0.2;">  <div class="img" alt="">  <img src="/images/avatar.png" alt="">  </div>  <div class="chat_body">  <div class="title">  GS300/LXS-8888/吳小涵  </div>  <div class="msg">  了解  </div>  </div>   </div> <div class="list_element" customer_id="Qr8zrWexwdXtbHQkV5bY" style="opacity:0.2;">  <div class="img" alt="">  <img src="/images/avatar.png" alt="">  </div>  <div class="chat_body">  <div class="title">  NX200/AAA-0000/李小龍  </div>  <div class="msg">  您已寄出一張圖片  </div>  </div> </div>
 				</div>
 			</div>
-				<div id='console'>
+			
+			<!-- 登入後 (右) -->
+			<div class='cs_manager_dialog hide_view'>
+				<div class="header_content">
+					<div class="heder_service">
+						<img alt="" class="img-responsive" src="/images/back.png">
+					</div>
+					<div class="txt">
+					</div>
 				</div>
-				
-				<!-- 下方控制面板 -->
-				<div class="control-bar">
-					<!-- 功能列表(隱) -->
-					<% if(func_list.length>0){ %>
+					<div id='console'>
+					</div>
+					
+					<!-- 下方控制面板 -->
+					<div class="control-bar">
+						<!-- 功能列表(隱) -->
 						<div class="select-menu" style="display: none;">
 							<ul class="select-tag05">
-					<% } %>
-					
-					<% func_list.forEach(function (item,i) { %>
-						<% if( i!=0 && i%3==0 ){%>
-							</ul>
-							<ul class="select-tag05">
-						<% } %>
-						<li>
-							<a href="javascript:void(0)" avalon-events="">
-								<img alt="" class="img-responsive" src="/images/func.png" border="0">
-								<%= item %>
-							</a>
-						</li>
-					<% }); %>
-					
-					<% if(func_list.length>0){ %>
+						
+						<% ["金牌話術","_訊息推播","照片","相機","撥打電話","_預約","_車主資料","常用訊息"].forEach(function (item,i) { %>
+							<% if( i!=0 && i%3==0 ){%>
+								</ul>
+								<ul class="select-tag05">
+							<% } %>
+							<li>
+								<a href="javascript:void(0)" avalon-events="">
+									<img alt="" class="img-responsive" src="/images/func.png" border="0">
+									<%= item %>
+								</a>
+							</li>
+						<% }); %>
 							</ul>
 						</div>
-					<% } %>
+						<!-- 金牌話術(隱) -->
+						<div>
+							<div id='talk_tricks_container'>
+							</div>
+						</div>
+						<!-- 表情符號(隱) -->
+						<div>
+							<div id='emoticon_container'></div>
+						</div>
+						<!-- 對話頁面(顯) -->
+						<div class="smart_top" avalon-events="" style="">
+							<div class="box">
+								<a href="javascript:void(0)" class="btn-add" avalon-events="">
+								</a>
+								<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
+								</a>
+								<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
+								<a id='dial_phone' href="tel:+886-919863010" style='display:none;'></a>
+								<input class="input msg" placeholder="你想問什麼？" maxlength="30" avalon-events="" type="text">
+								<a href="javascript:void(0)" class="btn-mic" avalon-events="">
+									<span class="btn-search">
+										<i></i>
+									</span>
+								</a>
+							</div>
+						</div>
+					</div>
 					
-					<!-- 金牌話術(隱) -->
-					<div>
-						<div id='talk_tricks_container'>
-						</div>
-					</div>
-					<!-- 表情符號(隱) -->
-					<div>
-						<div id='emoticon_container'></div>
-					</div>
-					<!-- 對話頁面(顯) -->
-					<div class="smart_top" avalon-events="" style="">
-						<div class="box">
-							<a href="javascript:void(0)" class="btn-add" avalon-events="">
-							</a>
-							<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
-							</a>
-							<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
-							<a id='dial_phone' href="tel:+886-919863010" style='display:none;'>0919863010</a>
-							<input class="input msg" placeholder="你想問什麼？" maxlength="30" avalon-events="" type="text">
-							<a href="javascript:void(0)" class="btn-mic" avalon-events="">
-								<span class="btn-search">
-									<i></i>
-								</span>
-							</a>
-						</div>
-					</div>
+					
+				
+				<!-- Div After click "相機"-->
+				<div id='video_container'>
+					<video autoplay></video>
 				</div>
-				
-				
-			
-			<!-- Div After click "相機"-->
-			<div id='video_container'>
-				<video autoplay></video>
-			</div>
-			<div id='talk_tricks_editor'>
+				<div id='talk_tricks_editor'>
+				</div>
 			</div>
 		</div>
-		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		

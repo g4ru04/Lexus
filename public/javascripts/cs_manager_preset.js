@@ -5,8 +5,6 @@ $( function() {
 	emotion_setting();
 	menu_setting();
 	
-	
-	set_manager_socket();
 	$("#talk_tricks_container").delegate( ".talk_trick", "click", function() {
 		$(".input").val($(this).text());
 		$("#talk_tricks_container").toggleClass("enable"); 
@@ -72,8 +70,54 @@ $( function() {
 	
 });
 
+function to_login(){
+	
+	call_hotai_api("USER_LOGIN",{
+		"USERID": $("#username").val(),
+		"PWD": $("#password").val()
+	},function(data){
+		
+		let login_info = data;
+		call_hotai_api("LINE006_Q01",{
+			DLRCD: login_info.DLRCD,
+			BRNHCD: login_info.BRNHCD,
+			USERID: login_info.USERID,
+			ECHOTITLECD: login_info.ECHOTITLECD,
+			FRAN: login_info.FRAN
+		},function(data){
+			$(".login_panel").hide();
+			$(".after_login").show();
+			let service_id = $("#username").val();
+			let manager_data = {
+				USERID: login_info.USERID,
+				ECHOTITLECD: login_info.ECHOTITLECD,
+				USERNM: login_info.USERNM,
+				PICURL: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+				PHONE: null,
+				PERSONAL_DATA:null
+			};
+			let responsibility_data = data.USERINFO.map(function(item){
+				return {
+					USERID: item.USERID,
+					ENCYID: item.ENCYID,
+					NICKNAME: item.NICKNAME,
+					CARNM: item.CARNM,
+					LICSNO: item.LICSNO,
+					PICURL: item.PICURL,
+					MOBILE: item.MOBILE,
+					PERSONAL_DATA: null,
+				};
+			});
+			
+			set_manager_socket(service_id,manager_data,responsibility_data);
+		});
+	});
+	
+}
+
+
 //設定 Socket 
-function set_manager_socket(){
+function set_manager_socket( service_id, manager_data, responsibility_data){
 	
 	Connection = {}
 	
@@ -82,7 +126,7 @@ function set_manager_socket(){
 		
 		Connection.end_point = "service" ;
 		Connection.client_id  = "";
-		Connection.service_id = getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID();
+		Connection.service_id = service_id?service_id:UUID();
 		Connection.conn = false ;
 		Connection.talks = [];
 		Connection.talks_history_cursor = 0;
@@ -94,6 +138,8 @@ function set_manager_socket(){
 		Connection.socket.emit("register service",{
 			type : Connection.end_point,
 			service_id : Connection.service_id,
+			manager_data : manager_data,
+			responsibility_data : responsibility_data
 		});
 	}
 	
@@ -101,6 +147,12 @@ function set_manager_socket(){
 		Connection.socket.on('enter', function (data) {
 			Connection.conn = true;
 			my_console("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
+			console.log(
+				window.location.origin + "/cust.do"
+					+"?c="+b64EncodeUnicode(Connection.client_id)
+					+"&s="+b64EncodeUnicode(Connection.service_id)
+			)
+			
 			Connection.socket.emit("get history",{});
 		});
 	
@@ -130,7 +182,16 @@ function set_manager_socket(){
 			Connection.socket.emit("register service",{
 				type : Connection.end_point,
 				service_id : Connection.service_id,
+				manager_data : manager_data,
+				responsibility_data : responsibility_data
 			});
+		});
+		
+		Connection.socket.on('update conversatoin list', function (data) {
+			console.log(data)
+			setTimeout(function(){
+				update_conversatoin_list(data[0]);
+			},100);
 		});
 	}
 	
