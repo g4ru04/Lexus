@@ -156,6 +156,7 @@ function emotion_setting(){
 }
 
 function produce_dialog_element(message) {
+	console.log(message);
 	if(message.from==null || message.message==null){
 		return JSON.stringify(message,null,"    ")
 				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")
@@ -166,7 +167,8 @@ function produce_dialog_element(message) {
 	
 	let message_str = "";
 	if(message.message.type=="text"){
-		message_str = message.message.text ;
+		message_str = message.message.text
+						.replace(/\n/g,"<br>") ;
 		
 	}else if(message.message.type=="image"){
 		message_str += "<a target='_blank' href='"+message.message.url+"'>"

@@ -93,8 +93,10 @@ body{
     background-color: #ecf2ed;
 }
 
-.control-bar .box .btn-laugh , .control-bar .box .btn-laugh , .control-bar .box .btn-picture{
-	display: table-cell;
+.control-bar .box .btn-laugh , .control-bar .box .btn-laugh ,
+.control-bar .box .btn-picture , .control-bar .box .btn-book ,
+.control-bar .box .btn-booklog {
+	/*display: table-cell;*/
 	vertical-align: middle;
 	overflow: hidden;
 	text-indent: -9999px;
@@ -102,6 +104,10 @@ body{
 	white-space: nowrap;
 	width: 60px;
 	height: 60px;
+	float: left;
+}
+.control-bar .smart_top .box a {
+	float:none;
 }
 .control-bar .box .btn-laugh {
 	background: url(/images/laugh.png);
@@ -119,6 +125,17 @@ body{
 	background-repeat: no-repeat;
 	background-position: center center;
 }
+.control-bar .box .btn-book {
+	background: url(/images/book.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.control-bar .box .btn-booklog {
+	background: url(/images/booklog.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+} 
+	 
 .control-bar .box .input {
 	box-sizing: border-box;
 	border-radius: 30px;

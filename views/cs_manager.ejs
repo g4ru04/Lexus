@@ -54,6 +54,7 @@
 					<!-- 下方控制面板 -->
 					<div class="control-bar">
 						<!-- 功能列表(隱) -->
+						<!--
 						<div class="select-menu" style="display: none;">
 							<ul class="select-tag05">
 						
@@ -71,6 +72,135 @@
 						<% }); %>
 							</ul>
 						</div>
+						-->
+						<div>
+							<div id="book-menu" class="select-menu samelayer" style="display: none;">
+								<div class="table-title">基本資料</div>
+								<div class="table-tr">
+									<div class="table-td left">姓名</div>
+									<div class="table-td right">
+										<input id="cust-name" type="text" placeholder="姓名" value="" id="button_text">
+									</div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">電話</div>
+									<div class="table-td right">
+										<input id="cust-phone" type="text" placeholder="電話" value="" id="button_text">
+									</div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">方便連絡時段</div>
+									<div class="table-td right">
+										<select name="font" id="cust-contacttime" class="span1">
+											<option value="" selected="selected" hidden>選擇時段</option>
+											<option value="morning">早上</option>
+											<option value="noon">下午</option>
+											<option value="night">晚上</option>
+										</select>
+									</div>
+								</div>
+								<br/>
+								<div class="table-title">選擇服務廠</div>
+								<div class="table-tr">
+									<div class="table-td left">是否在服務廠等候</div>
+									<div class="table-td right">
+										<input id="cust-wait" type="text" value="false" hidden/>
+										<button id="cust-wait-btn">Ｘ 完工通知</button>
+										<!-- toggle -> Ｏ 在場等候 -->
+									</div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">服務地區</div>
+									<div class="table-td right">
+										<select name="font" id="service-area" class="span1">
+											<option value="" selected="selected" hidden>選擇地區</option>
+											<option value="A">地區A</option>
+											<option value="B">地區B</option>
+											<option value="C">地區C</option>
+										</select>
+									</div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">服務廠</div>
+									<div class="table-td right">
+										<select name="font" id="service-factory" class="span1">
+											<option value="" selected="selected" hidden>選擇服務廠</option>
+											<option value="01">XX廠</option>
+											<option value="02">XX廠</option>
+											<option value="03">XX廠</option>
+										</select>
+									</div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">預約日期</div>
+									<div class="table-td right"><input type="text" id="service-date" size="30"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">預約時段</div>
+									<div class="table-td right">
+										<select name="font" id="service-time" class="span1">
+											<option value="" selected="selected" hidden>選擇時段</option>
+											<option value="時段1">時段1</option>
+											<option value="時段2">時段2</option>
+											<option value="時段3">時段3</option>
+										</select>
+									</div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">備註</div>
+									<div class="table-td right">
+										<textarea id="service-memo" placeholder="備註"></textarea>
+									</div>
+								</div>
+								<div class="table-tr">
+									<button type="button" id="book-reset" style="width:30%;">清除</button>
+									<button type="button" id="book-submit" style="width:30%;">送出</button>
+								</div>
+							</div>
+							<div id="book-log" class="samelayer" style="display: none;">
+								<h3>預約記錄</h3>
+								<a style="color: red;">若需修改時間，請重新預約或致電服務。</a>
+								<div class="select-menu">
+									<div class="table-tr">
+										<div class="table-td left">愛車車牌</div>
+										<div class="table-td right">愛車車牌</div>
+									</div>
+									<div class="table-tr">
+										<div class="table-td left">服務廠</div>
+										<div class="table-td right">廠廠廠</div>
+									</div>
+									<div class="table-tr">
+										<div class="table-td left">服務內容</div>
+										<div class="table-td right">內容</div>
+									</div>
+									<div class="table-tr">
+										<div class="table-td left">預約時間</div>
+										<div class="table-td right">時間</div>
+									</div>
+
+								</div>
+								<h3>連絡資料</h3>
+								<div class="select-menu">
+									<div class="table-tr">
+										<div class="table-td left">連絡人</div>
+										<div class="table-td right">人</div>
+									</div>
+									<div class="table-tr">
+										<div class="table-td left">連絡電話</div>
+										<div class="table-td right">電話</div>
+									</div>
+									<div class="table-tr">
+										<div class="table-td left">連絡時段</div>
+										<div class="table-td right">時段</div>
+									</div>
+									<div class="table-tr">
+										<div class="table-td left">其他意見</div>
+										<div class="table-td right">意見</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
 						<!-- 金牌話術(隱) -->
 						<div>
 							<div id='talk_tricks_container'>
@@ -83,8 +213,6 @@
 						<!-- 對話頁面(顯) -->
 						<div class="smart_top" avalon-events="" style="">
 							<div class="box">
-								<a href="javascript:void(0)" class="btn-add" avalon-events="">
-								</a>
 								<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
 								</a>
 								<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
@@ -96,6 +224,17 @@
 									</span>
 								</a>
 							</div>
+						</div>
+						<div class="box">
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">照片</div>
+							<a href="javascript:void(0)" class="btn-book" avalon-events="">
+							</a>
+							<a href="javascript:void(0)" class="btn-booklog" avalon-events="">
+							</a>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">換專員</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">車主資料</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">撥打</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">金牌話術</div>
 						</div>
 					</div>
 					

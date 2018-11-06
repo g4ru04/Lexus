@@ -283,7 +283,39 @@ function talk_tricks_setting(data){
 
 //功能選單
 function menu_setting(){
-	
+	$(".btn-book").click(function(){
+		//dealwithSamelayer('samelayer');
+		$("#book-menu").toggle();
+	});
+	$(".btn-booklog").click(function(){
+		//dealwithSamelayer('samelayer');
+		$('#book-log').toggle();
+	});
+
+	$("#service-date").datepicker();
+
+	$('#book-submit').click(function(){
+		var retText = 
+			'為您預約維修: \n' +
+			'日期:' + $("#service-date").val() + '\n' +
+			'時段:' + $("#service-time").val() + '\n' +
+			'服務廠:' + $("#service-factory").val();
+		
+		Connection.send_text(retText);
+		$("#book-menu").toggle();
+	});
+	$("#cancle-book").click(function(){
+		$('.top-page').toggle();
+	});
+	$(".heder_service2").click(function(){
+		$('.top-page').toggle();
+	});
+	$("#cust-wait-btn").click(function(){
+		var custWait = $('#cust-wait').val();
+		this.innerText = custWait=="true" ? 'Ｘ 完工通知':'Ｏ 在場等候';
+		$('#cust-wait').val(custWait=="true"?"false":"true");
+	});
+	/*
 	$(".btn-add").click(function(){
 		$(".select-menu").toggle();
 	});
@@ -329,5 +361,14 @@ function menu_setting(){
 		}
 		
 		$(".select-menu").toggle();
-	});
+	});*/
+}
+
+function dealwithSamelayer(classname){
+	var samelayer = $('.'+ classname)
+	samelayer.map(function(element){
+		if(samelayer[element].style.display != "none"){
+			samelayer[element].style.display = "none"
+		}
+	})
 }

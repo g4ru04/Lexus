@@ -200,7 +200,8 @@
 */
 .select-menu {
 	overflow: hidden;
-    background-color: #fff;
+	transition: height 0.3s;
+    background-color: aliceblue;
     border-top: 5px solid #ecf2ed;
     display: table;
     width: 100%;
@@ -246,6 +247,54 @@ ul.select-line hr {
 	display: block;
 }
 
+.select-menu .table-title {
+	text-align: center;
+	font-size:x-large;
+	background-color: inherit;
+}
+
+.select-menu .table-tr {
+	display: table-row; 
+	border-collapse: collapse; 
+	vertical-align: middle;
+}
+
+.select-menu .table-tr .table-td.left {
+	display: table-cell; 
+	vertical-align: top;
+	width: 30%;
+	text-align:right;
+	background-color: bisque;
+}
+.select-menu .table-tr .table-td.right {
+	display: table-cell; 
+	width: 70%;
+	text-align:left;
+	background-color: lightcyan;
+}
+
+textarea {
+	resize : none;
+	width:100%;
+	height:30%;
+}
+#book-log {
+	background-color: aliceblue;
+}
+
+#book-log a, #book-log h3 {
+	background-color: inherit;
+}
+/* 
+.top-page {
+	display: none;
+    z-index: 999;
+	background-color: #FFFFFF;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100%;
+} */
 
 /* Function css */
 #video_container{
