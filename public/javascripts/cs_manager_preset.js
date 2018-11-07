@@ -127,6 +127,18 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 		Connection.end_point = "service" ;
 		Connection.client_id  = "";
 		Connection.service_id = service_id?service_id:UUID();
+		Connection.client_info = {
+			"id":"",
+			"name":"",
+			"avator":"/images/avator.png",
+			"PHONE":""
+		};;
+		Connection.service_info = {
+			"id":"",
+			"name":"",
+			"avator":"/images/avator.png",
+			"PHONE":""
+		};
 		Connection.conn = false ;
 		Connection.talks = [];
 		Connection.talks_history_cursor = 0;
@@ -145,6 +157,14 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 	
 	Connection.set_listener = function(){
 		Connection.socket.on('enter', function (data) {
+			try {
+				let conversation_data = data[0][0];
+				Connection.client_info = JSON.parse(conversation_data.customer_data);
+				Connection.service_info = JSON.parse(conversation_data.manager_data);
+			}catch(err) {
+				console.log(err);
+			}
+			
 			Connection.conn = true;
 			my_console("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
 			console.log(
@@ -152,8 +172,9 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 					+"?c="+b64EncodeUnicode(Connection.client_id)
 					+"&s="+b64EncodeUnicode(Connection.service_id)
 			)
-			
-			Connection.socket.emit("get history",{});
+			if(Connection.talks_history_cursor==0){
+				Connection.socket.emit("get history",{});
+			}
 		});
 	
 		Connection.socket.on('leave', function () {
@@ -173,7 +194,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 		Connection.socket.on('reconnect', function () {
 			Connection.conn = true;
 			my_console("重新連接");
-			$("#console").html('<div class="loading_div"><img src="/images/loading.gif" /></div>');
+			//$("#console").html('<div class="loading_div"><img src="/images/loading.gif" /></div>');
 			Connection.socket.emit("enter",{
 				type : Connection.end_point,
 				client_id : Connection.client_id,
@@ -259,7 +280,7 @@ function update_conversatoin_list(conversatoin_data){
 				+'			</div>'
 				+'		</div>'
 				+			"<div class='timestamp'>"+displayChatTime(item.last_talk_time)+"&nbsp;</div>"
-				+			(item.unread?"<div class='unread'>"+item.unread+"</div>":"")
+				+			(item.manager_unread?"<div class='unread'>"+item.manager_unread+"</div>":"")
 				+			note
 				+'	</div>';
 		return div_html;

@@ -238,3 +238,51 @@ BEGIN
 	
 END $$
 
+-- ###################################### --
+DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_select_conversation_info $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_conversation_info`(
+	IN `p_manager_id` VARCHAR(50),
+	IN `p_customer_id` VARCHAR(50)
+)
+BEGIN
+	/* 20181022 By Ben */
+	/* call sp_select_conversation_info("SE0001","C0003"); */
+	DECLARE p_manager_json_data varchar(3000);
+	DECLARE p_customer_json_data varchar(3000);
+	
+	SET p_manager_json_data = (SELECT 
+		json_merge(
+			json_object(
+				"end_point","service",
+				"id",ht_id,
+				"name",manager_name,
+				"type",manager_type,
+				"avator",avator,
+				"PHONE",telphone
+			),personal_data
+		)
+	FROM tb_manager where ht_id = p_manager_id LIMIT 0,1);
+	
+	SET p_customer_json_data = (SELECT 
+		json_merge(
+			json_object(
+				"end_point","client",
+				"id",ht_id,
+				"name",name,
+				"vehicle_type",vehicle_type,
+				"vehicle_number",vehicle_number,
+				"avator",avator,
+				"PHONE",telphone,
+				"personal_data_time",personal_data_time
+			),personal_data
+		)
+	FROM tb_customer where ht_id = p_customer_id LIMIT 0,1);
+	
+	SET p_manager_json_data = IFNULL(p_manager_json_data,"{}");
+	SET p_customer_json_data = IFNULL(p_customer_json_data,"{}");
+	
+	SELECT p_manager_json_data manager_data, p_customer_json_data customer_data ;
+	#SELECT json_array(p_manager_json_data,p_customer_json_data) conversation_info ;
+	
+END $$

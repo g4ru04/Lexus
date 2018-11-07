@@ -77,18 +77,20 @@ function common_conn_setting(conn){
 	});
 	
 	conn.send_text = function(message){
-		let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
-		let client_icon = "/images/avatar.png";
+		//let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
+		//let client_icon = "/images/avatar.png";
 		if(conn.client_id){
 			conn.socket.emit("message", {
 				"type": conn.end_point,
 				"from": {
 					"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
-					"avatar":(conn.end_point=="service"?service_icon:client_icon)
+					"name": (conn.end_point=="service"?conn.service_info.name:conn.client_info.name),
+					"avator": (conn.end_point=="service"?conn.service_info.avator:conn.client_info.avator)
 				},
 				"to": {
 					"id": (conn.end_point=="service"?conn.client_id:conn.service_id),
-					"avatar":(conn.end_point=="service"?service_icon:client_icon)
+					"name": (conn.end_point=="service"?conn.client_info.name:conn.service_info.name),
+					"avator": (conn.end_point=="service"?conn.client_info.avator:conn.service_info.avator)
 				},
 				"time": Date.now(),
 				"message": {
@@ -102,17 +104,19 @@ function common_conn_setting(conn){
 	}
 	
 	conn.send_image = function(url){
-		let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
-		let client_icon = "/images/avatar.png";
+		//let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
+		//let client_icon = "/images/avatar.png";
 		conn.socket.emit("message", {
 			"type": conn.end_point,
 			"from": {
 				"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
-				"avatar":(conn.end_point=="service"?service_icon:client_icon)
+				"name": (conn.end_point=="service"?conn.service_info.name:conn.client_info.name),
+				"avator": (conn.end_point=="service"?conn.service_info.avator:conn.client_info.avator)
 			},
 			"to": {
 				"id": (conn.end_point=="service"?conn.client_id:conn.service_id),
-				"avatar":(conn.end_point=="service"?service_icon:client_icon)
+				"name": (conn.end_point=="service"?conn.client_info.name:conn.service_info.name),
+				"avator": (conn.end_point=="service"?conn.client_info.avator:conn.service_info.avator)
 			},
 			"time": Date.now(),
 			"message": {
@@ -198,12 +202,19 @@ function produce_dialog_element(message) {
 	if(message.recognitionResult && Connection.end_point=="service"){
 		message_str += "【"+message.recognitionResult+"】";
 	}
-	
+	/*
+	let from_info = {name:"SOMEONE",avator:"/images/avatar.png"};
+	if(message.from.id == Connection.client_info.id){
+		from_info = Connection.client_info;
+	}
+	if(message.from.id == Connection.service_info.id){
+		from_info = Connection.service_info;
+	}*/
 	
 	return '<div class="dialog dialog--'+message.type+' clearfix">'
 		+'<div class="dialog__profile">'
-		+'	<div class="dialog__profileImage"><img src="'+message.from.avatar+'"></div>'
-		+'	<div class="dialog__profileName">'+message.from.id+'</div>'
+		+'	<div class="dialog__profileImage"><img src="'+message.from.avator+'"></div>'
+		+'	<div class="dialog__profileName">'+message.from.name+'</div>'
 		+'	</div>'
 		+'	<div class="dialog__content">'
 		+'		<div class="dialogPop">'
