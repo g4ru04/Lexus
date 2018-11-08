@@ -20,8 +20,9 @@
 			<h2>登入頁面</h2>
 			<ul>
 				<li>帳號: <input type='text' id='username' value='AA94453'/></li>
-				<li>密碼: <input type='password' id='password' value='ab#1234'/></li>
+				<li>密碼: <input type='password' id='password' value='ab#12345'/></li>
 			</ul>
+			&nbsp;&nbsp;<input type='checkbox' checked />記住密碼<br>
 			<button onclick='to_login()'>登入</button>
 			<br>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href='javascript:void(0)' style='color:blue;text-decoration: underline;' onclick='$("#username").val("AA00001")'>銷售專員-陳柏廷</a>&nbsp;&nbsp;
@@ -219,7 +220,6 @@
 								<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
 								</a>
 								<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
-								<a id='dial_phone' href="tel:+886-919863010" style='display:none;'></a>
 								<input class="input msg" placeholder="你想問什麼？" maxlength="30" avalon-events="" type="text">
 								<a href="javascript:void(0)" class="btn-mic" avalon-events="">
 									<span class="btn-search">
@@ -229,15 +229,20 @@
 							</div>
 						</div>
 						<div class="box">
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">照片</div>
-							<a href="javascript:void(0)" class="btn-book" avalon-events="">
-							</a>
-							<a href="javascript:void(0)" class="btn-booklog" avalon-events="">
-							</a>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">換專員</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">車主資料</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">撥打</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">金牌話術</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
+								onclick='$("#upload_picture").trigger("click");'>照片</div>
+							<a href="javascript:void(0)" class="btn-book" avalon-events=""></a>
+							<a href="javascript:void(0)" class="btn-booklog" avalon-events=""></a>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+								onclick='alert("未實現");'>換專員</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+								onclick='alert("未實現");'>保修</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+								onclick='alert("未實現");'>車主資料</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
+								onclick='location.href="tel:+886-919863010";'>撥打</div>
+							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+								onclick='location.href="$("#talk_tricks_container").toggle();'>金牌話術</div>
 						</div>
 					</div>
 					

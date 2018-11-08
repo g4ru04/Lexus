@@ -1,9 +1,7 @@
 module.exports = {
 	"develop": true,
 	"socket_server": {
-		//"ip": "http://localhost:80/",
-		"ip": "https://nodered-api-lexus-test.mybluemix.net/"
-		
+		"ip": "http://localhost:8081/",
 	},
 	"hoital_api":{
 		//"develop": "https://htsr.hotaimotor.com.tw/LINEAPI_TEST/Service.asmx/",

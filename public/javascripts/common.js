@@ -11,8 +11,7 @@ function call_hotai_api(api_code,data,callback){
 			detail:true
 		}),
 		success: function(data) {
-			console.log(api_code);
-			console.log(data);
+			console.log(api_code,data)
 			if(data.isSuccess){
 				if(callback){
 					callback(data.result);
@@ -31,8 +30,8 @@ function call_hotai_api(api_code,data,callback){
 
 function common_conn_setting(conn){
 	
-	conn.client_id = 
-			conn.client_id || (getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID());
+	//conn.client_id = 
+	//		conn.client_id || (getUrlParameter("c")?b64DecodeUnicode(getUrlParameter("c")):UUID());
 	conn.service_id = 
 		conn.service_id || (getUrlParameter("s")?b64DecodeUnicode(getUrlParameter("s")):UUID());
 	conn.conn = 
@@ -56,8 +55,7 @@ function common_conn_setting(conn){
 	});
 	
 	conn.socket.on('message', function (data) {
-		console.log("socket_event: message")
-		console.log(data);
+		console.log("socket_event: message",data);
 		conn.talks_history_cursor += 1;
 		conn.talks.push(data);
 		conn.reiceive_msg(data);
@@ -160,7 +158,6 @@ function emotion_setting(){
 }
 
 function produce_dialog_element(message) {
-	console.log(message);
 	if(message.from==null || message.message==null){
 		return JSON.stringify(message,null,"    ")
 				.replace(/    /g,"&nbsp;&nbsp;&nbsp;")

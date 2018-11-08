@@ -91,13 +91,16 @@
 	width:60px;
 }
 .chat_body .title{
-	padding-top:6px;
+	padding-top:3px;
 	word-break: keep-all;
 	/*font-weight:600;*/
 	font-size: 1em;
 }
+.chat_body .name{
+	padding-left:3px;
+}
 .chat_body .msg{
-	padding-top:5px;
+	padding-top:0px;
 	font-size: 1.1em;
 	color:#888;
 	width: 200px;

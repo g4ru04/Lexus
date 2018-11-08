@@ -90,7 +90,7 @@
 		"outputs": 10,
 		"x": 760.3332824707031,
 		"y": 466.3332977294922,
-		"wires": [["811411b9.d1e678"], ["40a4725f.3009cc"], ["26bbcf3e.b45328"], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], ["f7ab24b2.60eaf"], ["40b8e0b.9f346a"]]
+		"wires": [["811411b9.d1e678"], ["40a4725f.3009cc"], [], ["158e7869.f375a8"], ["6f348e91.0f8e98"], ["6f348e91.0f8e98"], [], [], ["f7ab24b2.60eaf"], ["40b8e0b.9f346a"]]
 	}, {
 		"id": "ffd27283.5745f8",
 		"type": "function",
@@ -112,8 +112,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "socketIOEvent",
-		"x": 757.0832824707031,
-		"y": 384.08331298828125,
+		"x": 748.083251953125,
+		"y": 375.08331298828125,
 		"wires": []
 	}, {
 		"id": "ac5f8440.ef12b",
@@ -142,12 +142,12 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "//node.warn(msg.socketIOEvent+ \" ## \"+JSON.stringify(msg.payload));\n\nif([\"newListener\",\"disconnecting\"].indexOf(msg.socketIOEvent)==-1){\n    return msg;\n}\n\n\n",
+		"func": "//node.warn(msg.socketIOEvent+ \" ## \"+JSON.stringify(msg.payload));\nif([\"newListener\",\"disconnecting\"].indexOf(msg.socketIOEvent)==-1){\n    return msg;\n}\n\n\n",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 595.699951171875,
 		"y": 466.3333282470703,
-		"wires": [["d764afe7.de0d98", "f0cf7ead.f9a0a8", "530c0694.2cb448"]]
+		"wires": [["f0cf7ead.f9a0a8", "d764afe7.de0d98", "530c0694.2cb448"]]
 	}, {
 		"id": "158e7869.f375a8",
 		"type": "function",
@@ -158,15 +158,15 @@
 		"noerr": 0,
 		"x": 969.083251953125,
 		"y": 445.083251953125,
-		"wires": [["bc0353dc.7d5838", "cc3d78e6.2eb7f8", "c1ac7b2d.b8cfe", "46a3e44a.9d180c"]]
+		"wires": [["bc0353dc.7d5838", "c1ac7b2d.b8cfe", "46a3e44a.9d180c", "f7dabd67.390f98"]]
 	}, {
 		"id": "bc0353dc.7d5838",
 		"type": "socketio-join",
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1152.699951171875,
-		"y": 445.3333282470703,
+		"x": 1200.699951171875,
+		"y": 434.33331298828125,
 		"wires": []
 	}, {
 		"id": "cf38306a.e7073",
@@ -174,8 +174,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1165.63330078125,
-		"y": 483.8000030517578,
+		"x": 1208.63330078125,
+		"y": 509.79998779296875,
 		"wires": []
 	}, {
 		"id": "6f348e91.0f8e98",
@@ -185,8 +185,8 @@
 		"func": "let room_id = \"\";\n\n//if(msg.socketIOEvent==\"leave\"){\n//    room_id = msg.payload;\n//}else if(msg.socketIOEvent==\"disconnect\"){\n    room_id = msg.socketIOStaticProperties\n                ?msg.socketIOStaticProperties.room_id\n                :\"\";\n//}\n\nmsg.payload = {\n    room: room_id\n};\n\nRED.util.setMessageProperty(\n    msg, \"socketIOEmit\", \"emit\", true);\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 953.4666748046875,
-		"y": 483.56666564941406,
+		"x": 965.4666748046875,
+		"y": 522.566650390625,
 		"wires": [["cf38306a.e7073", "cc3d78e6.2eb7f8", "8767060f.1eb65", "46a3e44a.9d180c"]]
 	}, {
 		"id": "cc3d78e6.2eb7f8",
@@ -194,15 +194,15 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1151.466796875,
-		"y": 524.5666198730469,
+		"x": 1195.466796875,
+		"y": 548.566650390625,
 		"wires": []
 	}, {
 		"id": "bacab9aa.9e48b8",
 		"type": "debug",
 		"z": "da8f7bde.d2b408",
 		"name": "MSG OUT",
-		"active": true,
+		"active": false,
 		"tosidebar": true,
 		"console": false,
 		"tostatus": false,
@@ -220,8 +220,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1161.566650390625,
-		"y": 407.566650390625,
+		"x": 1199.566650390625,
+		"y": 394.566650390625,
 		"wires": []
 	}, {
 		"id": "8767060f.1eb65",
@@ -233,8 +233,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1164.566650390625,
-		"y": 561.5666198730469,
+		"x": 1197.566650390625,
+		"y": 587.566650390625,
 		"wires": []
 	}, {
 		"id": "fe8e1e52.aca93",
@@ -649,8 +649,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "DB SELECT - A",
 		"links": ["790015ce.d657ec", "dca3626d.9d58a"],
-		"x": 1344.566650390625,
-		"y": 1644.366455078125,
+		"x": 1350.566650390625,
+		"y": 1655.366455078125,
 		"wires": []
 	}, {
 		"id": "790015ce.d657ec",
@@ -669,7 +669,7 @@
 		"func": "\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties?msg.socketIOAddStaticProperties.service_id:service_id;\nservice_id = msg.socketIOStaticProperties?msg.socketIOStaticProperties.service_id:service_id;\n\nmsg.topic = \"call sp_select_manager_list('\"+service_id+\"');\";\nmsg.mysql_router = \"refresh_list\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 223.99993896484375,
+		"x": 218.99993896484375,
 		"y": 1757.3333740234375,
 		"wires": [["c72dab4a.0da338"]]
 	}, {
@@ -689,12 +689,12 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "\nmsg.flow_config = {\n    \"HT_API_host\":\"https://nodered-api-lexus-test.mybluemix.net/ht_api/\",\n    //\"HT_image_space\":\"https://s3-api.us-geo.objectstorage.softlayer.net/tytimage/LINE_images_test/\",\n    \"watson_config\": [{\n        \"name\":\"LexusBot\",\n        \"workspaceId\": \"234bf172-8356-42cc-8ec3-cb0a3dc69a0c\",\n        \"username\": \"4003aefc-79f8-4c14-a497-f720829da4f0\",\n        \"password\": \"ZYqZvVngtxaX\"\n    }],\n    \"time_record\":{\n        socket_receive: Date.now()\n    }\n};\nreturn msg;",
+		"func": "\nmsg.flow_config = {\n    \"HT_API_host\":\"https://nodered-api-lexus-test.mybluemix.net/ht_api/\",\n    //\"HT_image_space\":\"https://s3-api.us-geo.objectstorage.softlayer.net/tytimage/LINE_images_test/\",\n    \"watson_config\": [{\n        \"name\":\"LexusBot\",\n        \"workspaceId\": \"2fbeab39-9653-4086-ae5a-d0bdaee01f37\",\n        \"username\": \"4003aefc-79f8-4c14-a497-f720829da4f0\",\n        \"password\": \"ZYqZvVngtxaX\"\n    }],\n    \"time_record\":{\n        socket_receive: Date.now()\n    }\n};\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 241.8167266845703,
 		"y": 405.7166442871094,
-		"wires": [["7330bee2.170ed", "25998a28.5db1d6"]]
+		"wires": [["25998a28.5db1d6", "7330bee2.170ed"]]
 	}, {
 		"id": "a9e46035.a4aca8",
 		"type": "mqtt in",
@@ -778,20 +778,20 @@
 		"z": "da8f7bde.d2b408",
 		"name": "",
 		"server": "d5c1b5fd.4dfad8",
-		"x": 1633.3334350585938,
-		"y": 1694.2669372558594,
+		"x": 1642.33349609375,
+		"y": 1697.2669677734375,
 		"wires": []
 	}, {
 		"id": "41f64715.cbdd",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "BroadCast List to Room",
-		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"update conversatoin list\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\n\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
+		"func": "msg.payload[0].forEach(function(item){\n   item.notify_data = JSON.parse(item.notify_data); \n});\n\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"update conversation list\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"room\", true);\n\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\n\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 1415.433349609375,
-		"y": 1695.0335693359375,
-		"wires": [["da8710c2.1128f8", "942e4172.4183c"]]
+		"x": 1436.433349609375,
+		"y": 1697.0335693359375,
+		"wires": [["da8710c2.1128f8"]]
 	}, {
 		"id": "80a809bc.3b29d8",
 		"type": "comment",
@@ -839,11 +839,11 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "register_client",
-		"func": "let configs = msg.socketIOStaticProperties;\nlet cust_data = msg.payload.CSINFO[0] ;\n\nmsg.topic = \"call sp_bind_client('\"+configs.service_id+\"','\"+configs.client_id+\"','\"+cust_data.NICKNAME+\"','\"+cust_data.CARNM+\"','\"+cust_data.LICSNO+\"','\"+cust_data.PICURL+\"',NULL,NULL);\";\nmsg.mysql_router = \"register_client\";\nreturn msg;",
+		"func": "let configs = msg.socketIOStaticProperties || msg.socketIOAddStaticProperties;\nlet taipei_digi_data = msg.taipei_digi_data.CSINFO[0] ;\nlet lexus_data = msg.lexus_data.USERDATA[0];\nlet personal_data = JSON.stringify({\n    taipei_digi_data: taipei_digi_data,\n    lexus_data: lexus_data\n});\n\nmsg.topic = \"call sp_bind_client('\"+configs.service_id+\"','\"+configs.client_id+\"','\"+lexus_data.USERNM+\"','\"+taipei_digi_data.CARNM+\"','\"+taipei_digi_data.LICSNO+\"','\"+taipei_digi_data.PICURL+\"','\"+lexus_data.MOBILE+\"','\"+personal_data+\"',NULL);\";\nmsg.mysql_router = \"register_client\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 590,
-		"y": 1929.7335205078125,
+		"x": 824,
+		"y": 2021.7335205078125,
 		"wires": [["c72dab4a.0da338"]]
 	}, {
 		"id": "7626329b.3a749c",
@@ -896,8 +896,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "register client",
 		"info": "",
-		"x": 207.5000762939453,
-		"y": 1888.40087890625,
+		"x": 203.5000762939453,
+		"y": 1980.40087890625,
 		"wires": []
 	}, {
 		"id": "26bbcf3e.b45328",
@@ -905,8 +905,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Register Client - A",
 		"links": ["70261159.68ba98"],
-		"x": 926.4498901367188,
-		"y": 405.9666748046875,
+		"x": 1332.449951171875,
+		"y": 483.96669006347656,
 		"wires": []
 	}, {
 		"id": "70261159.68ba98",
@@ -914,8 +914,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Register Client - B",
 		"links": ["26bbcf3e.b45328"],
-		"x": 83.44996643066406,
-		"y": 1930.80029296875,
+		"x": 79.44996643066406,
+		"y": 2022.80029296875,
 		"wires": [["1870cb52.4b1535"]]
 	}, {
 		"id": "4c09eb55.20619c",
@@ -950,8 +950,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Talk Trick  OUT - A",
 		"links": ["e538fbfb.bb3868"],
-		"x": 1481.033447265625,
-		"y": 1608.133544921875,
+		"x": 1485.033447265625,
+		"y": 1613.133544921875,
 		"wires": []
 	}, {
 		"id": "306be94a.f8abfe",
@@ -970,7 +970,7 @@
 		"name": "",
 		"x": 933.6832885742188,
 		"y": 1596.6331787109375,
-		"wires": [["e5025345.fe2d6"]]
+		"wires": [["e5025345.fe2d6", "f786f54c.eac1d8"]]
 	}, {
 		"id": "3d2f7b05.3c11d4",
 		"type": "link in",
@@ -1012,10 +1012,10 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "BroadCast Oneself",
-		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"get history\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"emit\", true);\n\nlet conversations = msg.payload[0].map(function(item){\n    return {\n        \"type\": item.direction_type,\n        \"from\": {\n            \"id\": item.from,\n            \"avatar\": item.avator\n        },\n        \"to\": {\n            \"id\": item.to,\n        },\n        \"time\": new Date(item.time).getTime(),\n        \"intents\": (item.assistant_ans && item.assistant_ans!=\"\" ?JSON.parse(item.assistant_ans):null),\n        \"recognitionResult\":item.visualrecog_ans,\n        \"message\": {\n            \"type\": item.message_type,\n            \"text\": (item.message_type==\"text\"?item.content:null),\n            \"url\": (item.message_type==\"image\"?item.content:null)\n        }\n    };\n});\n\n\nmsg.payload={\n    req_para:msg.ori_paylaod,\n    data: conversations\n};\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
+		"func": "\nRED.util.setMessageProperty(msg, \"socketIOEvent\", \"get history\", true);\nRED.util.setMessageProperty(msg, \"socketIOEmit\", \"emit\", true);\n\nlet conversations = msg.payload[0].map(function(item){\n    return {\n        \"type\": item.direction_type,\n        \"from\": {\n            \"id\": item.from,\n            \"avator\": item.avator,\n            \"name\": item.name\n        },\n        \"to\": {\n            \"id\": item.to,\n        },\n        \"time\": new Date(item.time).getTime(),\n        \"intents\": (item.assistant_ans && item.assistant_ans!=\"\" ?JSON.parse(item.assistant_ans):null),\n        \"recognitionResult\":item.visualrecog_ans,\n        \"message\": {\n            \"type\": item.message_type,\n            \"text\": (item.message_type==\"text\"?item.content:null),\n            \"url\": (item.message_type==\"image\"?item.content:null)\n        }\n    };\n});\n\n\nmsg.payload={\n    req_para:msg.ori_paylaod,\n    data: conversations\n};\nlet service_id = \"\";\nservice_id = msg.socketIOAddStaticProperties ? msg.socketIOAddStaticProperties.service_id : service_id;\nservice_id = msg.socketIOStaticProperties ? msg.socketIOStaticProperties.service_id : service_id;\nmsg.room = service_id;\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 1311.566650390625,
+		"x": 1321.566650390625,
 		"y": 1492.233154296875,
 		"wires": [["65ba8056.5678f"]]
 	}, {
@@ -1024,8 +1024,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Get History - A",
 		"links": ["3d2f7b05.3c11d4"],
-		"x": 904.449951171875,
-		"y": 537.9666748046875,
+		"x": 908.449951171875,
+		"y": 564.9666748046875,
 		"wires": []
 	}, {
 		"id": "438e11aa.15364",
@@ -1119,7 +1119,7 @@
 		"func": "\n\nlet output_text = msg.payload.output.text.join(\"\");\nlet service_id = msg.socketIOStaticProperties.service_id;\n\nif(is_json(output_text)){\n    let ans_obj = JSON.parse(output_text);\n    if(ans_obj && ans_obj.ans_ID){\n        msg.flow_config.time_record.mysql_call = Date.now();\n        msg.topic = \"call sp_select_talk_tricks('\"+service_id+\"','\"+ans_obj.ans_ID+\"');\";\n        msg.payload_preserved.ans_ID = ans_obj.ans_ID;\n        msg.mysql_router = \"get_talk_trick\";\n        return [msg,null];\n    }\n}\nreturn [null,msg];\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
 		"outputs": 2,
 		"noerr": 0,
-		"x": 227.00001525878906,
+		"x": 217.00001525878906,
 		"y": 1591,
 		"wires": [["c72dab4a.0da338"], ["9355898f.98a318"]]
 	}, {
@@ -1130,8 +1130,8 @@
 		"func": "msg.flow_config.time_record.mysql_return = Date.now();\n\nif(\n    msg.payload[0][0]!=null &&\n    msg.payload[0][0].talk_tricks!=null && \n    is_json(msg.payload[0][0].talk_tricks)\n){\n    msg.payload_preserved.talk_tricks = JSON.parse(msg.payload[0][0].talk_tricks);\n}\nreturn msg;\n\nfunction is_json(str) {\n    try {\n        JSON.parse(str);\n    } catch (e) {\n        return false;\n    }\n    return true;\n}\n",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 1377.0001220703125,
-		"y": 1608,
+		"x": 1385.0001220703125,
+		"y": 1613,
 		"wires": [["ace05e75.936928"]]
 	}, {
 		"id": "d4b56d5f.c879a",
@@ -1181,8 +1181,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Update Talk Trick- A",
 		"links": ["ce6ab305.739da8"],
-		"x": 905,
-		"y": 573.3333129882812,
+		"x": 909,
+		"y": 600.3333129882812,
 		"wires": []
 	}, {
 		"id": "734801a4.d89c1",
@@ -1201,8 +1201,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "register manager",
 		"info": "",
-		"x": 217.566650390625,
-		"y": 1803.96630859375,
+		"x": 213.566650390625,
+		"y": 1895.96630859375,
 		"wires": []
 	}, {
 		"id": "6ca8b2fd.5749c4",
@@ -1210,19 +1210,19 @@
 		"z": "da8f7bde.d2b408",
 		"name": "DB SELECT - A",
 		"links": ["790015ce.d657ec", "dca3626d.9d58a"],
-		"x": 1339.800048828125,
-		"y": 1739.966552734375,
+		"x": 1351.800048828125,
+		"y": 1772.966552734375,
 		"wires": []
 	}, {
 		"id": "12bddfd1.d1707",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "register_manager",
-		"func": "let mysql_cmd = \"SELECT 1; \";\nif(msg.payload.manager_data){\n    let manager_data = msg.payload.manager_data\n    manager_data.PERSONAL_DATA = manager_data.PERSONAL_DATA || \"NULL\";\n    manager_data.PHONE = manager_data.PHONE || \"NULL\";\n    mysql_cmd += 'call sp_update_manager(\"'+manager_data.USERID+'\",\"'+manager_data.ECHOTITLECD+'\",\"'+manager_data.USERNM+'\",\"'+manager_data.PICURL+'\", \"'+manager_data.PHONE+'\",\"'+manager_data.PERSONAL_DATA+'\"); ';\n}\nif(msg.payload.responsibility_data){\n    msg.payload.responsibility_data.forEach(function(item){\n        item.PERSONAL_DATA = item.PERSONAL_DATA || \"NULL\";\n        item.PHONE = item.PHONE || \"NULL\";\n        mysql_cmd += \"call sp_bind_client('\"+item.USERID+\"','\"+item.ENCYID+\"','\"+item.NICKNAME+\"','\"+item.CARNM+\"','\"+item.LICSNO+\"','\"+item.PICURL+\"', '\"+item.MOBILE+\"', '\"+item.PERSONAL_DATA+\"'); \"\n    });\n}\nmsg.topic = mysql_cmd;\nmsg.mysql_router = \"register_manager\";\nreturn msg;",
+		"func": "let mysql_cmd = \"SELECT 1; \";\nif(msg.payload.manager_data){\n    let manager_data = msg.payload.manager_data;\n    manager_data.PERSONAL_DATA = JSON.stringify(manager_data.PERSONAL_DATA) || \"{}\";\n    manager_data.PHONE = manager_data.PHONE || \"NULL\";\n    \n    mysql_cmd += \"call sp_update_manager('\"+manager_data.USERID+\"','\"+manager_data.ECHOTITLECD+\"','\"+manager_data.USERNM+\"','\"+manager_data.PICURL+\"', '\"+manager_data.PHONE+\"','\"+manager_data.PERSONAL_DATA+\"'); \";\n}\nif(msg.payload.responsibility_data){\n    msg.payload.responsibility_data.forEach(function(item){\n        item.NOTIFY_DATA = JSON.stringify(item.NOTIFY_DATA) || \"{}\";\n        mysql_cmd += \"call sp_bind_client('\"+item.USERID+\"','\"+item.ENCYID+\"','\"+item.NICKNAME+\"','\"+item.CARNM+\"','\"+item.LICSNO+\"','\"+item.PICURL+\"', '\"+item.MOBILE+\"', NULL,'\"+item.NOTIFY_DATA+\"'); \";\n    });\n}\nmsg.topic = mysql_cmd;\nmsg.mysql_router = \"register_manager\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 247.2333984375,
-		"y": 1843.93310546875,
+		"x": 243.2333984375,
+		"y": 1935.93310546875,
 		"wires": [["c72dab4a.0da338"]]
 	}, {
 		"id": "ee631ea9.d9c07",
@@ -1230,8 +1230,8 @@
 		"z": "da8f7bde.d2b408",
 		"name": "Register Manager - B",
 		"links": ["57a56582.e7fcdc", "51305727.5c6d18"],
-		"x": 88.00001525878906,
-		"y": 1844.2998046875,
+		"x": 84.00001525878906,
+		"y": 1936.2998046875,
 		"wires": [["12bddfd1.d1707"]]
 	}, {
 		"id": "cdcb200a.d1e07",
@@ -1247,34 +1247,34 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "\nmsg.url = msg.flow_config.HT_API_host+\"LINE006_Q00\";\nmsg.headers = {\n    \"Content-Type\":\"application/x-www-form-urlencoded\"\n}\n\nmsg.payload = {\n    \"jsonstr\":JSON.stringify({\n        \"ENCYID\": msg.socketIOStaticProperties.client_id,\n        \"FRAN\": \"L\"\n    })\n};\n\nreturn msg;\n\n",
+		"func": "\nmsg.url = msg.flow_config.HT_API_host+\"LINE006_Q00\";\nmsg.headers = {\n    \"Content-Type\":\"application/x-www-form-urlencoded\"\n}\nlet configs = msg.socketIOStaticProperties || msg.socketIOAddStaticProperties;\nmsg.payload = {\n    \"jsonstr\":JSON.stringify({\n        \"ENCYID\": configs.client_id,\n        \"FRAN\": \"L\"\n    })\n};\n\nreturn msg;\n\n",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 202.56666564941406,
-		"y": 1930.566650390625,
+		"x": 198.56666564941406,
+		"y": 2022.566650390625,
 		"wires": [["9468857e.4af5f"]]
 	}, {
 		"id": "48c0b195.e370e8",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "/*msg.payload = {\n    \"rtnCode\": \"0\",\n    \"rtnMsg\": \"\",\n    \"CSINFO\": [\n        {\n            \"LICSNO\": \"RBD-0021\",\n            \"FRAN\": \"L\",\n            \"CARNM\": \"IS300h\",\n            \"CRCOMPID\": \"AA\",\n            \"CRSALR\": \"AA94453\",\n            \"CRSALRNM\": \"楊建中\",\n            \"SRCOMPID\": \"AA\",\n            \"WHSRVNO\": \"AA94453\",\n            \"WHSRVNM\": \"劉伯溫\",\n            \"NICKNAME\": \"柏廷\",\n            \"PICURL\": \"https://profile.line-scdn.net/0huWZ840ahKnhnQQYLIUFVL1sEJBUQbywwH3IyGhJFJ0FMeGp5Wi9hSkBEI00ad256CCIyGEQVJhpL\"\n        }\n    ]\n}*/\n\nreturn msg;\n",
+		"func": "msg.taipei_digi_data = msg.payload;\n\nlet configs = msg.socketIOStaticProperties || msg.socketIOAddStaticProperties;\n\nmsg.url = msg.flow_config.HT_API_host+\"LINELCS01_Q01\";\nmsg.headers = {\n    \"Content-Type\":\"application/x-www-form-urlencoded\"\n}\n\nmsg.payload = {\n    \"jsonstr\":JSON.stringify({\n        \"ENCYID\": configs.client_id\n    })\n};\n\nreturn msg;\n",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 421.56666564941406,
-		"y": 1930.566650390625,
-		"wires": [["5c998016.9b7798"]]
+		"x": 417.56666564941406,
+		"y": 2022.566650390625,
+		"wires": [["dbf18291.55d71"]]
 	}, {
 		"id": "9468857e.4af5f",
 		"type": "http request",
 		"z": "da8f7bde.d2b408",
-		"name": "",
+		"name": "taipei_digi",
 		"method": "POST",
 		"ret": "obj",
 		"url": "",
 		"tls": "",
-		"x": 361.56666564941406,
-		"y": 1930.566650390625,
+		"x": 347.56666564941406,
+		"y": 2022.566650390625,
 		"wires": [["48c0b195.e370e8"]]
 	}, {
 		"id": "e5025345.fe2d6",
@@ -1305,6 +1305,10 @@
 				"vt": "str"
 			}, {
 				"t": "eq",
+				"v": "select_conversation_info",
+				"vt": "str"
+			}, {
+				"t": "eq",
 				"v": "register_manager",
 				"vt": "str"
 			}, {
@@ -1317,10 +1321,10 @@
 		],
 		"checkall": "true",
 		"repair": false,
-		"outputs": 8,
+		"outputs": 9,
 		"x": 1099.36669921875,
 		"y": 1594.5999755859375,
-		"wires": [["feb08d3e.29ac58"], [], ["f505772a.f14158"], ["a9dfd5c0.c27ac"], ["41f64715.cbdd"], ["6ca8b2fd.5749c4"], [], ["765342f2.ff5a8c"]]
+		"wires": [["feb08d3e.29ac58"], [], ["f505772a.f14158"], ["a9dfd5c0.c27ac"], ["41f64715.cbdd"], ["ec669d73.90bec8"], ["6ca8b2fd.5749c4"], ["2088f371.ce3734"], ["765342f2.ff5a8c"]]
 	}, {
 		"id": "ede202c8.61d748",
 		"type": "function",
@@ -1329,7 +1333,7 @@
 		"func": "let configs = msg.socketIOStaticProperties;\n\nlet skip =  msg.payload && msg.payload.skip?msg.payload.skip:\"null\";\nlet limit =  msg.payload && msg.payload.limit?msg.payload.limit:\"null\";\nmsg.ori_paylaod = msg.payload;\nmsg.topic = \"call sp_select_talk_history('\"+configs.type+\"','\"+configs.service_id+\"','\"+configs.client_id+\"',\"+skip+\",\"+limit+\");\";\nmsg.mysql_router = \"get_history\";\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
-		"x": 215.36666870117188,
+		"x": 225.36666870117188,
 		"y": 1418.0999755859375,
 		"wires": [["c72dab4a.0da338"]]
 	}, {
@@ -1346,7 +1350,7 @@
 		"type": "function",
 		"z": "da8f7bde.d2b408",
 		"name": "",
-		"func": "\n//node.warn(msg.mysql_router+\"\\n\"+msg.topic);\nreturn msg;",
+		"func": "\nnode.warn(\"SQL: \"+msg.mysql_router);\n//node.warn(msg.topic);\n//node.warn(msg.mysql_router+\"\\n\"+msg.topic);\nreturn msg;",
 		"outputs": 1,
 		"noerr": 0,
 		"x": 506,
@@ -1362,8 +1366,8 @@
 		"console": false,
 		"tostatus": false,
 		"complete": "true",
-		"x": 1371.9999542236328,
-		"y": 1822.000015258789,
+		"x": 1423,
+		"y": 1841,
 		"wires": []
 	}, {
 		"id": "51305727.5c6d18",
@@ -1384,19 +1388,6 @@
 		"y": 1720.3333740234375,
 		"wires": []
 	}, {
-		"id": "942e4172.4183c",
-		"type": "debug",
-		"z": "da8f7bde.d2b408",
-		"name": "DEBBUG",
-		"active": true,
-		"tosidebar": true,
-		"console": false,
-		"tostatus": false,
-		"complete": "true",
-		"x": 1621,
-		"y": 1761.75,
-		"wires": []
-	}, {
 		"id": "9f988e2f.e2dbf8",
 		"type": "function",
 		"z": "da8f7bde.d2b408",
@@ -1408,10 +1399,148 @@
 		"y": 360,
 		"wires": [["2764b3f4.fc8cf4"]]
 	}, {
+		"id": "f786f54c.eac1d8",
+		"type": "debug",
+		"z": "da8f7bde.d2b408",
+		"name": "DEBBUG",
+		"active": false,
+		"tosidebar": true,
+		"console": false,
+		"tostatus": false,
+		"complete": "true",
+		"x": 1128.583251953125,
+		"y": 1419.88330078125,
+		"wires": []
+	}, {
+		"id": "ec6fd38a.ea5518",
+		"type": "comment",
+		"z": "da8f7bde.d2b408",
+		"name": "select conversation info",
+		"info": "",
+		"x": 236.566650390625,
+		"y": 1797.566650390625,
+		"wires": []
+	}, {
+		"id": "b486d37c.a231c8",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "select conversation info",
+		"func": "\nmsg.topic = 'call sp_select_conversation_info(\"'+msg.socketIOAddStaticProperties.service_id+'\",\"'+msg.socketIOAddStaticProperties.client_id+'\");';\nmsg.mysql_router = \"select_conversation_info\";\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 256.2333984375,
+		"y": 1837.533447265625,
+		"wires": [["c72dab4a.0da338"]]
+	}, {
+		"id": "cc971ec7.7c3f18",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Select Conversation Info IN - B",
+		"links": ["ed930f0.95e127", "2088f371.ce3734"],
+		"x": 87.00001525878906,
+		"y": 1837.900146484375,
+		"wires": [["b486d37c.a231c8"]]
+	}, {
+		"id": "38329afd.72f436",
+		"type": "link in",
+		"z": "da8f7bde.d2b408",
+		"name": "Select Conversation Info OUT - B",
+		"links": ["ec669d73.90bec8"],
+		"x": 1410.449951171875,
+		"y": 475.2000274658203,
+		"wires": [["cc3d78e6.2eb7f8"]]
+	}, {
+		"id": "ec669d73.90bec8",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Select Conversation Info OUT - A",
+		"links": ["38329afd.72f436"],
+		"x": 1352.4498901367188,
+		"y": 1737.9666748046875,
+		"wires": []
+	}, {
+		"id": "ed930f0.95e127",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Select Conversation Info IN - A",
+		"links": ["cc971ec7.7c3f18"],
+		"x": 1330.449951171875,
+		"y": 445.9668731689453,
+		"wires": []
+	}, {
+		"id": "7e87c44e.3bdbdc",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "msg.lexus_data = msg.payload;\n\nreturn msg;\n",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 644.75,
+		"y": 2022.25,
+		"wires": [["5c998016.9b7798"]]
+	}, {
+		"id": "dbf18291.55d71",
+		"type": "http request",
+		"z": "da8f7bde.d2b408",
+		"name": "lexus",
+		"method": "POST",
+		"ret": "obj",
+		"url": "",
+		"tls": "",
+		"x": 564.75,
+		"y": 2022.25,
+		"wires": [["7e87c44e.3bdbdc"]]
+	}, {
+		"id": "d3b3493a.45e708",
+		"type": "inject",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"topic": "",
+		"payload": "",
+		"payloadType": "date",
+		"repeat": "",
+		"crontab": "",
+		"once": false,
+		"onceDelay": 0.1,
+		"x": 159.36666870117188,
+		"y": 2161,
+		"wires": [["6cefb6c1.094308"]]
+	}, {
+		"id": "6cefb6c1.094308",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "清空資料庫",
+		"func": "msg.topic = \"\";\nmsg.topic += \"DELETE FROM tb_customer WHERE 1;\";\nmsg.topic += \"DELETE FROM tb_manager WHERE 1;\";\nmsg.topic += \"DELETE FROM tb_responsibility WHERE 1;\";\nmsg.topic += \"DELETE FROM tb_message WHERE 1;\";\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 415.36669921875,
+		"y": 2162.5,
+		"wires": [["53702728.5f4998"]]
+	}, {
+		"id": "f7dabd67.390f98",
+		"type": "function",
+		"z": "da8f7bde.d2b408",
+		"name": "",
+		"func": "\nlet configs = msg.socketIOStaticProperties || msg.socketIOAddStaticProperties;\n\nif(configs.type==\"client\"){\n    return [null,msg];\n}else{\n    return [msg,null];\n}",
+		"outputs": 2,
+		"noerr": 0,
+		"x": 1168.449951171875,
+		"y": 471.6667022705078,
+		"wires": [["ed930f0.95e127"], ["26bbcf3e.b45328"]]
+	}, {
+		"id": "2088f371.ce3734",
+		"type": "link out",
+		"z": "da8f7bde.d2b408",
+		"name": "Select Conversation Info IN - A",
+		"links": ["cc971ec7.7c3f18"],
+		"x": 1350.0999755859375,
+		"y": 1807.566650390625,
+		"wires": []
+	}, {
 		"id": "d5c1b5fd.4dfad8",
 		"type": "socketio-config",
 		"z": "",
-		"port": "80",
+		"port": "8081",
 		"sendClient": "true",
 		"path": "/socket.io",
 		"bindToNode": false

@@ -85,6 +85,7 @@ function to_login(){
 			ECHOTITLECD: login_info.ECHOTITLECD,
 			FRAN: login_info.FRAN
 		},function(data){
+			let responsibility_info = data
 			$(".login_panel").hide();
 			$(".after_login").show();
 			let service_id = $("#username").val();
@@ -94,9 +95,9 @@ function to_login(){
 				USERNM: login_info.USERNM,
 				PICURL: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
 				PHONE: null,
-				PERSONAL_DATA:null
+				PERSONAL_DATA:login_info
 			};
-			let responsibility_data = data.USERINFO.map(function(item){
+			let responsibility_data = responsibility_info.USERINFO.map(function(item){
 				return {
 					USERID: item.USERID,
 					ENCYID: item.ENCYID,
@@ -105,10 +106,22 @@ function to_login(){
 					LICSNO: item.LICSNO,
 					PICURL: item.PICURL,
 					MOBILE: item.MOBILE,
-					PERSONAL_DATA: null,
+					NOTIFY_DATA: [{
+						"type":"FEN",
+						"day":item.FENDAT,
+						"notify":item.FFLAG=="Y"
+					},{
+						"type":"UEN",
+						"day":item.UENDAT,
+						"notify":item.UFLAG=="Y"
+					},{
+						"type":"BRTH",
+						"day":item.BRTHDT,
+						"notify":item.BIRFLAG=="Y"
+					}]
 				};
 			});
-			
+
 			set_manager_socket(service_id,manager_data,responsibility_data);
 		});
 	});
@@ -164,11 +177,13 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 			}catch(err) {
 				console.log(err);
 			}
+			console.log("Connection.service_info",Connection.service_info);
+			console.log("Connection.client_info",Connection.client_info);
 			
 			Connection.conn = true;
 			my_console("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");
 			console.log(
-				window.location.origin + "/cust.do"
+				"對話對象所見頁面",window.location.origin + "/cust.do"
 					+"?c="+b64EncodeUnicode(Connection.client_id)
 					+"&s="+b64EncodeUnicode(Connection.service_id)
 			)
@@ -178,9 +193,13 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 		});
 	
 		Connection.socket.on('leave', function () {
-			console.log("leave: "+Connection.client_id);
-			console.log("join: "+Connection.next_client_id);
+			console.log("change_talk_target",{
+				"leave":Connection.client_id,
+				"join":Connection.next_client_id
+			});
 			if(Connection.next_client_id){
+				Connection.talks = [] ;
+				Connection.talks_history_cursor = 0;
 				Connection.socket.emit("enter", {
 					type : Connection.end_point,
 					client_id : Connection.next_client_id,
@@ -208,8 +227,8 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 			});
 		});
 		
-		Connection.socket.on('update conversatoin list', function (data) {
-			console.log(data)
+		Connection.socket.on('update conversation list', function (data) {
+			console.log("receive conversation list",data)
 			setTimeout(function(){
 				update_conversatoin_list(data[0]);
 			},100);
@@ -217,7 +236,6 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 	}
 	
 	Connection.change_customer = function(client_id){
-		console.log(client_id);
 		Connection.next_client_id = client_id;
 		Connection.socket.emit('leave',{
 			type : Connection.end_point,
@@ -274,6 +292,9 @@ function update_conversatoin_list(conversatoin_data){
 				+'		<div class="chat_body">'
 				+'			<div class="title">'
 				+					item.conversation_title
+				+'			</div>'
+				+'			<div class="name">'
+				+					item.customer_nickname
 				+'			</div>'
 				+'			<div class="msg">'
 				+					item.last_message

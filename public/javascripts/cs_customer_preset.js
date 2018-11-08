@@ -49,14 +49,16 @@ function set_customer_socket(){
 	Connection.set_listener = function(){
 		
 		Connection.socket.on('enter', function (data) {
-			console.log(data);
 			try {
 				let conversation_data = data[0][0];
 				Connection.client_info = JSON.parse(conversation_data.customer_data);
 				Connection.service_info = JSON.parse(conversation_data.manager_data);
+				
 			}catch(err) {
 				console.log(err);
 			}
+			console.log("Connection.service_info",Connection.service_info);
+			console.log("Connection.client_info",Connection.client_info);
 			
 			Connection.conn = true;
 			my_console("【"+Connection.client_id+"-"+Connection.service_id+"】 連線成功");

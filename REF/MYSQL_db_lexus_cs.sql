@@ -26,9 +26,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_bind_client`(
 	IN `p_vehicle_number` VARCHAR(20),
 	IN `p_avator` VARCHAR(300),
 	IN `p_telphone` VARCHAR(20),
-	IN `p_personal_data` VARCHAR(2000)
-
-
+	IN `p_personal_data` VARCHAR(2000),
+	IN `p_notify_data` VARCHAR(200)
 
 
 
@@ -45,30 +44,38 @@ BEGIN
 	)THEN
 		INSERT INTO tb_customer
 		(`customer_id`, `ht_id`, `name`, `vehicle_type`, `vehicle_number`, `avator`, `telphone`, `personal_data`, `personal_data_time`, `memo`) 
-		VALUES (UUID(), p_customer_id, p_customer_name, p_vehicle_type, p_vehicle_number, p_avator, p_telphone, p_personal_data, NOW(), NULL);
+		VALUES (UUID(), p_customer_id, p_customer_name, p_vehicle_type, p_vehicle_number, p_avator, p_telphone, IFNULL(p_personal_data,"{}"), NOW(), NULL);
 	ELSE
-		UPDATE tb_customer SET telphone = p_telphone WHERE ht_id = p_customer_id;	
+		UPDATE tb_customer SET telphone = p_telphone WHERE ht_id = p_customer_id;
 	END IF;
 
 	IF NOT EXISTS (
 		SELECT responsibility_id FROM tb_responsibility WHERE manager_id = p_manager_id AND customer_id = p_customer_id
 	)THEN
 		SET p_conversation_title = (
-				SELECT CONCAT(vehicle_type,"/",vehicle_number,"/",name) 
+				SELECT CONCAT(vehicle_type,"/",vehicle_number) 
 				FROM tb_customer 
 				WHERE ht_id = p_customer_id limit 0,1
 			);
+
 		SET p_conversation_avator = (
 				SELECT avator 
 				FROM tb_customer 
 				WHERE ht_id = p_customer_id limit 0,1
 			);
-		SET p_conversation_title = IFNULL(p_conversation_title, CONCAT("未知的使用者: ",p_customer_id));
-		SET p_conversation_avator = IFNULL(p_conversation_avator, "https://customer-service-xiang.herokuapp.com/images/avatar.png");
+		#SET p_conversation_title = IFNULL(p_conversation_title, CONCAT("未知的使用者: ",p_customer_id));
+		#SET p_conversation_avator = IFNULL(p_conversation_avator, "https://customer-service-xiang.herokuapp.com/images/avatar.png");
 		INSERT INTO tb_responsibility 
-		(`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `avator`, `last_talk_time`, `last_message`, `manager_unread`, `customer_unread`)
+		(`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `customer_nickname`, `avator`, `last_talk_time`, `last_message`, `manager_unread`, `customer_unread`,`notify_data`)
 		VALUES
-		(UUID(), p_manager_id, p_customer_id, p_conversation_title, p_conversation_avator,  NOW(), '', 0 , 0 );
+		(UUID(), p_manager_id, p_customer_id, p_conversation_title, p_customer_name, p_conversation_avator,  NOW(), '', 0, 0, IFNULL(p_notify_data,"{}"));
+	ELSE 
+		UPDATE tb_responsibility SET 
+			conversation_title = CONCAT(p_vehicle_type,"/", p_vehicle_number), 
+			#customer_nickname = p_customer_name
+			avator = p_avator,
+			notify_data = IFNULL(p_notify_data,notify_data)
+		WHERE manager_id = p_manager_id AND customer_id = p_customer_id;
 	END IF;
 	
 END//
@@ -131,12 +138,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_manager_list`(
 	IN `p_manager_id` VARCHAR(50)
 
 
+
+
+
 )
 BEGIN
 	/* 20181022 By Ben */
 	/* call sp_select_manager_list("SE0001"); */
 	
-	SELECT customer_id, conversation_title, avator, last_talk_time, last_message, manager_unread, note
+	SELECT customer_id, conversation_title, customer_nickname, avator, last_talk_time, last_message, manager_unread, notify_data
 	from tb_responsibility WHERE manager_id = p_manager_id ORDER BY last_talk_time DESC;
 	
 END//
@@ -150,6 +160,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_talk_history`(
 	IN `p_customer_id` VARCHAR(50),
 	IN `p_skip` int,
 	IN `p_limit` int
+
 
 
 )
@@ -175,7 +186,7 @@ BEGIN
 	#message_type, content, avator, last_talk_time, last_message, unread, note
 	FROM tb_message 
 	LEFT JOIN 
-	((SELECT ht_id , avator FROM tb_customer) UNION (SELECT ht_id , avator FROM tb_manager)) avator_dict
+	((SELECT ht_id, name name, avator FROM tb_customer) UNION (SELECT ht_id, manager_name name, avator FROM tb_manager)) avator_dict
 	ON tb_message.from = avator_dict.ht_id
 	WHERE (`to` = p_manager_id AND `from` = p_customer_id ) 
 		OR (`to` = p_customer_id AND `from` = p_manager_id )
@@ -225,6 +236,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_send_message`(
 
 
 
+
 )
 BEGIN
 	/* 20181022 By Ben */
@@ -263,6 +275,7 @@ BEGIN
 		UPDATE tb_responsibility SET last_talk_time = p_datetime, last_message =  p_content, 
 			manager_unread = (manager_unread+1)*p_set_unread, customer_unread = (customer_unread+1)*IF(p_set_unread=1,0,1)
 		WHERE manager_id = p_manager_id AND customer_id = p_customer_id;
+		/*
 	ELSE 
 		SET p_conversation_title = (
 				SELECT CONCAT(vehicle_type,"/",vehicle_number,"/",name) 
@@ -277,9 +290,10 @@ BEGIN
 		SET p_conversation_title = IFNULL(p_conversation_title, CONCAT("未知的使用者: "+p_customer_id));
 		SET p_conversation_avator = IFNULL(p_conversation_avator, "https://customer-service-xiang.herokuapp.com/images/avatar.png");
 		INSERT INTO tb_responsibility 
-		(`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `avator`, `last_talk_time`, `last_message`, `manager_unread`,`customer_unread`)
+		(`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `avator`, `last_talk_time`, `last_message`, `manager_unread`,`customer_unread`,`notify_data`,`personal_data`)
 		VALUES
-		(UUID(), p_manager_id, p_customer_id, p_conversation_title, p_conversation_avator,  p_datetime, p_content, 0 ,0);
+		(UUID(), p_manager_id, p_customer_id, p_conversation_title, p_conversation_avator,  p_datetime, p_content, 0, 0, p_notify_data, p_personal_data);
+		*/
 	END IF;
 	
 END//
@@ -349,11 +363,10 @@ CREATE TABLE IF NOT EXISTS `tb_customer` (
 -- 正在傾印表格  db_lexus_cs.tb_customer 的資料：~4 rows (大約)
 /*!40000 ALTER TABLE `tb_customer` DISABLE KEYS */;
 INSERT INTO `tb_customer` (`customer_id`, `ht_id`, `name`, `vehicle_type`, `vehicle_number`, `avator`, `telphone`, `personal_data`, `personal_data_time`, `memo`) VALUES
-	('54c6e618-e1ce-11e8-ac49-00090ffe0001', 'U502785c6d9c1d63aad1535d71c51eae3', '鄭鈺婷', 'IS300h', 'NUM-056', 'https://ai-catcher.com/wp-content/uploads/icon_74.png', '', '{}', '2018-11-06 22:14:53', NULL),
-	('5f45d80e-e1ce-11e8-ac49-00090ffe0001', 'C0001', '測試使用者1', 'IS300h', 'RBD-0021', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGa49DabvTpQldi1JH7KHt2TeGFmn_3g4U2jAegFdvRLFunkYQg', '0919863010', '{}', '2018-11-06 22:15:11', NULL),
-	('5f70f4f5-e1ce-11e8-ac49-00090ffe0001', 'C0002', '測試使用者2', 'IS300h', 'RBD-0022', 'https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/079/99/0010799970.jpg&v=5ba225b9&w=348&h=348', '0919863010', '{}', '2018-11-06 22:15:11', NULL),
-	('5f91e592-e1ce-11e8-ac49-00090ffe0001', 'C0003', '測試使用者3', 'IS300h', 'RBD-0023', 'http://blog.accupass.com/wp-content/uploads/2017/03/1_120122230539_1.jpg', '0919863010', '{}', '2018-11-06 22:15:11', NULL),
-	('d3d429b9-e1d1-11e8-ac49-00090ffe0001', '38ed3cdc-7136-4b28-8b82-b0ecb9b1cfc3', '鄭伊然', 'IS300h', 'NUM-031', 'https://ai-catcher.com/wp-content/uploads/icon_74.png', '', '{}', '2018-11-06 22:39:55', NULL);
+	('e239d075-e362-11e8-ac49-00090ffe0001', 'U502785c6d9c1d63aad1535d71c51eae3', '鄭鈺婷', 'IS300h', 'NUM-056', 'https://ai-catcher.com/wp-content/uploads/icon_74.png', '0919863156', '{"taipei_digi_data":{"LICSNO":"NUM-056","FRAN":"L","CARNM":"IS300h","CRCOMPID":"AA","CRSALR":"AA00001","CRSALRNM":"陳柏廷","CRMOBILE":"0919863010","SRCOMPID":"AA","WHSRVNO":"AA00002","WHSRVNM":"劉孟函","SRMOBILE":"0226581910","NICKNAME":"鈺婷","PICURL":"https://ai-catcher.com/wp-content/uploads/icon_74.png"},"lexus_data":{"USERNM":"鄭鈺婷","ADDR":"台北市內湖區文湖街156號","MOBILE":"0919863156","BIRTHDAY":"1/7","CARNM":"IS300h","SFX":"3311","REDLDT":"2015/01/01","FENDAT":"2019/01/20","UENDAT":"2019/01/10","NXRPMO":"引擎腳老化","RTPTDT":"2018/10/24","RTPTML":"1","BRKDS":"網路預約;萬公里定保-LINE-LCS預約測試資料"}}', '2018-11-08 22:30:28', NULL),
+	('fc8b7706-e362-11e8-ac49-00090ffe0001', 'C0001', '測試使用者1', 'IS300h', 'RBD-0021', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGa49DabvTpQldi1JH7KHt2TeGFmn_3g4U2jAegFdvRLFunkYQg', '0919863010', '{}', '2018-11-08 22:31:12', NULL),
+	('fcb2848a-e362-11e8-ac49-00090ffe0001', 'C0002', '測試使用者2', 'IS300h', 'RBD-0022', 'https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/079/99/0010799970.jpg&v=5ba225b9&w=348&h=348', '0919863010', '{}', '2018-11-08 22:31:12', NULL),
+	('fcc81306-e362-11e8-ac49-00090ffe0001', 'C0003', '測試使用者3', 'IS300h', 'RBD-0023', 'http://blog.accupass.com/wp-content/uploads/2017/03/1_120122230539_1.jpg', '0919863010', '{}', '2018-11-08 22:31:12', NULL);
 /*!40000 ALTER TABLE `tb_customer` ENABLE KEYS */;
 
 -- 傾印  表格 db_lexus_cs.tb_manager 結構
@@ -364,7 +377,7 @@ CREATE TABLE IF NOT EXISTS `tb_manager` (
   `manager_name` varchar(50) DEFAULT NULL,
   `avator` varchar(300) DEFAULT NULL,
   `telphone` varchar(50) DEFAULT NULL,
-  `personal_data` varchar(50) DEFAULT NULL COMMENT '預想是jsonstr',
+  `personal_data` varchar(2000) DEFAULT NULL COMMENT '預想是jsonstr',
   `personal_data_time` datetime DEFAULT NULL,
   `memo` varchar(200) DEFAULT '',
   PRIMARY KEY (`manager_id`)
@@ -373,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `tb_manager` (
 -- 正在傾印表格  db_lexus_cs.tb_manager 的資料：~1 rows (大約)
 /*!40000 ALTER TABLE `tb_manager` DISABLE KEYS */;
 INSERT INTO `tb_manager` (`manager_id`, `ht_id`, `manager_type`, `manager_name`, `avator`, `telphone`, `personal_data`, `personal_data_time`, `memo`) VALUES
-	('5f3999ee-e1ce-11e8-ac49-00090ffe0001', 'AA00001', 'D', '陳柏廷', 'https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png', 'NULL', '{}', '2018-11-06 22:15:11', '');
+	('fc7f37c4-e362-11e8-ac49-00090ffe0001', 'AA00001', 'D', '陳柏廷', 'https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png', 'NULL', '{"rtnCode":"0","rtnMsg":"","FLAG":"Y","COMPID":"AA","DLRCD":"A","BRNHCD":"01","SECTCD":"0","FRAN":"L","USERID":"AA00001","USERNM":"陳柏廷","ECHOTITLECD":"D","COMPSIMPNM":"國都汽車","DEPTSIMPNM":"丹鳳服務廠"}', '2018-11-08 22:31:12', '');
 /*!40000 ALTER TABLE `tb_manager` ENABLE KEYS */;
 
 -- 傾印  表格 db_lexus_cs.tb_message 結構
@@ -391,14 +404,11 @@ CREATE TABLE IF NOT EXISTS `tb_message` (
   PRIMARY KEY (`message_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 正在傾印表格  db_lexus_cs.tb_message 的資料：~0 rows (大約)
+-- 正在傾印表格  db_lexus_cs.tb_message 的資料：~1 rows (大約)
 /*!40000 ALTER TABLE `tb_message` DISABLE KEYS */;
 INSERT INTO `tb_message` (`message_id`, `message_type`, `content`, `time`, `assistant_ans`, `visualrecog_ans`, `direction_type`, `from`, `to`, `time_record`) VALUES
-	('03254a97-e1d3-11e8-ac49-00090ffe0001', 'text', '123', '2018-11-06 22:48:20.349', '[]', '', 'client', '38ed3cdc-7136-4b28-8b82-b0ecb9b1cfc3', 'AA00001', '{"socket_receive":1541515700350,"assistant_call":1541515700351,"assistant_return":1541515704190,"mysql_call":1541515704190,"mysql_return":1541515704196,"socket_broadcast":1541515704197,"before_db_log":1541515704198}'),
-	('3e69edfa-e1d3-11e8-ac49-00090ffe0001', 'text', '123123123', '2018-11-06 22:50:02.470', '[]', '', 'client', '38ed3cdc-7136-4b28-8b82-b0ecb9b1cfc3', 'AA00001', '{"socket_receive":1541515802471,"assistant_call":1541515802471,"assistant_return":1541515803632,"mysql_call":1541515803632,"mysql_return":1541515803633,"socket_broadcast":1541515803633,"before_db_log":1541515803633}'),
-	('599a2080-e1d3-11e8-ac49-00090ffe0001', 'text', '123123123', '2018-11-06 22:50:48.111', '[]', '', 'client', 'U502785c6d9c1d63aad1535d71c51eae3', 'AA00001', '{"socket_receive":1541515848112,"assistant_call":1541515848112,"assistant_return":1541515849191,"mysql_call":1541515849192,"mysql_return":1541515849248,"socket_broadcast":1541515849248,"before_db_log":1541515849248}'),
-	('62deaa58-e1d3-11e8-ac49-00090ffe0001', 'text', '妳好妳好', '2018-11-06 22:51:04.795', '', '', 'service', 'AA00001', 'U502785c6d9c1d63aad1535d71c51eae3', '{"socket_receive":1541515864796,"socket_broadcast":1541515864796,"before_db_log":1541515864797}'),
-	('7ff85531-e1d3-11e8-ac49-00090ffe0001', 'text', '哈囉', '2018-11-06 22:51:53.618', '', '', 'service', 'AA00001', '38ed3cdc-7136-4b28-8b82-b0ecb9b1cfc3', '{"socket_receive":1541515913618,"socket_broadcast":1541515913618,"before_db_log":1541515913619}');
+	('187c95c0-e364-11e8-ac49-00090ffe0001', 'text', '123', '2018-11-08 22:39:07.696', '[]', '', 'client', 'U502785c6d9c1d63aad1535d71c51eae3', 'AA00001', '{"socket_receive":1541687947696,"assistant_call":1541687947697,"assistant_return":1541687948665,"mysql_call":1541687948665,"mysql_return":1541687948670,"socket_broadcast":1541687948670,"before_db_log":1541687948672}'),
+	('1f403f6f-e364-11e8-ac49-00090ffe0001', 'text', '嗯嗯嗯', '2018-11-08 22:39:20.010', '', '', 'service', 'AA00001', 'U502785c6d9c1d63aad1535d71c51eae3', '{"socket_receive":1541687960011,"socket_broadcast":1541687960011,"before_db_log":1541687960012}');
 /*!40000 ALTER TABLE `tb_message` ENABLE KEYS */;
 
 -- 傾印  表格 db_lexus_cs.tb_responsibility 結構
@@ -406,25 +416,25 @@ CREATE TABLE IF NOT EXISTS `tb_responsibility` (
   `responsibility_id` char(40) NOT NULL,
   `manager_id` char(40) DEFAULT NULL,
   `customer_id` char(40) DEFAULT NULL,
-  `conversation_title` varchar(60) DEFAULT NULL COMMENT '避免為了名字而每次join',
+  `conversation_title` varchar(60) DEFAULT NULL,
+  `customer_nickname` varchar(60) DEFAULT NULL,
   `avator` varchar(300) DEFAULT NULL,
   `last_talk_time` datetime DEFAULT NULL,
   `last_message` varchar(200) DEFAULT NULL,
   `manager_unread` int(11) DEFAULT NULL,
   `customer_unread` int(11) DEFAULT NULL,
-  `note` varchar(200) DEFAULT NULL,
+  `notify_data` varchar(200) DEFAULT NULL,
   `memo` varchar(200) DEFAULT '',
   PRIMARY KEY (`responsibility_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 正在傾印表格  db_lexus_cs.tb_responsibility 的資料：~4 rows (大約)
 /*!40000 ALTER TABLE `tb_responsibility` DISABLE KEYS */;
-INSERT INTO `tb_responsibility` (`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `avator`, `last_talk_time`, `last_message`, `manager_unread`, `customer_unread`, `note`, `memo`) VALUES
-	('54d9a0b0-e1ce-11e8-ac49-00090ffe0001', 'AA00001', 'U502785c6d9c1d63aad1535d71c51eae3', 'IS300h/NUM-056/鄭鈺婷', 'https://ai-catcher.com/wp-content/uploads/icon_74.png', '2018-11-06 22:51:05', '妳好妳好', 0, 1, NULL, ''),
-	('5f5d3327-e1ce-11e8-ac49-00090ffe0001', 'AA00001', 'C0001', 'IS300h/RBD-0021/測試使用者1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGa49DabvTpQldi1JH7KHt2TeGFmn_3g4U2jAegFdvRLFunkYQg', '2018-11-06 22:15:11', '', 0, 0, NULL, ''),
-	('5f86622a-e1ce-11e8-ac49-00090ffe0001', 'AA00001', 'C0002', 'IS300h/RBD-0022/測試使用者2', 'https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/079/99/0010799970.jpg&v=5ba225b9&w=348&h=348', '2018-11-06 22:15:11', '', 0, 0, NULL, ''),
-	('5f9c0913-e1ce-11e8-ac49-00090ffe0001', 'AA00001', 'C0003', 'IS300h/RBD-0023/測試使用者3', 'http://blog.accupass.com/wp-content/uploads/2017/03/1_120122230539_1.jpg', '2018-11-06 22:15:11', '', 0, 0, NULL, ''),
-	('d3e8bc96-e1d1-11e8-ac49-00090ffe0001', 'AA00001', '38ed3cdc-7136-4b28-8b82-b0ecb9b1cfc3', 'IS300h/NUM-031/鄭伊然', 'https://ai-catcher.com/wp-content/uploads/icon_74.png', '2018-11-06 22:51:54', '哈囉', 0, 1, NULL, '');
+INSERT INTO `tb_responsibility` (`responsibility_id`, `manager_id`, `customer_id`, `conversation_title`, `customer_nickname`, `avator`, `last_talk_time`, `last_message`, `manager_unread`, `customer_unread`, `notify_data`, `memo`) VALUES
+	('e24430cb-e362-11e8-ac49-00090ffe0001', 'AA00001', 'U502785c6d9c1d63aad1535d71c51eae3', 'IS300h/NUM-056', '鄭鈺婷', 'https://ai-catcher.com/wp-content/uploads/icon_74.png', '2018-11-08 22:39:20', '嗯嗯嗯', 0, 1, '{}', ''),
+	('fc9e7543-e362-11e8-ac49-00090ffe0001', 'AA00001', 'C0001', 'IS300h/RBD-0021', '測試使用者1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGa49DabvTpQldi1JH7KHt2TeGFmn_3g4U2jAegFdvRLFunkYQg', '2018-11-08 22:31:12', '', 0, 0, '[{"type":"FEN","day":"19000101","notify":true},{"type":"UEN","day":"19000101","notify":true},{"type":"BRTH","day":"19911111","notify":true}]', ''),
+	('fcbe68ec-e362-11e8-ac49-00090ffe0001', 'AA00001', 'C0002', 'IS300h/RBD-0022', '測試使用者2', 'https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/079/99/0010799970.jpg&v=5ba225b9&w=348&h=348', '2018-11-08 22:31:12', '', 0, 0, '[{"type":"FEN","day":"19000101","notify":true},{"type":"UEN","day":"19000101","notify":true},{"type":"BRTH","day":"19911111","notify":true}]', ''),
+	('fcd3f606-e362-11e8-ac49-00090ffe0001', 'AA00001', 'C0003', 'IS300h/RBD-0023', '測試使用者3', 'http://blog.accupass.com/wp-content/uploads/2017/03/1_120122230539_1.jpg', '2018-11-08 22:31:12', '', 0, 0, '[{"type":"FEN","day":"19000101","notify":true},{"type":"UEN","day":"19000101","notify":true},{"type":"BRTH","day":"19911111","notify":true}]', '');
 /*!40000 ALTER TABLE `tb_responsibility` ENABLE KEYS */;
 
 -- 傾印  表格 db_lexus_cs.tb_talk_tricks 結構
