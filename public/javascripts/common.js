@@ -11,9 +11,9 @@ function call_hotai_api(api_code,data,callback){
 			detail:true
 		}),
 		success: function(data) {
-			if(data.isSuccess && 
-				(data.result.rtnCode=="0"|| data.result.rtnCode=="00")
-			){
+			console.log(api_code);
+			console.log(data);
+			if(data.isSuccess){
 				if(callback){
 					callback(data.result);
 				}

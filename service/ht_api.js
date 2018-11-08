@@ -71,8 +71,11 @@
 					}, function (err, res, body) {
 						if(err)  resolve(returnMessage(false, 'Api server return error' + detail ? (': ' + err.tostring()) : ''));
 	
-						var result = returnMessage(true, JSON.parse(body.replace(/[\r\n\t]/g,"")));
-						resolve(result);
+						var result = JSON.parse(body.replace(/[\r\n\t]/g,""));
+						var isSuccess = result.rtnCode || false;
+						isSuccess = isSuccess && '00'.includes(result.rtnCode);
+						
+						resolve(returnMessage(isSuccess, result));
 					});
 				
 			}catch(e){
