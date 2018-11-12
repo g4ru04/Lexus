@@ -121,7 +121,7 @@ function to_login(){
 					}]
 				};
 			});
-
+			
 			set_manager_socket(service_id,manager_data,responsibility_data);
 		});
 	});
@@ -170,6 +170,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 	
 	Connection.set_listener = function(){
 		Connection.socket.on('enter', function (data) {
+			console.log('data',data)
 			try {
 				let conversation_data = data[0][0];
 				Connection.client_info = JSON.parse(conversation_data.customer_data);
@@ -236,6 +237,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 	}
 	
 	Connection.change_customer = function(client_id){
+		console.log(client_id);
 		Connection.next_client_id = client_id;
 		Connection.socket.emit('leave',{
 			type : Connection.end_point,
@@ -325,92 +327,172 @@ function talk_tricks_setting(data){
 
 //功能選單
 function menu_setting(){
-	$(".btn-book").click(function(){
-		//dealwithSamelayer('samelayer');
-		$("#book-menu").toggle();
-	});
-	$(".btn-booklog").click(function(){
-		//dealwithSamelayer('samelayer');
-		$('#book-log').toggle();
-	});
 
-	$("#service-date").datepicker();
+	//預約流程
+	initBook();
 
+	$("#btn-booklog").click(function(){
+		call_hotai_api("LINELCS02_Q03",{  
+			"LICSNO": Connection.client_info.vehicle_number
+		},function(data){
+			if(data.BOOKDATA.length>0){
+				//塞資料
+				data = data.BOOKDATA[0];
+				$('#booklog_carno').html(data.LICSNO);
+				$('#booklog_factory').html(data.BRNHNM);
+				$('#booklog_content').html(data.REFCDNM);
+				$('#booklog_time').html(data.BKDT);
+				$('#booklog_name').html(data.CONTPSN);
+				$('#booklog_phone').html(data.CONTEL);
+				$('#booklog_other').html(data.REMARK);
+				var timezone = 
+					data.CALLOUTSEC == "1" ? "08:30-12:00" :
+					data.CALLOUTSEC == "2" ? "13:00-17:30" :
+					data.CALLOUTSEC == "3" ? "18:00-19:30" :
+					data.CALLOUTSEC == "4" ? "任何時段" :
+					/* "5" or others */ "無須連絡電話"
+				$('#booklog_timezone').html(timezone);
+
+				//取消預約
+				$('#cancel_reservation').unbind('click');
+				$('#cancel_reservation').click(function(){
+					call_hotai_api("LINELCS02_D01", {  
+						"SKEY": data.SKEY,
+						"LICSNO": data.LICSNO,
+						"CRTPGID": "USP_LINELCS02_D01",
+						"DLRCD": data.DLRCD,
+						"BRNHCD": data.BRNHCD,
+						"WORKNO": data.WORKNO
+					}, function(d){
+						// 已為您取消 yyyy/mm/dd hh:mm 於 XX廠 的 OO保養 預約"
+						Connection.send_text("已為您取消 " + data.BKDT + ' ' + data.BKSSEC + 
+						" 於 " + data.BRNHNM + " 的 " + data.REFCDNM + " 預約");
+						$('#book-log').toggle();
+					});
+				});
+				$('#book-log').toggle();
+			}else{
+				alert("沒有預約記錄");
+			}
+		});
+	});
+}
+
+function initBook(){
+	$("#btn-book").click(function(){
+		//已有預約保修 flag
+		var booked = false;
+
+		call_hotai_api("LINELCS02_Q03",{  
+			"LICSNO": Connection.client_info.vehicle_number
+		},function(data){
+			if(data.BOOKDATA.length>0){
+				booked=true;
+				alert("已有預約保修");
+			}else{
+				$('#cust-name').val(Connection.client_info.name);
+				$('#cust-phone').val(Connection.client_info.PHONE);
+
+				$('#service-factory').on('change', function(){
+					call_hotai_api('LINELCS02_Q02', {  
+						"DLRCD": Connection.service_info.DLRCD,
+						"BRNHCD": Connection.service_info.BRNHCD,
+						"USERID": Connection.service_id
+					}, function(data){
+						var date_time = {}; //Object.keys(a)
+						data.AVITIME.forEach(function(item){
+							if(date_time.hasOwnProperty(item.ORDERDT)){
+								if(!date_time[item.ORDERDT].includes(item.TIME_SET)){
+									date_time[item.ORDERDT].push(item.TIME_SET)
+								}
+							}else{
+								date_time[item.ORDERDT] = [item.TIME_SET] 
+							}
+						});
+						$('#service-date').html('');
+						$('#service-date').append(Object.keys(date_time).map(function(item){
+							return '<option '+ 'value="' + item +'">' + item + '</option>';
+						}).join(''));
+
+						$('#service-date').unbind('change');
+						$('#service-date').on('change', function(){
+							$('#service-time').html('');
+							$('#service-time').append(date_time[$('#service-date').val()].map(function(item){
+								return '<option '+ 'value="' + item +'">' + item + '</option>';
+							}).join(''));
+						});
+						$('#service-date').trigger('change');
+					})
+				});
+
+				call_hotai_api('LINELCS02_Q01', '{}', function(data){
+
+					//地區綁服務廠 { area : [factories], }
+					var area_factory = {};
+					data.BRNHMF.forEach(function(item){
+						if(area_factory.hasOwnProperty(item.ZIPNM)){
+							if(!area_factory[item.ZIPNM].includes(item.DLRCD +'-'+ item.BRNHCD)){
+								area_factory[item.ZIPNM].push(item.DLRCD +'-'+ item.BRNHCD)
+							}
+						}else{
+							area_factory[item.ZIPNM] = [item.DLRCD +'-'+ item.BRNHCD] 
+						}
+					});
+					//todo 選地區只跑出對應地區服務廠
+					
+					var selectList = data.BRNHMF.map(function(item){
+						//地區
+						if(Connection.service_info.BRNHCD == item.BRNHCD && Connection.service_info.DLRCD == item.DLRCD) {
+							('option[text="' + item.ZIPNM + '"]').attr('selected','selected')
+						}
+						//服務廠
+						return '<option '+
+							(Connection.service_info.BRNHCD == item.BRNHCD && Connection.service_info.DLRCD == item.DLRCD ? 
+								'selected="selected"' : '') +
+							'value="' + item.DLRCD +'-'+ item.BRNHCD +'">' +
+							item.BRNHNM + '</option>';
+					}).join('');
+					$('#service-factory').append(selectList);
+					$('#service-factory').trigger('change');
+				});
+				$("#book-menu").toggle();
+			}
+		})
+	});
+	//$("#service-date").datepicker({ dateFormat: 'yy/mm/dd' });
 	$('#book-submit').click(function(){
-		var retText = 
-			'為您預約維修: \n' +
-			'日期:' + $("#service-date").val() + '\n' +
-			'時段:' + $("#service-time").val() + '\n' +
-			'服務廠:' + $("#service-factory").val();
+		call_hotai_api('LINELCS02_I01', {  
+			"LICSNO": Connection.client_info.vehicle_number,
+			"DLRCD": Connection.service_info.DLRCD,
+			"BRNHCD": Connection.service_info.BRNHCD,
+
+			"BKDT": $('#service-date').val().replace(/\//g,'-'),
+			"BKSSEC": $('#service-time').val(),
+			//固定寫1
+			"OPTP": "1", 
+			//hardcore now 里程數
+			"RTPTML": "0",
+			"CONTPSN": Connection.client_info.name,
+			"CONTTEL": Connection.client_info.PHONE,
+			"CALLOUTSEC": $('#cust-contacttime').val(),
+			"REMARK": $('#service-memo').val(),
+			"CRTPGID": "LINELCS02_I01",
+			"GVTYPE": $('#cust-wait').val()
+			}, function(data){
+				var retText = 
+					'為您預約維修: \n' +
+					'日期:' + $("#service-date").val() + '\n' +
+					'時段:' + $("#service-time").val() + '\n' +
+					'服務廠:' + $("#service-factory").val();
+				
+				Connection.send_text(retText);
+			});
 		
-		Connection.send_text(retText);
 		$("#book-menu").toggle();
-	});
-	$("#cancle-book").click(function(){
-		$('.top-page').toggle();
-	});
-	$(".heder_service2").click(function(){
-		$('.top-page').toggle();
 	});
 	$("#cust-wait-btn").click(function(){
 		var custWait = $('#cust-wait').val();
-		this.innerText = custWait=="true" ? 'Ｘ 完工通知':'Ｏ 在場等候';
-		$('#cust-wait').val(custWait=="true"?"false":"true");
+		this.innerText = custWait=="A" ? 'Ｘ 完工通知':'Ｏ 在場等候';
+		$('#cust-wait').val(custWait=="A"?"C":"A");
 	});
-	/*
-	$(".btn-add").click(function(){
-		$(".select-menu").toggle();
-	});
-	
-	$(".select-menu a").click(function(){
-		let func_name = $(this).text().trim();
-		if(func_name=="相機"){
-			
-			if (window.stream) {
-				if (window.stream) {
-					window.stream.getTracks().forEach(function(track) {
-					  track.stop();
-					});
-				}
-				window.stream = null;
-				$("#video_container").html('<video autoplay=""> </video>');
-				
-			}else{
-				navigator.mediaDevices.getUserMedia({ video: true}).
-					then(function(stream) { 
-						window.stream = stream;
-						document.querySelector('video').srcObject = stream;
-					});	
-			}
-			
-			$("#video_container").toggle();
-			$("#video_container").position({
-				my: "left+10 top+10",
-				at: "left top",
-				of: "#console"
-			});
-		}else if(func_name=="撥打電話"){
-			location.href = 'tel:+886-919863010';
-			
-		}else if(func_name=="照片"){
-			$("#upload_picture").trigger("click"); 
-			
-		}else if(func_name=="金牌話術"){
-			$("#talk_tricks_container").toggle();
-
-		}else{
-			alert(func_name);
-		}
-		
-		$(".select-menu").toggle();
-	});*/
-}
-
-function dealwithSamelayer(classname){
-	var samelayer = $('.'+ classname)
-	samelayer.map(function(element){
-		if(samelayer[element].style.display != "none"){
-			samelayer[element].style.display = "none"
-		}
-	})
 }

@@ -95,12 +95,13 @@
 								<div class="table-tr">
 									<div class="table-td left">方便連絡時段</div>
 									<div class="table-td right">
-										<select name="font" id="cust-contacttime" class="span1">
-											<option value="" selected="selected" hidden>選擇時段</option>
-											<option value="morning">早上</option>
-											<option value="noon">下午</option>
-											<option value="night">晚上</option>
-										</select>
+											<select name="font" id="cust-contacttime" class="span1">
+												<option value="1">08:30-12:00</option>
+												<option value="2">13:00-17:30</option>
+												<option value="3">18:00-19:30</option>
+												<option value="4" selected="selected">任何時段</option>
+												<option value="5">無須連絡電話</option>
+											</select>
 									</div>
 								</div>
 								<br/>
@@ -118,9 +119,19 @@
 									<div class="table-td right">
 										<select name="font" id="service-area" class="span1">
 											<option value="" selected="selected" hidden>選擇地區</option>
-											<option value="A">地區A</option>
-											<option value="B">地區B</option>
-											<option value="C">地區C</option>
+											<option text="台北市">台北市</option>
+											<option text="新北市">新北市</option>
+											<option text="桃園市">桃園市</option>
+											<option text="新竹市">新竹市</option>
+											<option text="苗栗縣">苗栗縣</option>
+											<option text="台中市">台中市</option>
+											<option text="彰化縣">彰化縣</option>
+											<option text="台南市">台南市</option>
+											<option text="嘉義縣">嘉義縣</option>
+											<option text="雲林縣">雲林縣</option>
+											<option text="高雄市">高雄市</option>
+											<option text="宜蘭縣">宜蘭縣</option>
+											<option text="花蓮縣">花蓮縣</option>
 										</select>
 									</div>
 								</div>
@@ -129,24 +140,22 @@
 									<div class="table-td right">
 										<select name="font" id="service-factory" class="span1">
 											<option value="" selected="selected" hidden>選擇服務廠</option>
-											<option value="01">XX廠</option>
-											<option value="02">XX廠</option>
-											<option value="03">XX廠</option>
 										</select>
 									</div>
 								</div>
 								<div class="table-tr">
 									<div class="table-td left">預約日期</div>
-									<div class="table-td right"><input type="text" id="service-date" size="30"></div>
+									<div class="table-td right">
+										<select name="font" id="service-date" class="span1">
+											<option value="" selected="selected" hidden>選擇日期</option>
+										</select>
+									</div>
 								</div>
 								<div class="table-tr">
 									<div class="table-td left">預約時段</div>
 									<div class="table-td right">
 										<select name="font" id="service-time" class="span1">
 											<option value="" selected="selected" hidden>選擇時段</option>
-											<option value="時段1">時段1</option>
-											<option value="時段2">時段2</option>
-											<option value="時段3">時段3</option>
 										</select>
 									</div>
 								</div>
@@ -166,42 +175,42 @@
 								<a style="color: red;">若需修改時間，請重新預約或致電服務。</a>
 								<div class="select-menu">
 									<div class="table-tr">
-										<div class="table-td left">愛車車牌</div>
-										<div class="table-td right">愛車車牌</div>
+										<div class="table-td left">愛車車牌  </div>
+										<div class="table-td right" id="booklog_carno"></div>
 									</div>
 									<div class="table-tr">
-										<div class="table-td left">服務廠</div>
-										<div class="table-td right">廠廠廠</div>
+										<div class="table-td left">服務廠  </div>
+										<div class="table-td right" id="booklog_factory"></div>
 									</div>
 									<div class="table-tr">
-										<div class="table-td left">服務內容</div>
-										<div class="table-td right">內容</div>
+										<div class="table-td left">服務內容  </div>
+										<div class="table-td right" id="booklog_content"></div>
 									</div>
 									<div class="table-tr">
-										<div class="table-td left">預約時間</div>
-										<div class="table-td right">時間</div>
+										<div class="table-td left">預約時間  </div>
+										<div class="table-td right" id="booklog_time"></div>
 									</div>
-
 								</div>
 								<h3>連絡資料</h3>
 								<div class="select-menu">
 									<div class="table-tr">
-										<div class="table-td left">連絡人</div>
-										<div class="table-td right">人</div>
+										<div class="table-td left">連絡人  </div>
+										<div class="table-td right" id="booklog_name"></div>
 									</div>
 									<div class="table-tr">
-										<div class="table-td left">連絡電話</div>
-										<div class="table-td right">電話</div>
+										<div class="table-td left">連絡電話  </div>
+										<div class="table-td right" id="booklog_phone"></div>
 									</div>
 									<div class="table-tr">
-										<div class="table-td left">連絡時段</div>
-										<div class="table-td right">時段</div>
+										<div class="table-td left">連絡時段  </div>
+										<div class="table-td right" id="booklog_timezone"></div>
 									</div>
 									<div class="table-tr">
-										<div class="table-td left">其他意見</div>
-										<div class="table-td right">意見</div>
+										<div class="table-td left">其他意見  </div>
+										<div class="table-td right" id="booklog_other"></div>
 									</div>
 								</div>
+								<button id="cancel_reservation">取消預約</button>
 							</div>
 						</div>
 						
@@ -231,8 +240,10 @@
 						<div class="box">
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
 								onclick='$("#upload_picture").trigger("click");'>照片</div>
-							<a href="javascript:void(0)" class="btn-book" avalon-events=""></a>
-							<a href="javascript:void(0)" class="btn-booklog" avalon-events=""></a>
+							<!-- <a href="javascript:void(0)" class="btn-book" avalon-events=""></a> -->
+							<!-- <a href="javascript:void(0)" class="btn-booklog" avalon-events=""></a> -->
+							<div id="btn-book" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">預約保修</div>
+							<div id="btn-booklog" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">預約記錄</div>
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
 								onclick='alert("未實現");'>換專員</div>
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"

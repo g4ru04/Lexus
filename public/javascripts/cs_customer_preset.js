@@ -2,9 +2,11 @@
 
 $( function() {
 	emotion_setting();
+	maintain_log_init();
 	
 	set_customer_socket();
 	
+	$("#dialog").dialog({autoOpen: false});
 	$(".header_content .txt").html(Connection.service_name);
 });
 
@@ -87,4 +89,84 @@ function set_customer_socket(){
 	
 	Connection.init();
 
+}
+
+function maintain_log_init(){
+	$('#maintain_log').click(function(){
+		$("#dialog").dialog("open");
+	})
+	
+	$("#maintain-return").click(function(){
+		$('#maintain-page').toggle();
+	});
+	$("#detail-return").click(function(){
+		$('#detail-page').toggle();
+	});
+}
+
+function moredetail(DLRCD,BRNHCD,WORKNO,RTPTDT,RTPTML,TOTAMT){
+	call_hotai_api("LINELCS03_Q02",{  
+		"DLRCD": DLRCD,
+		"BRNHCD": BRNHCD,
+		"WORKNO": WORKNO
+	},function(data){
+		$('#detail-no').html("工單編號: " + WORKNO);
+		$('#detail-date').html("入廠日期: " + RTPTDT);
+		$('#detail-kms').html("入廠里程: " + RTPTML);
+		$('#detail-amt').html("發票金額:  " + TOTAMT);
+
+		var list = data.PARTSDATA.map(function(item){
+			return '<div class="list_element">'+
+			'	<div class="list-table">' +
+			'		<div class="list-tr">' +
+			'			<div class="list-cell">' + item.PTCHNM + '</div>' +
+			'			<div class="list-cell">數量：' + item.PCNT + ' 單位</div>' +
+			'		</div>' +
+			'	</div>' +
+			'</div>';
+		}).join('');
+
+		$('#maintain_details').html(list);
+		$('#detail-page').toggle();
+	});
+}
+
+function do_login(){
+	call_hotai_api("LINE001_Q01",{
+		"LICSNO": Connection.client_info.vehicle_number,
+		//todo 確認這個id塞啥
+		"ENCYID": Connection.client_id,
+		"HALFCUSTID": $("#password").val()
+	}, function(data){
+		if("Y" == data.PASSFLAG){
+			call_hotai_api("LINELCS03_Q01", {  
+				"DLRCD": "A",
+				"BRNHCD": "52",
+				"WORKNO": "07A0001"
+			}, function(data){
+				$("#dialog").dialog("close");
+				var maintainLogs = data.LSFXINFO;
+				var list = maintainLogs.map(function(item){
+					return '<div class="list_element" onclick="javascript:moredetail(\'' + 
+						item.DLRCD + '\',\'' + item.BRNHCD + '\',\'' + item.WORKNO + '\',\'' + 
+						item.RTPTDT + '\',\'' + item.RTPTML + '\',\'' + item.TOTAMT + '\')">'+
+					'	<div class="list-table">' +
+					'		<div class="list-tr">' +
+					'			<div class="list-cell">' + item.RTPTDT + '</div>' +
+					'			<div class="list-cell">里程數：' + item.RTPTML + ' m</div>' +
+					'			<div class="list-cell">' +
+					'				<div style="float:right;font-size: 1.3em;">></div>' +
+					'			</div>' +
+					'		</div>' +
+					'	</div>' +
+					'</div>';
+				}).join('');
+	
+				$('#maintain_logs').html(list);
+				$('#maintain-page').toggle();
+			});
+		}else{
+			alert("密碼錯誤" + (data.rtnMsg ? "," + data.rtnMsg : ""));
+		}
+	});
 }

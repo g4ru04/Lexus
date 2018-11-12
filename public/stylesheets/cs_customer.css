@@ -3,7 +3,38 @@
 	display: block;
 	overflow: hidden;
 }
+.heder_service {
+	position: relative;
+	top: 14px;
+	left: 11px;
+	width:0px;
+	height:0px;
+}
+.heder_service img{
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+}
 
+.list_element{
+	height:60px;
+	display: block;
+	width: 100%;
+	border: 1px solid #ddd;
+}
+.list_element.active {
+	background-color:#fef;
+}
+.list-table {
+	display:table;
+	height:100%;
+}
+.list-tr {
+	display:table-row;height:100%;
+}
+.list-cell {
+	display:table-cell;height:100%;width:40vw;text-align: center;vertical-align: middle;
+}
 /* CTBC style */
 .dialog--service .dialog__profile {
   float: left;
