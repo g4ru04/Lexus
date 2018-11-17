@@ -22,7 +22,6 @@ $( function() {
 				"</div>"
 		}).join("<br>");
 		console.log(talk_trick_text);
-		console.log(talk_trick_text);
 		
 		$("#talk_tricks_editor").html(editor_str+"<div class='new'>new</div>");
 		$("#talk_tricks_editor").dialog( "open" );
@@ -67,7 +66,23 @@ $( function() {
 				}
 			}]
 		});
-	
+	$('.search_box_container > input').keyup(function(e){
+		var input = $('.search_box_container > input').val();
+		$('.cs_manager_list_container > .list_element').attr("style", "display: none;")
+		if(input){
+			var target = Connection.conversation_list.forEach(function(item){
+				//console.log(item.conversation_title.includes(input), item.customer_nickname.includes(input))
+				if(item.conversation_title.includes(input) || item.customer_nickname.includes(input))
+					$('.cs_manager_list_container > .list_element[customer_id="' + item.customer_id + '"]').attr("style", "display: block;")
+			});
+
+			// if(target){
+			// 	$('.cs_manager_list_container > .list_element[customer_id="' + target.customer_id + '"]').attr("style", "display: block;")
+			// }
+		}else{
+			$('.cs_manager_list_container > .list_element').attr("style", "display: block;")
+		}
+	});
 });
 
 function to_login(){
@@ -75,9 +90,9 @@ function to_login(){
 	call_hotai_api("USER_LOGIN",{
 		"USERID": $("#username").val(),
 		"PWD": $("#password").val()
-	},function(data){
+	},function(logindata){
 		
-		let login_info = data;
+		let login_info = logindata;
 		call_hotai_api("LINE006_Q01",{
 			DLRCD: login_info.DLRCD,
 			BRNHCD: login_info.BRNHCD,
@@ -89,14 +104,17 @@ function to_login(){
 			$(".login_panel").hide();
 			$(".after_login").show();
 			let service_id = $("#username").val();
-			let manager_data = {
-				USERID: login_info.USERID,
-				ECHOTITLECD: login_info.ECHOTITLECD,
-				USERNM: login_info.USERNM,
-				PICURL: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
-				PHONE: null,
-				PERSONAL_DATA:login_info
-			};
+			// let manager_data = {
+			// 	USERID: login_info.USERID,
+			// 	ECHOTITLECD: login_info.ECHOTITLECD,
+			// 	USERNM: login_info.USERNM,
+			// 	PICURL: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+			// 	PHONE: null,
+			// 	PERSONAL_DATA:login_info
+			// };
+			login_info.PICURL = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
+			login_info.PHONE = null;
+			
 			let responsibility_data = responsibility_info.USERINFO.map(function(item){
 				return {
 					USERID: item.USERID,
@@ -106,23 +124,16 @@ function to_login(){
 					LICSNO: item.LICSNO,
 					PICURL: item.PICURL,
 					MOBILE: item.MOBILE,
-					NOTIFY_DATA: [{
-						"type":"FEN",
-						"day":item.FENDAT,
-						"notify":item.FFLAG=="Y"
-					},{
-						"type":"UEN",
-						"day":item.UENDAT,
-						"notify":item.UFLAG=="Y"
-					},{
-						"type":"BRTH",
-						"day":item.BRTHDT,
-						"notify":item.BIRFLAG=="Y"
-					}]
+					FENDAT: item.FENDAT,
+					UENDAT: item.UENDAT,
+					BRTHDT: item.BRTHDT,
+					FFLAG: item.FFLAG,
+					UFLAG :item.UFLAG,
+					BIRFLAG: item.BIRFLAG
 				};
 			});
 			
-			set_manager_socket(service_id,manager_data,responsibility_data);
+			set_manager_socket(service_id,login_info,responsibility_data,logindata);
 		});
 	});
 	
@@ -130,7 +141,7 @@ function to_login(){
 
 
 //設定 Socket 
-function set_manager_socket( service_id, manager_data, responsibility_data){
+function set_manager_socket( service_id, manager_data, responsibility_data,logindata){
 	
 	Connection = {}
 	
@@ -152,6 +163,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 			"avator":"/images/avator.png",
 			"PHONE":""
 		};
+
 		Connection.conn = false ;
 		Connection.talks = [];
 		Connection.talks_history_cursor = 0;
@@ -160,6 +172,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 		
 		common_conn_setting(Connection);
 		
+		console.log('init')
 		Connection.socket.emit("register service",{
 			type : Connection.end_point,
 			service_id : Connection.service_id,
@@ -174,7 +187,18 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 			try {
 				let conversation_data = data[0][0];
 				Connection.client_info = JSON.parse(conversation_data.customer_data);
+				Connection.client_info.detail = Connection.conversation_list.find(function(item){
+					return item.customer_id == Connection.client_info.id;
+				}).detail;
+				//todo 太醜了
 				Connection.service_info = JSON.parse(conversation_data.manager_data);
+				Connection.service_info.BRNHCD = logindata.BRNHCD;
+				Connection.service_info.COMPID = logindata.COMPID;
+				Connection.service_info.COMPSIMPNM = logindata.COMPSIMPNM;
+				Connection.service_info.DEPTSIMPNM = logindata.DEPTSIMPNM;
+				Connection.service_info.DLRCD = logindata.DLRCD;
+				Connection.service_info.ECHOTITLECD = logindata.ECHOTITLECD;
+				Connection.service_info.FRAN = logindata.FRAN;
 			}catch(err) {
 				console.log(err);
 			}
@@ -231,8 +255,29 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 		Connection.socket.on('update conversation list', function (data) {
 			console.log("receive conversation list",data)
 			setTimeout(function(){
+				Connection.conversation_list = data[0];
 				update_conversatoin_list(data[0]);
 			},100);
+		});
+
+		Connection.socket.on('normal talk trick', function (data) {
+			//["普通話術1", "普通話術2", "生日快樂1", "生日快樂2", "續保話術1", "該續保了2", "其他1", "其他話術"]
+			Connection.normal_talk_trick = data;
+			var birth = '<h3>生日祝賀1</h3><input type="button" id="normal-tricks-2" onclick="select_trick(event)" class="trick-content" value="' + data[2] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-2\',event)" value="編輯">'+
+					'<h3>生日祝賀2</h3><input type="button" id="normal-tricks-3" onclick="select_trick(event)" class="trick-content" value="' + data[3] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-3\',event)" value="編輯">',
+				fend = '<h3>續保話術1</h3><input type="button" id="normal-tricks-4" onclick="select_trick(event)" class="trick-content" value="' + data[4] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-4\',event)" value="編輯">'+
+					'<h3>續保話術2</h3><input type="button" id="normal-tricks-5" onclick="select_trick(event)" class="trick-content" value="' + data[5] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-5\',event)" value="編輯">',
+				other = '<h3>其他話術1</h3><input type="button" id="normal-tricks-6" onclick="select_trick(event)" class="trick-content" value="' + data[6] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-6\',event)" value="編輯">'+
+					'<h3>其他話術2</h3><input type="button" id="normal-tricks-7" onclick="select_trick(event)" class="trick-content" value="' + data[7] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-7\',event)" value="編輯">';
+			$('#tab-birth').html(birth);
+			$('#tab-fend').html(fend);
+			$('#tab-other').html(other);
 		});
 	}
 	
@@ -247,7 +292,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 	}
 	
 	Connection.reiceive_msg = function (message){
-		
+		console.log(message)
 		if(message.ans_ID){
 			$("#talk_tricks_editor").attr("ans_ID",message.ans_ID);
 		}
@@ -255,8 +300,10 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 			talk_tricks_setting(message.talk_tricks);
 			$("#talk_tricks_container").addClass("enable"); 
 		}
-		$("#console").append(produce_dialog_element(message));
-		$("#console").scrollTop($('#console')[0].scrollHeight);
+		if(!message.broadcast){
+			$("#console").append(produce_dialog_element(message));
+			$("#console").scrollTop($('#console')[0].scrollHeight);
+		}
 	}
 	
 	Connection.update_talk_tricks = function(ans_ID,talk_tricks){
@@ -275,11 +322,11 @@ function set_manager_socket( service_id, manager_data, responsibility_data){
 function update_conversatoin_list(conversatoin_data){
 	console.log("draw_conversatoin_list");
 	let div_html = conversatoin_data.reduce(function(div_html,item){
-		let note = item.note &&  item.note.length>0
-								?"<div class='note' title=''>"
-									+"<div class='tooltip'>重要提醒"
+		let detail = item.detail ? "<div class='note' title=''>"
+									+"<div class='tooltip'>"//重要提醒"
+									+(item.detail.BIRFLAG == "Y"?"生日 ":"")
+									+(item.detail.FFLAG == "Y"?"強制險 ":"")
 										+"<span class='tooltiptext'>"
-											+item.note.map(function(item){return item.msg;})+
 										+"</span>"
 									+"</div>"
 								+"</div>"
@@ -303,14 +350,44 @@ function update_conversatoin_list(conversatoin_data){
 				+'			</div>'
 				+'		</div>'
 				+			"<div class='timestamp'>"+displayChatTime(item.last_talk_time)+"&nbsp;</div>"
+				// +			'<div class="notifaction">' + 'alert' + '</div>'
 				+			(item.manager_unread?"<div class='unread'>"+item.manager_unread+"</div>":"")
-				+			note
+				+			detail
 				+'	</div>';
 		return div_html;
 	},"");
 	
 	$(".cs_manager_list_container").html(div_html);
 	
+}
+
+//一般話術
+function tricks(type){
+	type = type || "other";
+
+	// Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById('tab-'+ type).style.display = "block";
+    $('#Tab-'+ type).addClass('active')
+}
+
+function select_trick(event){
+	$('.input.msg').val(event.target.value);
+	$('#normal_talk_tricks').toggle();
 }
 
 //金牌話術
@@ -321,7 +398,7 @@ function talk_tricks_setting(data){
 		return "<div class='talk_trick'><a>"+item+"</a></div>";
 	}).join("");
 	
-	$("#talk_tricks_container").html( edit_div + talk_tricks_str );
+	$("#talk_tricks_container").html(edit_div + talk_tricks_str);
 	
 }
 
@@ -330,6 +407,35 @@ function menu_setting(){
 
 	//預約流程
 	initBook();
+	$('#btn-custinfo').click(function(){
+		call_hotai_api("LINELCS01_Q01",{
+			"ENCYID": Connection.client_id
+		},function(data){
+			var data = data.USERDATA[0];
+			$('#custinfo_name').html(Connection.client_info.name);
+			$('#custinfo_address').html(data.ADDR);
+			$('#custinfo_carno').html(Connection.client_info.vehicle_number?Connection.client_info.vehicle_number:"");
+			$('#custinfo_phone').html(data.MOBILE);
+			$('#custinfo_hascars').html("取得失敗");
+			$('#custinfo_uendat').html(data.UENDAT);
+			$('#custifo_brkds').html(data.BRKDS);
+			$('#custifo_rtptml').html(data.RTPTML);
+			$('#custinfo_advise').html(data.NXRPMO);
+			$('#custifo_rtptdt').html(data.RTPTDT);
+
+			// button?
+			// 在14天內且Flag==Y
+			var hasbutton = (countBirhday(data.BIRTHDAY)<14 && "Y" == Connection.client_info.detail.BIRFLAG);
+			$('#custinfo_birthday').html(data.BIRTHDAY+
+				(hasbutton ? ('<button onclick="javascript:tricks(\'birth\');$(\'#normal_talk_tricks\').toggle();$(\'#cust-info\').toggle();">生日祝賀</button>'):''));
+
+			hasbutton = moment(data.FENDAT.replace(/\//g,'')).diff(moment(new Date())) < 14 &&
+					"Y" == Connection.client_info.detail.FFLAG;
+			$('#custifo_fendat').html(data.FENDAT+
+				(hasbutton ? ('<button onclick="javascript:tricks(\'fend\');$(\'#normal_talk_tricks\').toggle();$(\'#cust-info\').toggle();">續保提醒</button>'):''));
+			$('#cust-info').toggle();
+		});
+	})
 
 	$("#btn-booklog").click(function(){
 		call_hotai_api("LINELCS02_Q03",{  
@@ -376,12 +482,18 @@ function menu_setting(){
 			}
 		});
 	});
+	
 }
 
 function initBook(){
 	$("#btn-book").click(function(){
 		//已有預約保修 flag
 		var booked = false;
+
+		if($('#book-menu').attr("style")!="display: none;"){
+			$('#book-menu').attr("style", "display: none;");
+			return;
+		}
 
 		call_hotai_api("LINELCS02_Q03",{  
 			"LICSNO": Connection.client_info.vehicle_number
@@ -393,10 +505,12 @@ function initBook(){
 				$('#cust-name').val(Connection.client_info.name);
 				$('#cust-phone').val(Connection.client_info.PHONE);
 
+				$('#service-factory').unbind('change');
 				$('#service-factory').on('change', function(){
+					var target = $('#service-factory').val().split('-');
 					call_hotai_api('LINELCS02_Q02', {  
-						"DLRCD": Connection.service_info.DLRCD,
-						"BRNHCD": Connection.service_info.BRNHCD,
+						"DLRCD": target[0] || Connection.service_info.DLRCD,
+						"BRNHCD": target[1] || Connection.service_info.BRNHCD,
 						"USERID": Connection.service_id
 					}, function(data){
 						var date_time = {}; //Object.keys(a)
@@ -426,7 +540,6 @@ function initBook(){
 				});
 
 				call_hotai_api('LINELCS02_Q01', '{}', function(data){
-
 					//地區綁服務廠 { area : [factories], }
 					var area_factory = {};
 					data.BRNHMF.forEach(function(item){
@@ -495,4 +608,199 @@ function initBook(){
 		this.innerText = custWait=="A" ? 'Ｘ 完工通知':'Ｏ 在場等候';
 		$('#cust-wait').val(custWait=="A"?"C":"A");
 	});
+}
+
+//melvin
+getUserList = function(){
+	fetch('api/json/sl')
+	.then(function(response) {
+		return response.json();
+	})
+	.then(function(data) {
+		showUserList(data);
+	})
+	.catch(function(error) {
+		console.error(error);
+	});
+}
+ showUserList = function(data){
+}
+ showGroupSend = function(){
+	getUserList();
+	initFroalaEditor();
+	gs_edit_setting();
+}
+gs_edit_setting = function() {
+	var title = $('.txt').html();
+	$('.txt').html('多人訊息');
+
+	$('.btn_gs_leave').unbind('click');
+	$('.btn_gs_leave').click(function(e){
+		$('.txt').html(title);
+		$(".cs_manager_dialog, .gs_area, .btn_gs_choose")
+			.addClass("current_view")
+			.removeClass("hide_view");
+		$('.gs, .gs_list, .btn_gs_submit, .btn_gs_reset')
+			.addClass('hide_view')
+			.removeClass('current_view');
+	});
+
+	$(".gs_list, .btn_gs_submit")
+		.removeClass("current_view")
+		.addClass("hide_view");
+ 	$('.gs, .gs_area, .btn_gs_choose, .btn_gs_reset')
+		.removeClass('hide_view')
+		.addClass('current_view');
+}
+gs_list_setting = function() {
+	$('#gs_list').html(Connection.conversation_list.reduce(function(result,item){
+		return result + '<div class="list_element" customer_id="' + item.customer_id + '">'+
+		'	<div class="img" alt="">'+
+		'		<img src="' + item.avator + '" alt="">'+
+		'	</div>'+
+		'	<div class="chat_body">'+
+		'		<div class="title">'+
+		'			<input type="checkbox" id="' + item.customer_id + '" />'+
+		'			<label for="' + item.customer_id + '">' +
+		'			' + item.conversation_title + '/' + item.customer_nickname +
+		'			</label>'+
+		'		</div>'+
+		'	</div>'+
+		'</div>';
+	},""));
+	$(".cs_manager_dialog, .gs_area, .btn_gs_choose")
+		.removeClass("current_view")
+		.addClass("hide_view");
+ 	$('.gs, .gs_list, .btn_gs_submit, .btn_gs_reset')
+		.removeClass('hide_view')
+		.addClass('current_view');
+}
+
+$('.btn_gs_reset').click(function(e){
+	gs_edit_setting();
+})
+$('.btn_gs_choose').click(function(e){
+	e.preventDefault();
+	gs_list_setting();
+})
+initFroalaEditor = function(){
+	$('img#gs_photo').froalaEditor({
+		height: 30,
+		imageUploadParam: 'file',
+		imageUploadURL: '/upload_image',
+		imageUploadMethod: 'POST',
+		imageMaxSize: 5 * 1024 * 1024,
+		imageAllowedTypes: ['jpeg', 'jpg', 'png']
+	})
+	.on('froalaEditor.image.uploaded', function (e, editor, response) {
+		let res = JSON.parse(response);
+		// $('img#gs_photo').attr('src', res.link);
+		// Image was uploaded to the server.
+	});
+	$('textarea').froalaEditor();
+	
+}
+$('.gs .btn_gs_submit').click(function(e){
+	e.preventDefault();
+	
+	let userlist = [];
+	let msg = $('#gs_form .gs_msg').val(),
+		url = $('#gs_photo').attr('src');
+	
+	$('#gs_list :checkbox:checked').each(function(idx, element){
+		userlist.push($(element).attr('id'));
+	});
+ 	if(userlist.length == 0 || msg == ""){
+		alert('請挑選車主並填寫訊息。');
+		return;
+	}
+ 	userlist.forEach(function(element) {
+		let message_obj = {
+			type: "service",
+			from: {
+				id: Connection.service_id,
+				name: Connection.service_info.name,
+				avatar: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+			},
+			to: {
+				id: element,
+				name: Connection.client_info.name,
+				avatar: "/images/avatar.png"
+			},
+			time: Date.now(),
+			message: [{
+				type: "text",
+				text: msg
+			}]
+		},
+		image_obj = {
+			type: "service",
+			from: {
+				id: Connection.service_id,
+				avatar: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+			},
+			to: {
+				id: element,
+				avatar: "/images/avatar.png"
+			},
+			time: Date.now(),
+			message: [{
+				type: "image",
+				url: url
+			}]
+		};
+		
+		Connection.group_send(message_obj);
+		if(url) Connection.group_send(image_obj);
+
+		//推播
+ 		line_push_message_obj = {
+			COMPID: "AY",
+			USERID: "AY04916",
+			MSG: "您有一封來自車主的訊息，請登入https://htsr.hotaimotor.com.tw/LINENOTIFYAPI_TEST/LOGIN/login查看"
+		};
+		
+		//call_hotai_api("API",{},function(){});
+
+ 		// $.post('line_send_message', line_push_message_obj, function(result){
+		// 	return result;
+		// });
+		
+		$('.btn_gs_leave').trigger('click');
+	});
+}) 
+
+function countBirhday(birthday){
+	var today = new Date();
+	var b = moment(today)
+	birthday = birthday.split("/");
+	
+	if(birthday.length==2){
+		birthday = (birthday[0].length == 2 ? birthday[0] : "0" + birthday[0]) +
+				(birthday[1].length == 2 ? birthday[1] : "0" + birthday[1]);
+	}else if(birthday.length==3){
+		birthday = (birthday[1].length == 2 ? birthday[1] : "0" + birthday[1]) +
+				(birthday[2].length == 2 ? birthday[2] : "0" + birthday[2]);
+	}else{
+		return "";
+	}
+
+	var result1 = moment((today.getFullYear()+1)+birthday).diff(b, 'days');
+	var result2 = moment((today.getFullYear())+birthday).diff(b, 'days')
+
+	return result1 < 365 ? result1 : result2;
+}
+
+function edit_normal_trick(id,event){
+	if($('#'+id).attr('type') == 'text'){
+		var target = id.split('-');
+		$('#'+id).attr('onclick','select_trick(event)').attr('type','button');
+		event.srcElement.value = "編輯";
+		Connection.normal_talk_trick[target[2]] = $('#'+id).val();
+		Connection.update_talk_tricks('Normal', Connection.normal_talk_trick);
+
+	}else{
+		$('#'+id).attr('onclick','').attr('type','text');
+		event.srcElement.value = "確認";
+	}
 }

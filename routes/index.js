@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var common = require('../service/common');
 var ht_api = require('../service/ht_api.js');
+var sp = require('../service/sp');
 const settings = require('../configs.js');
 
 router.get('/', function(req, res, next) {
@@ -53,6 +54,13 @@ router.get('/demo.do', function(req, res, next) {
 			<frame name="lower_right" src="/serv.do">
 		</frameset> 
 	</html>`);
+});
+
+// router.post('/line_send_message', function(req, res){
+// 	sp.line_send_message(req, res);
+// });
+router.post('/upload_image', function(req, res){
+	sp.upload_image(req, res);
 });
 
 router.get('/api/json/sl', common.getSl);

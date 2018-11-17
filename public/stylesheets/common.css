@@ -5,7 +5,7 @@ body{
 
 /* CSS in Dialog */
 #console{
-	height: calc( 100vh - 120px );
+	height: calc( 100vh - 180px );
 	/*max-height:400px;*/
 	width: 100%;
 	color: #324148;
@@ -47,9 +47,9 @@ body{
     z-index: 1;
 }
 
-.tooltip:hover .tooltiptext {
+/* .tooltip:hover .tooltiptext {
     visibility: visible;
-}
+} */
 
 /* Dialog header */
 .logo {

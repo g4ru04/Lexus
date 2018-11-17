@@ -1,0 +1,63 @@
+.gs{
+	display: block;
+    position: fixed;
+    top: 50px;
+    background-color: white;
+    height: 100%;
+    width: inherit;
+    z-index: 99;
+}
+.gs.current_view{
+	display: block;
+}
+.gs.hide_view{
+	display: none;
+}
+/*Checkbox*/
+.title input[type=checkbox] {
+    position: absolute;
+    left: -9999px;
+    /*Disabled*/
+    /*Checked*/
+}
+input[type=checkbox] + label {
+    height: 32px;
+    margin: 0;
+    margin-right: 10px;
+    position: relative;
+    display: block;
+    float: right;
+    padding: 0px 0px 0px 28px;
+    cursor: pointer;
+    /*Checkbox setup*/
+}
+input[type=checkbox] + label:before {
+    display: block;
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin: -12px 0 0;
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/checkbox.svg);
+    background-repeat: no-repeat;
+}
+input[type=checkbox]:disabled, input[type=checkbox].readonly {
+    /*Disabled checked*/
+}
+input[type=checkbox]:disabled + label, input[type=checkbox].readonly + label {
+    cursor: not-allowed;
+    color: #666;
+}
+input[type=checkbox]:disabled + label:before, input[type=checkbox].readonly + label:before {
+    background-position: -48px 0;
+}
+input[type=checkbox]:disabled:checked + label, input[type=checkbox].readonly:checked + label {}
+input[type=checkbox]:disabled:checked + label:before, input[type=checkbox].readonly:checked + label:before {
+    background-position: -72px 0;
+}
+input[type=checkbox]:checked + label {}
+input[type=checkbox]:checked + label:before {
+    background-position: -24px 0;
+}

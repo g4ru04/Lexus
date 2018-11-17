@@ -4,10 +4,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
 		<meta property="og:image" content="https://cf55ae10.ngrok.io/FEIB_POC/servicebot.png" />
 		<title>客服人員後台</title>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.css">
+		<link href='scripts/css/froala_editor.min.css' rel='stylesheet' type='text/css' />
+		<link href='scripts/css/froala_style.min.css' rel='stylesheet' type='text/css' />
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 		<link rel="stylesheet" href="/stylesheets/ctbc.css">
 		<link rel="stylesheet" href="/stylesheets/cs_manager.css">
 		<link rel="stylesheet" href="/stylesheets/common.css">
+		<link rel="stylesheet" href="/stylesheets/manager.css">
 		
 		<script>
 			var socket_server_ip = '<%= socket_server_ip  %>';
@@ -22,7 +27,8 @@
 				<li>帳號: <input type='text' id='username' value='AA94453'/></li>
 				<li>密碼: <input type='password' id='password' value='ab#12345'/></li>
 			</ul>
-			&nbsp;&nbsp;<input type='checkbox' checked />記住密碼<br>
+			<br>
+			<input type='checkbox' checked />記住密碼&nbsp;&nbsp;
 			<button onclick='to_login()'>登入</button>
 			<br>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href='javascript:void(0)' style='color:blue;text-decoration: underline;' onclick='$("#username").val("AA00001")'>銷售專員-陳柏廷</a>&nbsp;&nbsp;
@@ -58,25 +64,6 @@
 					<!-- 下方控制面板 -->
 					<div class="control-bar">
 						<!-- 功能列表(隱) -->
-						<!--
-						<div class="select-menu" style="display: none;">
-							<ul class="select-tag05">
-						
-						<% ["金牌話術","_訊息推播","照片","相機","撥打電話","_預約","_車主資料","常用訊息"].forEach(function (item,i) { %>
-							<% if( i!=0 && i%3==0 ){%>
-								</ul>
-								<ul class="select-tag05">
-							<% } %>
-							<li>
-								<a href="javascript:void(0)" avalon-events="">
-									<img alt="" class="img-responsive" src="/images/func.png" border="0">
-									<%= item %>
-								</a>
-							</li>
-						<% }); %>
-							</ul>
-						</div>
-						-->
 						<div>
 							<div id="book-menu" class="select-menu samelayer" style="display: none;">
 								<div class="table-title">基本資料</div>
@@ -212,11 +199,85 @@
 								</div>
 								<button id="cancel_reservation">取消預約</button>
 							</div>
+							<div id="cust-info" class="select-menu" style="display:none;">
+								<table style="width:100%">
+									<tr>
+										<th colspan="4">車主資料</th>
+									</tr>
+									<tr>
+										<td>姓名</td>
+										<td id="custinfo_name">姓名</td> 
+										<td>地址</td>
+										<td id="custinfo_address">地址</td>
+									</tr>
+									<tr>
+										<td>車號</td>
+										<td id="custinfo_carno">車號</td>
+										<td>電話</td>
+										<td id="custinfo_phone">電話</td>
+									</tr>
+									<tr>
+										<td>車數</td>
+										<td id="custinfo_hascars">車數</td>
+										<td>生日</td>
+										<td id="custinfo_birthday">生日</td>
+									</tr>
+									<tr>
+										<td>任意險到期日</td>
+										<td id="custinfo_uendat">到期日</td>
+										<td>強制險到期日</td>
+										<td id="custifo_fendat">到期日</td>
+									</tr>
+									<tr>
+										<td>上次入廠里程數</td>
+										<td id="custifo_rtptml">里程</td>
+										<td>上次入廠日期</td>
+										<td id="custifo_rtptdt">日期</td>
+									</tr>
+									<tr>
+										<td colspan="2">上次維修內容</td>
+										<td colspan="2" id="custifo_brkds">里程</td>
+									</tr>
+									<tr>
+										<td colspan="2">上次維修建議</td>
+										<td colspan="2" id="custinfo_advise">建議</td>
+									</tr>
+								</table>
+							</div>
 						</div>
 						
 						<!-- 金牌話術(隱) -->
 						<div>
 							<div id='talk_tricks_container'>
+							</div>
+						</div>
+						<div>
+							<div id='normal_talk_tricks' style="display:none;">
+								<div class="tab">
+									<button id="Tab-birth" class="tablinks" onclick="tricks('birth')">生日話術</button>
+									<button id="Tab-fend" class="tablinks" onclick="tricks('fend')">續保話術</button>
+									<button id="Tab-other" class="tablinks active" onclick="tricks('other')">其他話術</button>
+								</div>
+								<div id="tab-birth" class="tabcontent">
+									<h3>生日祝賀1</h3>
+									<input type="button" onclick="select_trick(event)" class="trick-content" value="123123123123123123123">
+									<h3>生日祝賀2</h3>
+									<input type="button" class="trick-content" value="777777777777777777777777">
+								</div>
+								
+								<div id="tab-fend" class="tabcontent">
+									<h3>續保話術1</h3>
+									<input type="button" class="trick-content" value="123123123123123123123">
+									<h3>續保話術2</h3>
+									<input type="button" class="trick-content" value="777777777777777777777777">
+								</div>
+								
+								<div id="tab-other" class="tabcontent" style="display:block;">
+									<h3>其他話術1</h3>
+									<input type="button" class="trick-content" value="123123123123123123123">
+									<h3>其他話術2</h3>
+									<input type="button" class="trick-content" value="777777777777777777777777">
+								</div>
 							</div>
 						</div>
 						<!-- 表情符號(隱) -->
@@ -247,34 +308,54 @@
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
 								onclick='alert("未實現");'>換專員</div>
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
-								onclick='alert("未實現");'>保修</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
-								onclick='alert("未實現");'>車主資料</div>
+								onclick='showGroupSend();'>推播</div>
+							<div id="btn-custinfo" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">車主資料</div>
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
 								onclick='location.href="tel:+886-919863010";'>撥打</div>
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
-								onclick='location.href="$("#talk_tricks_container").toggle();'>金牌話術</div>
+								onclick="$('#normal_talk_tricks').toggle();">常用話術</div>
 						</div>
 					</div>
-					
-					
-				
 				<!-- Div After click "相機"-->
 				<div id='video_container'>
 					<video autoplay></video>
 				</div>
 				<div id='talk_tricks_editor'>
 				</div>
+				<!--推播訊息-->
+				<div class="gs hide_view">
+					<form id="gs_form" style="width:100%;height:100%;">
+						<div class="gs_content">
+								<div id="gs_list" class="gs_list">
+									<!-- generate list -->
+								</div>
+							<div class="gs_area">
+								<textarea class="gs_msg" placeholder="請輸入訊息">親愛的車主，您好！</textarea>
+								<img id="gs_photo" class="fr-fil fr-dib" src="" alt="選擇圖片" width="300"/>
+								<!-- <p><a id="get-text" class="btn r-btn highlight text-small">Clear</a></p> -->
+							</div>
+						</div>
+						<div class="gs_btn_area gs_footer">
+							<input type="button" class="btn_gs_choose" value="選擇推播對象" />
+							<input type="submit" class="btn_gs_submit" value="送出" /> 
+							<input type="reset" class="btn_gs_reset" value="重置" />
+							<input type="button" class="btn_gs_leave" value="離開" />
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
+		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script src="https://unpkg.com/moment"></script>
 		
 		<script src="/javascripts/socket.io/socket.io.js"></script>
 		<script src="/javascripts/common.js"></script>
 		<script src="/javascripts/cs_manager_preset.js"></script>
 		<script src="/javascripts/cs_manager.js"></script>
-		
+		<script type='text/javascript' src='scripts/js/froala_editor.min.js'></script>
+		<script type='text/javascript' src='scripts/js/plugins/image.min.js'></script>
 		
 	</body>
 </html>

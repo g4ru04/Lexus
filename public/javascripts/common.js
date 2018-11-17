@@ -1,5 +1,6 @@
 
 function call_hotai_api(api_code,data,callback){
+	console.log(api_code,data)
 	$.ajax({
 		type : "POST",
 		url : "/api",
@@ -10,18 +11,19 @@ function call_hotai_api(api_code,data,callback){
 			data:data,
 			detail:true
 		}),
-		success: function(data) {
-			console.log(api_code,data)
-			if(data.isSuccess){
+		success: function(d) {
+			console.log(api_code,d)
+
+			if(d.isSuccess){
 				if(callback){
-					callback(data.result);
+					callback(d.result);
 				}
 			}else{
-				alert('API取得失敗');
-				console.log(data);
+				alert(d.result.rtnMsg || 'API取得失敗');
+				console.log(d);
 			}
 		},error: function (jqXHR, textStatus, errorThrown) {
-			alert('API使用異常');
+			alert('API使用異常:' + api_code);
 			console.log(jqXHR,textStatus,errorThrown);
 		}
 	});
@@ -94,7 +96,8 @@ function common_conn_setting(conn){
 				"message": {
 					"type": "text",
 					"text": message
-				}
+				},
+				"push":false
 			});
 		}else{
 			alert('無對象');
@@ -104,7 +107,7 @@ function common_conn_setting(conn){
 	conn.send_image = function(url){
 		//let service_icon = "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png";
 		//let client_icon = "/images/avatar.png";
-		conn.socket.emit("message", {
+		var item = {
 			"type": conn.end_point,
 			"from": {
 				"id": (conn.end_point=="service"?conn.service_id:conn.client_id),
@@ -120,8 +123,11 @@ function common_conn_setting(conn){
 			"message": {
 				"type": "image",
 				"url": url
-			}
-		});
+			},
+			"push":false
+		}
+		console.log('img item:',item)
+		conn.socket.emit("message", item);
 	}
 	
 	conn.get_history = function(num){
@@ -134,6 +140,13 @@ function common_conn_setting(conn){
 				"limit":num
 			});
 		}
+	}
+
+	//melvin
+	conn.group_send = function(msg_obj){
+		msg_obj.push = true;
+		console.log('msg_obj',msg_obj)
+		conn.socket.emit("message", msg_obj);
 	}
 }
 
@@ -180,22 +193,22 @@ function produce_dialog_element(message) {
 	
 	message_str += "<br>";
 	
-	if(message.intents && Connection.end_point=="service"){
-		message.intents = message.intents.filter(function(item){
-			return item.confidence>0.3;
-		});
-		if(message.intents.length!=0){
-			message_str += "【"
-				+message.intents.map(function(item){
-					return item.intent+"("+
-						new Number(item.confidence).toFixed(3)
-					+") ";
-				}).join(",")
-			+"】";
-		}else{
-			message_str += "【無明確意圖】";
-		}
-	}
+	// if(message.intents && Connection.end_point=="service"){
+	// 	message.intents = message.intents.filter(function(item){
+	// 		return item.confidence>0.3;
+	// 	});
+	// 	if(message.intents.length!=0){
+	// 		message_str += "【"
+	// 			+message.intents.map(function(item){
+	// 				return item.intent+"("+
+	// 					new Number(item.confidence).toFixed(3)
+	// 				+") ";
+	// 			}).join(",")
+	// 		+"】";
+	// 	}else{
+	// 		message_str += "【無明確意圖】";
+	// 	}
+	// }
 	if(message.recognitionResult && Connection.end_point=="service"){
 		message_str += "【"+message.recognitionResult+"】";
 	}
