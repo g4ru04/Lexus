@@ -728,10 +728,10 @@ $('.gs .btn_gs_submit').click(function(e){
 				avatar: "/images/avatar.png"
 			},
 			time: Date.now(),
-			message: [{
+			message: {
 				type: "text",
 				text: msg
-			}]
+			}
 		},
 		image_obj = {
 			type: "service",
@@ -744,10 +744,10 @@ $('.gs .btn_gs_submit').click(function(e){
 				avatar: "/images/avatar.png"
 			},
 			time: Date.now(),
-			message: [{
+			message: {
 				type: "image",
 				url: url
-			}]
+			}
 		};
 		
 		Connection.group_send(message_obj);
