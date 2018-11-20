@@ -55,264 +55,264 @@
 					<div class="txt">
 					</div>
 				</div>
-					<div id='console'>
+				<div id='console'>
+				</div>
+				
+				<!-- 下方控制面板 -->
+				<div class="control-bar">
+					<!-- 功能列表(隱) -->
+					<div>
+						<div id="book-menu" class="select-menu samelayer" style="display: none;">
+							<div class="table-title">基本資料</div>
+							<div class="table-tr">
+								<div class="table-td left">姓名</div>
+								<div class="table-td right">
+									<input id="cust-name" type="text" placeholder="姓名" value="" id="button_text">
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">電話</div>
+								<div class="table-td right">
+									<input id="cust-phone" type="text" placeholder="電話" value="" id="button_text">
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">方便連絡時段</div>
+								<div class="table-td right">
+										<select name="font" id="cust-contacttime" class="span1">
+											<option value="1">08:30-12:00</option>
+											<option value="2">13:00-17:30</option>
+											<option value="3">18:00-19:30</option>
+											<option value="4" selected="selected">任何時段</option>
+											<option value="5">無須連絡電話</option>
+										</select>
+								</div>
+							</div>
+							<br/>
+							<div class="table-title">選擇服務廠</div>
+							<div class="table-tr">
+								<div class="table-td left">是否在服務廠等候</div>
+								<div class="table-td right">
+									<input id="cust-wait" type="text" value="false" hidden/>
+									<button id="cust-wait-btn">Ｘ 完工通知</button>
+									<!-- toggle -> Ｏ 在場等候 -->
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">服務地區</div>
+								<div class="table-td right">
+									<select name="font" id="service-area" class="span1">
+										<option value="" selected="selected" hidden>選擇地區</option>
+										<option text="台北市">台北市</option>
+										<option text="新北市">新北市</option>
+										<option text="桃園市">桃園市</option>
+										<option text="新竹市">新竹市</option>
+										<option text="苗栗縣">苗栗縣</option>
+										<option text="台中市">台中市</option>
+										<option text="彰化縣">彰化縣</option>
+										<option text="台南市">台南市</option>
+										<option text="嘉義縣">嘉義縣</option>
+										<option text="雲林縣">雲林縣</option>
+										<option text="高雄市">高雄市</option>
+										<option text="宜蘭縣">宜蘭縣</option>
+										<option text="花蓮縣">花蓮縣</option>
+									</select>
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">服務廠</div>
+								<div class="table-td right">
+									<select name="font" id="service-factory" class="span1">
+										<option value="" selected="selected" hidden>選擇服務廠</option>
+									</select>
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">預約日期</div>
+								<div class="table-td right">
+									<select name="font" id="service-date" class="span1">
+										<option value="" selected="selected" hidden>選擇日期</option>
+									</select>
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">預約時段</div>
+								<div class="table-td right">
+									<select name="font" id="service-time" class="span1">
+										<option value="" selected="selected" hidden>選擇時段</option>
+									</select>
+								</div>
+							</div>
+							<div class="table-tr">
+								<div class="table-td left">備註</div>
+								<div class="table-td right">
+									<textarea id="service-memo" placeholder="備註"></textarea>
+								</div>
+							</div>
+							<div class="table-tr">
+								<button type="button" id="book-reset" style="width:30%;">清除</button>
+								<button type="button" id="book-submit" style="width:30%;">送出</button>
+							</div>
+						</div>
+						<div id="book-log" class="samelayer" style="display: none;">
+							<h3>預約記錄</h3>
+							<a style="color: red;">若需修改時間，請重新預約或致電服務。</a>
+							<div class="select-menu">
+								<div class="table-tr">
+									<div class="table-td left">愛車車牌  </div>
+									<div class="table-td right" id="booklog_carno"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">服務廠  </div>
+									<div class="table-td right" id="booklog_factory"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">服務內容  </div>
+									<div class="table-td right" id="booklog_content"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">預約時間  </div>
+									<div class="table-td right" id="booklog_time"></div>
+								</div>
+							</div>
+							<h3>連絡資料</h3>
+							<div class="select-menu">
+								<div class="table-tr">
+									<div class="table-td left">連絡人  </div>
+									<div class="table-td right" id="booklog_name"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">連絡電話  </div>
+									<div class="table-td right" id="booklog_phone"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">連絡時段  </div>
+									<div class="table-td right" id="booklog_timezone"></div>
+								</div>
+								<div class="table-tr">
+									<div class="table-td left">其他意見  </div>
+									<div class="table-td right" id="booklog_other"></div>
+								</div>
+							</div>
+							<button id="cancel_reservation">取消預約</button>
+						</div>
+						<div id="cust-info" class="select-menu" style="display:none;">
+							<table style="width:100%">
+								<tr>
+									<th colspan="4">車主資料</th>
+								</tr>
+								<tr>
+									<td>姓名</td>
+									<td id="custinfo_name">姓名</td> 
+									<td>地址</td>
+									<td id="custinfo_address">地址</td>
+								</tr>
+								<tr>
+									<td>車號</td>
+									<td id="custinfo_carno">車號</td>
+									<td>電話</td>
+									<td id="custinfo_phone">電話</td>
+								</tr>
+								<tr>
+									<td>車數</td>
+									<td id="custinfo_hascars">車數</td>
+									<td>生日</td>
+									<td id="custinfo_birthday">生日</td>
+								</tr>
+								<tr>
+									<td>任意險到期日</td>
+									<td id="custinfo_uendat">到期日</td>
+									<td>強制險到期日</td>
+									<td id="custifo_fendat">到期日</td>
+								</tr>
+								<tr>
+									<td>上次入廠里程數</td>
+									<td id="custifo_rtptml">里程</td>
+									<td>上次入廠日期</td>
+									<td id="custifo_rtptdt">日期</td>
+								</tr>
+								<tr>
+									<td colspan="2">上次維修內容</td>
+									<td colspan="2" id="custifo_brkds">里程</td>
+								</tr>
+								<tr>
+									<td colspan="2">上次維修建議</td>
+									<td colspan="2" id="custinfo_advise">建議</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 					
-					<!-- 下方控制面板 -->
-					<div class="control-bar">
-						<!-- 功能列表(隱) -->
-						<div>
-							<div id="book-menu" class="select-menu samelayer" style="display: none;">
-								<div class="table-title">基本資料</div>
-								<div class="table-tr">
-									<div class="table-td left">姓名</div>
-									<div class="table-td right">
-										<input id="cust-name" type="text" placeholder="姓名" value="" id="button_text">
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">電話</div>
-									<div class="table-td right">
-										<input id="cust-phone" type="text" placeholder="電話" value="" id="button_text">
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">方便連絡時段</div>
-									<div class="table-td right">
-											<select name="font" id="cust-contacttime" class="span1">
-												<option value="1">08:30-12:00</option>
-												<option value="2">13:00-17:30</option>
-												<option value="3">18:00-19:30</option>
-												<option value="4" selected="selected">任何時段</option>
-												<option value="5">無須連絡電話</option>
-											</select>
-									</div>
-								</div>
-								<br/>
-								<div class="table-title">選擇服務廠</div>
-								<div class="table-tr">
-									<div class="table-td left">是否在服務廠等候</div>
-									<div class="table-td right">
-										<input id="cust-wait" type="text" value="false" hidden/>
-										<button id="cust-wait-btn">Ｘ 完工通知</button>
-										<!-- toggle -> Ｏ 在場等候 -->
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">服務地區</div>
-									<div class="table-td right">
-										<select name="font" id="service-area" class="span1">
-											<option value="" selected="selected" hidden>選擇地區</option>
-											<option text="台北市">台北市</option>
-											<option text="新北市">新北市</option>
-											<option text="桃園市">桃園市</option>
-											<option text="新竹市">新竹市</option>
-											<option text="苗栗縣">苗栗縣</option>
-											<option text="台中市">台中市</option>
-											<option text="彰化縣">彰化縣</option>
-											<option text="台南市">台南市</option>
-											<option text="嘉義縣">嘉義縣</option>
-											<option text="雲林縣">雲林縣</option>
-											<option text="高雄市">高雄市</option>
-											<option text="宜蘭縣">宜蘭縣</option>
-											<option text="花蓮縣">花蓮縣</option>
-										</select>
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">服務廠</div>
-									<div class="table-td right">
-										<select name="font" id="service-factory" class="span1">
-											<option value="" selected="selected" hidden>選擇服務廠</option>
-										</select>
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">預約日期</div>
-									<div class="table-td right">
-										<select name="font" id="service-date" class="span1">
-											<option value="" selected="selected" hidden>選擇日期</option>
-										</select>
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">預約時段</div>
-									<div class="table-td right">
-										<select name="font" id="service-time" class="span1">
-											<option value="" selected="selected" hidden>選擇時段</option>
-										</select>
-									</div>
-								</div>
-								<div class="table-tr">
-									<div class="table-td left">備註</div>
-									<div class="table-td right">
-										<textarea id="service-memo" placeholder="備註"></textarea>
-									</div>
-								</div>
-								<div class="table-tr">
-									<button type="button" id="book-reset" style="width:30%;">清除</button>
-									<button type="button" id="book-submit" style="width:30%;">送出</button>
-								</div>
-							</div>
-							<div id="book-log" class="samelayer" style="display: none;">
-								<h3>預約記錄</h3>
-								<a style="color: red;">若需修改時間，請重新預約或致電服務。</a>
-								<div class="select-menu">
-									<div class="table-tr">
-										<div class="table-td left">愛車車牌  </div>
-										<div class="table-td right" id="booklog_carno"></div>
-									</div>
-									<div class="table-tr">
-										<div class="table-td left">服務廠  </div>
-										<div class="table-td right" id="booklog_factory"></div>
-									</div>
-									<div class="table-tr">
-										<div class="table-td left">服務內容  </div>
-										<div class="table-td right" id="booklog_content"></div>
-									</div>
-									<div class="table-tr">
-										<div class="table-td left">預約時間  </div>
-										<div class="table-td right" id="booklog_time"></div>
-									</div>
-								</div>
-								<h3>連絡資料</h3>
-								<div class="select-menu">
-									<div class="table-tr">
-										<div class="table-td left">連絡人  </div>
-										<div class="table-td right" id="booklog_name"></div>
-									</div>
-									<div class="table-tr">
-										<div class="table-td left">連絡電話  </div>
-										<div class="table-td right" id="booklog_phone"></div>
-									</div>
-									<div class="table-tr">
-										<div class="table-td left">連絡時段  </div>
-										<div class="table-td right" id="booklog_timezone"></div>
-									</div>
-									<div class="table-tr">
-										<div class="table-td left">其他意見  </div>
-										<div class="table-td right" id="booklog_other"></div>
-									</div>
-								</div>
-								<button id="cancel_reservation">取消預約</button>
-							</div>
-							<div id="cust-info" class="select-menu" style="display:none;">
-								<table style="width:100%">
-									<tr>
-										<th colspan="4">車主資料</th>
-									</tr>
-									<tr>
-										<td>姓名</td>
-										<td id="custinfo_name">姓名</td> 
-										<td>地址</td>
-										<td id="custinfo_address">地址</td>
-									</tr>
-									<tr>
-										<td>車號</td>
-										<td id="custinfo_carno">車號</td>
-										<td>電話</td>
-										<td id="custinfo_phone">電話</td>
-									</tr>
-									<tr>
-										<td>車數</td>
-										<td id="custinfo_hascars">車數</td>
-										<td>生日</td>
-										<td id="custinfo_birthday">生日</td>
-									</tr>
-									<tr>
-										<td>任意險到期日</td>
-										<td id="custinfo_uendat">到期日</td>
-										<td>強制險到期日</td>
-										<td id="custifo_fendat">到期日</td>
-									</tr>
-									<tr>
-										<td>上次入廠里程數</td>
-										<td id="custifo_rtptml">里程</td>
-										<td>上次入廠日期</td>
-										<td id="custifo_rtptdt">日期</td>
-									</tr>
-									<tr>
-										<td colspan="2">上次維修內容</td>
-										<td colspan="2" id="custifo_brkds">里程</td>
-									</tr>
-									<tr>
-										<td colspan="2">上次維修建議</td>
-										<td colspan="2" id="custinfo_advise">建議</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-						
-						<!-- 金牌話術(隱) -->
-						<div>
-							<div id='talk_tricks_container'>
-							</div>
-						</div>
-						<div>
-							<div id='normal_talk_tricks' style="display:none;">
-								<div class="tab">
-									<button id="Tab-birth" class="tablinks" onclick="tricks('birth')">生日話術</button>
-									<button id="Tab-fend" class="tablinks" onclick="tricks('fend')">續保話術</button>
-									<button id="Tab-other" class="tablinks active" onclick="tricks('other')">其他話術</button>
-								</div>
-								<div id="tab-birth" class="tabcontent">
-									<h3>生日祝賀1</h3>
-									<input type="button" onclick="select_trick(event)" class="trick-content" value="123123123123123123123">
-									<h3>生日祝賀2</h3>
-									<input type="button" class="trick-content" value="777777777777777777777777">
-								</div>
-								
-								<div id="tab-fend" class="tabcontent">
-									<h3>續保話術1</h3>
-									<input type="button" class="trick-content" value="123123123123123123123">
-									<h3>續保話術2</h3>
-									<input type="button" class="trick-content" value="777777777777777777777777">
-								</div>
-								
-								<div id="tab-other" class="tabcontent" style="display:block;">
-									<h3>其他話術1</h3>
-									<input type="button" class="trick-content" value="123123123123123123123">
-									<h3>其他話術2</h3>
-									<input type="button" class="trick-content" value="777777777777777777777777">
-								</div>
-							</div>
-						</div>
-						<!-- 表情符號(隱) -->
-						<div>
-							<div id='emoticon_container'></div>
-						</div>
-						<!-- 對話頁面(顯) -->
-						<div class="smart_top" avalon-events="" style="">
-							<div class="box">
-								<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
-								</a>
-								<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
-								<input class="input msg" placeholder="你想問什麼？" maxlength="30" avalon-events="" type="text">
-								<a href="javascript:void(0)" class="btn-mic" avalon-events="">
-									<span class="btn-search">
-										<i></i>
-									</span>
-								</a>
-							</div>
-						</div>
-						<div class="box">
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
-								onclick='$("#upload_picture").trigger("click");'>照片</div>
-							<!-- <a href="javascript:void(0)" class="btn-book" avalon-events=""></a> -->
-							<!-- <a href="javascript:void(0)" class="btn-booklog" avalon-events=""></a> -->
-							<div id="btn-book" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">預約保修</div>
-							<div id="btn-booklog" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">預約記錄</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
-								onclick='alert("未實現");'>換專員</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
-								onclick='showGroupSend();'>推播</div>
-							<div id="btn-custinfo" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">車主資料</div>
-							<div id="btn-call" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
-								onclick='location.href="tel:+886-919863010";'>撥打</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
-								onclick="$('#normal_talk_tricks').toggle();">常用話術</div>
+					<!-- 金牌話術(隱) -->
+					<div>
+						<div id='talk_tricks_container'>
 						</div>
 					</div>
+					<div>
+						<div id='normal_talk_tricks' style="display:none;">
+							<div class="tab">
+								<button id="Tab-birth" class="tablinks" onclick="tricks('birth')">生日話術</button>
+								<button id="Tab-fend" class="tablinks" onclick="tricks('fend')">續保話術</button>
+								<button id="Tab-other" class="tablinks active" onclick="tricks('other')">其他話術</button>
+							</div>
+							<div id="tab-birth" class="tabcontent">
+								<h3>生日祝賀1</h3>
+								<input type="button" onclick="select_trick(event)" class="trick-content" value="123123123123123123123">
+								<h3>生日祝賀2</h3>
+								<input type="button" class="trick-content" value="777777777777777777777777">
+							</div>
+							
+							<div id="tab-fend" class="tabcontent">
+								<h3>續保話術1</h3>
+								<input type="button" class="trick-content" value="123123123123123123123">
+								<h3>續保話術2</h3>
+								<input type="button" class="trick-content" value="777777777777777777777777">
+							</div>
+							
+							<div id="tab-other" class="tabcontent" style="display:block;">
+								<h3>其他話術1</h3>
+								<input type="button" class="trick-content" value="123123123123123123123">
+								<h3>其他話術2</h3>
+								<input type="button" class="trick-content" value="777777777777777777777777">
+							</div>
+						</div>
+					</div>
+					<!-- 表情符號(隱) -->
+					<div>
+						<div id='emoticon_container'></div>
+					</div>
+					<!-- 對話頁面(顯) -->
+					<div class="smart_top" avalon-events="" style="">
+						<div class="box">
+							<a href="javascript:void(0)" class="btn-laugh" avalon-events="">
+							</a>
+							<input type='file' id='upload_picture' name='upload_picture' style='display:none;' accept="image/*"  onchange="save_picture()">
+							<input class="input msg" placeholder="你想問什麼？" maxlength="30" avalon-events="" type="text">
+							<a href="javascript:void(0)" class="btn-mic" avalon-events="">
+								<span class="btn-search">
+									<i></i>
+								</span>
+							</a>
+						</div>
+					</div>
+					<div class="box">
+						<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
+							onclick='$("#upload_picture").trigger("click");'>照片</div>
+						<!-- <a href="javascript:void(0)" class="btn-book" avalon-events=""></a> -->
+						<!-- <a href="javascript:void(0)" class="btn-booklog" avalon-events=""></a> -->
+						<div id="btn-book" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">預約保修</div>
+						<div id="btn-booklog" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">預約記錄</div>
+						<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+							onclick='changeManager();'>換專員</div>
+						<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+							onclick='showGroupSend();'>推播</div>
+						<div id="btn-custinfo" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">車主資料</div>
+						<div id="btn-call" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
+							onclick='location.href="tel:+886-919863010";'>撥打</div>
+						<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
+							onclick="$('#normal_talk_tricks').toggle();">常用話術</div>
+					</div>
+				</div>
 				<!-- Div After click "相機"-->
 				<div id='video_container'>
 					<video autoplay></video>
@@ -322,12 +322,12 @@
 				<!--推播訊息-->
 				<div class="gs hide_view">
 					<form id="gs_form" style="width:100%;height:100%;">
-						<div>
-							<input type="text" placeholder="搜尋"/>	
-							<input type="checkbox" id="birth" />生日
-							<input type="checkbox" id="fend" />強制險
-						</div>
 						<div class="gs_content">
+							<div class="push_search_box_container">
+								<input id="gs_fliter" type="text" placeholder="搜尋"/>	
+								<input type="checkbox" name='birth_filter' />生日
+								<input type="checkbox" name='insurance_filter' />強制險
+							</div>
 							<div id="gs_list" class="gs_list">
 								<!-- generate list -->
 							</div>
@@ -345,11 +345,43 @@
 							<input type="submit" class="btn_gs_submit" value="送出" /> 
 							<input type="reset" class="btn_gs_reset" value="重置" />
 							<input type="button" class="btn_gs_leave" value="離開" />
+							<input type="button" class="btn_gs_tricks" onclick="javascript:$('#dialog-normal-talk-tricks').dialog('open')" value="推播話術">
 						</div>
 					</form>
 				</div>
+
+				<!-- 確認dialog -->
+				<div class="dialog" id="dialog-change-manager" title="切換服務專員">
+					<h3 id="dialog-change-manager-content">是否結束您與此專員的對話，改由XXX負責</h3>
+					<button onclick="javascript:$('#dialog-change-manager').dialog('close');">取消</button>
+					<button id="btn-change-manager" onclick="ConfirmChangeManager()">轉換</button>
+				</div>
+				<!-- 確認dialog -->
+				<div class="dialog" id="dialog-normal-talk-tricks" title="常用話數">
+					<div class="tab">
+						<button id="Tab-dia-birth" class="tablinks active" onclick="tricks('dia-birth')">生日話術</button>
+						<button id="Tab-dia-fend" class="tablinks" onclick="tricks('dia-fend')">續保話術</button>
+						<button id="Tab-dia-other" class="tablinks" onclick="tricks('dia-other')">其他話術</button>
+						<button id="Tab-dia-push" class="tablinks" onclick="tricks('dia-push')">推播話術</button>
+					</div>
+					<div id="tab-dia-birth" class="tabcontent" style="display:block;">
+						123
+					</div>
+					<div id="tab-dia-fend" class="tabcontent">
+						123
+					</div>
+					<div id="tab-dia-other" class="tabcontent">
+						123
+					</div>
+					<div id="tab-dia-push" class="tabcontent">
+						123
+					</div>
+					<button onclick="javascript:$('#dialog-normal-talk-tricks').dialog('close');">關閉</button>
+				</div>
 			</div>
 		</div>
+
+		
 		
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

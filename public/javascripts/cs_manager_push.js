@@ -41,8 +41,31 @@ gs_edit_setting = function() {
 		.removeClass('hide_view')
 		.addClass('current_view');
 }
-gs_list_setting = function() {
-	$('#gs_list').html(Connection.conversation_list.reduce(function(result,item){
+gs_list_setting = function(name_filter,birth_filter,insurance_filter) {
+	
+	let gs_conversation_list = Connection.conversation_list;
+	if(name_filter && name_filter!=""){
+		gs_conversation_list = gs_conversation_list.filter(function(item){
+			let input = $("#gs_fliter").val();
+			return item.conversation_title.includes(input) || item.customer_nickname.includes(input);
+			//let input = $("")
+			//return item.conversation_title.includes(input) || item.customer_nickname.includes(input)
+		})
+	}
+	if(birth_filter){
+		gs_conversation_list = gs_conversation_list.filter(function(item){
+			return DateDiff(item.detail.BRTHDT) < 15;//TODO
+			//return (new Date(item.OOXX).getTime() - Date.now()) >14 * 24*60*60*1000;
+		})
+	}
+	if(insurance_filter){
+		gs_conversation_list = gs_conversation_list.filter(function(item){
+			return DateDiff(item.detail.FENDAT) < 15;//TODO
+			//return (new Date(item.OOXX).getTime() - Date.now()) >14 * 24*60*60*1000;
+		})
+	}
+	$('#gs_list').html(gs_conversation_list.reduce(function(result,item){
+		//以下原code
 		return result + '<div class="list_element" customer_id="' + item.customer_id + '">'+
 		'	<div class="img" alt="">'+
 		'		<img src="' + item.avator + '" alt="">'+
@@ -57,7 +80,7 @@ gs_list_setting = function() {
 		'	</div>'+
 		'</div>';
 	},""));
-	$(".gs_area, .btn_gs_choose")
+	$(".cs_manager_dialog, .gs_area, .btn_gs_choose")
 		.removeClass("current_view")
 		.addClass("hide_view");
  	$('.gs, .gs_list, .btn_gs_submit, .btn_gs_reset')
@@ -158,3 +181,20 @@ $('.gs .btn_gs_submit').click(function(e){
 		$('.btn_gs_leave').trigger('click');
 	});
 }) 
+
+//filter
+$('.push_search_box_container > input[type="text"]').keyup(function(e){
+	gs_refresh_list();
+});
+$('.push_search_box_container > input[name="birth_filter"]').change(function(e){
+	gs_refresh_list();
+});
+$('.push_search_box_container > input[name="insurance_filter"').change(function(e){
+	gs_refresh_list();
+});
+gs_refresh_list = function(){
+	let name_filter = $('.push_search_box_container > input[type="text"]').val();
+	let birth_filter = $('.push_search_box_container > input[name="birth_filter"]').prop("checked");
+	let insurance_filter = $('.push_search_box_container > input[name="insurance_filter"]').prop("checked");
+	gs_list_setting(name_filter,birth_filter,insurance_filter);
+}

@@ -15,12 +15,12 @@ function set_customer_socket(){
 	
 	Connection = {}
 	
-	Connection.init = function(){
+	Connection.init = function(manager_id){
 		Connection.socket = io(socket_server_ip);
 		
 		Connection.end_point = "client" ;
 		Connection.client_id  = client_id_b64?b64DecodeUnicode(client_id_b64):UUID();
-		Connection.service_id = service_id_b64?b64DecodeUnicode(service_id_b64):UUID();
+		Connection.service_id = manager_id?manager_id:service_id_b64?b64DecodeUnicode(service_id_b64):UUID();
 		Connection.client_info = {
 			"id":"",
 			"name":"",
@@ -80,6 +80,14 @@ function set_customer_socket(){
 				service_id : Connection.service_id
 			});
 		});
+
+		Connection.socket.on('change customer',function(data){
+			console.log('change customer',data)
+			if(data.manager_id !== Connection.service_id){
+				Connection.socket.emit("leave",{});
+				Connection.init(data.manager_id);
+			}
+		})
 	}
 	
 	Connection.reiceive_msg = function (message){

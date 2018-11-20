@@ -186,10 +186,11 @@ function set_manager_socket( service_id, manager_data, responsibility_data,login
 			console.log('data',data)
 			try {
 				let conversation_data = data[0][0];
+				Connection.client_info = JSON.parse(conversation_data.customer_data);
 				let target = Connection.conversation_list.find(function(item){
 					return item.customer_id == Connection.client_info.id;
 				});
-				Connection.client_info = JSON.parse(conversation_data.customer_data);
+
 				Connection.client_info.detail = target.detail;
 				Connection.client_info.notify = {
 					birth_need_notify: target.birth_need_notify || "Y",
@@ -198,7 +199,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data,login
 					fend_notify: target.fend_notify || "Y",
 					uend_need_notify: target.uend_need_notify || "Y",
 					uend_notify: target.uend_notify || "Y"
-				}
+				};
 				//todo 太醜了
 				Connection.service_info = JSON.parse(conversation_data.manager_data);
 				Connection.service_info.BRNHCD = logindata.BRNHCD;
@@ -279,7 +280,11 @@ function set_manager_socket( service_id, manager_data, responsibility_data,login
 		Connection.socket.on('normal talk trick', function (data) {
 			//["普通話術1", "普通話術2", "生日快樂1", "生日快樂2", "續保話術1", "該續保了2", "其他1", "其他話術"]
 			Connection.normal_talk_trick = data;
-			var birth = '<h3>生日祝賀1</h3><input type="button" id="normal-tricks-2" onclick="select_trick(event)" class="trick-content" value="' + data[2] + '">'+
+			var push = '<h3>推播話術1</h3><input type="button" id="normal-tricks-0" onclick="select_trick(event)" class="trick-content" value="' + data[0] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-0\',event)" value="編輯">'+
+					'<h3>推播話術2</h3><input type="button" id="normal-tricks-1" onclick="select_trick(event)" class="trick-content" value="' + data[1] + '">'+
+					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-1\',event)" value="編輯">';
+				birth = '<h3>生日祝賀1</h3><input type="button" id="normal-tricks-2" onclick="select_trick(event)" class="trick-content" value="' + data[2] + '">'+
 					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-2\',event)" value="編輯">'+
 					'<h3>生日祝賀2</h3><input type="button" id="normal-tricks-3" onclick="select_trick(event)" class="trick-content" value="' + data[3] + '">'+
 					'<input type="button" onclick="edit_normal_trick(\'normal-tricks-3\',event)" value="編輯">',
@@ -294,6 +299,10 @@ function set_manager_socket( service_id, manager_data, responsibility_data,login
 			$('#tab-birth').html(birth);
 			$('#tab-fend').html(fend);
 			$('#tab-other').html(other);
+			$('#tab-dia-birth').html(birth);
+			$('#tab-dia-fend').html(fend);
+			$('#tab-dia-other').html(other);
+			$('#tab-dia-push').html(push);
 		});
 	}
 	
@@ -339,13 +348,17 @@ function update_conversatoin_list(conversatoin_data){
 	console.log("draw_conversatoin_list");
 	let div_html = conversatoin_data.reduce(function(div_html,item){
 		item.detail = item.detail || {};
+		var BIRFLAG = item.birth_need_notify == "Y" &&
+						item.birth_notify == "N" &&
+						item.detail.BRTHDT <15,
+			FFLAG = item.fend_need_notify == "Y" &&
+					item.fend_notify == "N" &&
+					item.detail.FENDAT <15;
 
-		let detail = item.detail=={} ? "" : 
-			(item.detail.BIRFLAG == "Y" || item.detail.FFLAG == "Y") ?
+		let detail = item.detail=={} ? "" : (BIRFLAG || FFLAG) ?
 				"<div class='note' title=''>"
 					+"<div class='tooltip'>"
-					+(item.detail.BIRFLAG == "Y"?"生日 ":"")
-					+(item.detail.FFLAG == "Y"?"強制險 ":"")
+					+(BIRFLAG?"生日 ":"") + (FFLAG?"強制險 ":"")
 						+"<span class='tooltiptext'>"
 						+"</span>"
 					+"</div>"
@@ -379,31 +392,15 @@ function update_conversatoin_list(conversatoin_data){
 	
 	$(".cs_manager_list_container").html(div_html);
 
-	if((notify.birth_need_notify=="N" || notify.birth_notify=="Y") && 
-		(notify.fend_need_notify=="N" || notify.fend_notify=="Y")){
-		$('#btn-custinfo')[0].style.backgroundColor = '#ef3';
+	var notify = Connection.client_info.notify;
+	if(notify){
+		if((notify.birth_need_notify=="N" || notify.birth_notify=="Y") && 
+			(notify.fend_need_notify=="N" || notify.fend_notify=="Y")){
+			$('#btn-custinfo')[0].style.backgroundColor = '#ef3';
+		}
 	}
 }
 
-function apply_edit_nickname(event){
-    targetevent = event
-	var target = event.srcElement.getAttribute('customer_id');
-
-	Connection.socket.emit("edit customer name",{
-		customer_id: target,
-		manager_id: Connection.service_id,
-		nickname: $('input[type="text"][customer_id="'+target+'"]').val()
-	})
-
-	$('input[customer_id="'+target+'"]').attr('style','display:none;');
-	$('div.name[customer_id="'+target+'"]').attr('style','');
-}
-function edit_nickname(event){
-    targetevent = event
-	var target = event.srcElement.getAttribute('customer_id');
-	$('div.name[customer_id="'+target+'"]').attr('style','display:none;');
-	$('input[customer_id="'+target+'"]').attr('style','');
-}
 
 
 //一般話術
@@ -431,8 +428,14 @@ function tricks(type){
 }
 
 function select_trick(event){
-	$('.input.msg').val(event.target.value);
-	$('#normal_talk_tricks').toggle();
+	console.log(event)
+	if($('.txt').html() == "多人訊息"){
+		$('.fr-element.fr-view > p').html(event.target.value);
+		$('#dialog-normal-talk-tricks').dialog('close');
+	}else{
+		$('.input.msg').val(event.target.value);
+		$('#normal_talk_tricks').toggle();
+	}
 }
 
 //金牌話術
@@ -470,7 +473,7 @@ function menu_setting(){
 
 			// button?
 			// 在14天內且Flag==Y
-			var hasbutton = (countBirhday(data.BIRTHDAY)<14 && "Y" == Connection.client_info.detail.BIRFLAG);
+			var hasbutton = (DateDiff(data.BIRTHDAY)<14 && "Y" == Connection.client_info.detail.BIRFLAG);
 			$('#custinfo_birthday').html(data.BIRTHDAY+
 				(hasbutton ? ('<button onclick="javascript:tricks(\'birth\');$(\'#normal_talk_tricks\').toggle();$(\'#cust-info\').toggle();Notify(\''+Connection.client_id+'\',\'birth\');">生日祝賀</button>'):''));
 
@@ -483,7 +486,7 @@ function menu_setting(){
 	})
 }
 
-function countBirhday(birthday){
+function DateDiff(birthday){
 	var today = new Date();
 	var b = moment(today)
 	birthday = birthday.split("/");
@@ -495,7 +498,7 @@ function countBirhday(birthday){
 		birthday = (birthday[1].length == 2 ? birthday[1] : "0" + birthday[1]) +
 				(birthday[2].length == 2 ? birthday[2] : "0" + birthday[2]);
 	}else{
-		return "";
+		return 999;
 	}
 
 	var result1 = moment((today.getFullYear()+1)+birthday).diff(b, 'days');
@@ -504,24 +507,54 @@ function countBirhday(birthday){
 	return result1 < 365 ? result1 : result2;
 }
 
-function edit_normal_trick(id,event){
-	if($('#'+id).attr('type') == 'text'){
-		var target = id.split('-');
-		$('#'+id).attr('onclick','select_trick(event)').attr('type','button');
-		event.srcElement.value = "編輯";
-		Connection.normal_talk_trick[target[2]] = $('#'+id).val();
-		Connection.update_talk_tricks('Normal', Connection.normal_talk_trick);
-
-	}else{
-		$('#'+id).attr('onclick','').attr('type','text');
-		event.srcElement.value = "確認";
-	}
-}
-
 function Notify(customer_id, target){
 	Connection.socket.emit('update notify flag',{
 		customer_id: customer_id,
 		target: target,
 		value: "Y"
+	});
+}
+
+function changeManager(){
+
+	if(!Connection.client_id) return;
+
+	call_hotai_api("LINE006_Q00",{
+		"ENCYID": Connection.client_id,
+		"FRAN": "L"
+	}, function(data){
+		var managers = [];
+		data = data.CSINFO[0];
+		console.log()
+		if(""!==data.CRSALR && Connection.service_id !== data.CRSALR){
+			managers.push({
+				"id": data.CRSALR,
+            	"name": data.CRSALRNM
+			});
+		}
+		if(""!==data.WHSRVNO && Connection.service_id !== data.WHSRVNO){
+			managers.push({
+				"id": data.WHSRVNO,
+            	"name": data.WHSRVNM
+			});
+		}
+		if(managers.length == 1){
+			$('#dialog-change-manager-content').html("是否結束您與此專員的對話，改由 "+managers[0].name +" 負責");
+			$('#btn-change-manager').attr('style','');
+			$('#btn-change-manager').attr('onclick','ConfirmChangeManager("'+Connection.client_id+'","'+managers[0].id+'")');
+		}else{
+			$('#dialog-change-manager-content').html("用戶暫時沒有其他負責專員");
+			$('#btn-change-manager').attr('style','display:none;');
+		}
+	
+		$("#dialog-change-manager").dialog("open");
+	});
+}
+
+function ConfirmChangeManager(customer_id, manager_id){
+	console.log(customer_id, manager_id);
+	Connection.socket.emit('change customer',{
+		customer_id: customer_id,
+		manager_id: manager_id
 	});
 }

@@ -56,6 +56,7 @@ CREATE DEFINER=`root`@`%` PROCEDURE `sp_bind_client`(
 	IN `p_personal_data` VARCHAR(2000),
 	IN `p_notify_data` VARCHAR(200)
 
+
 )
 BEGIN
 	/* 20181022 By Ben */
@@ -70,7 +71,15 @@ BEGIN
 		(`customer_id`, `ht_id`, `name`, `vehicle_type`, `vehicle_number`, `avator`, `telphone`, `fend_date`, `uend_date`, `birth_date`, `fend_need_notify`, `uend_need_notify`, `birth_need_notify`, `personal_data`, `personal_data_time`, `memo`) 
 		VALUES (UUID(), p_customer_id, p_customer_name, p_vehicle_type, p_vehicle_number, p_avator, p_telphone, p_fend_date, p_uend_date, p_birth_date, p_f_flag, p_u_flag, p_birth_flag, IFNULL(p_personal_data,"{}"), NOW(), NULL);
 	ELSE
-		UPDATE tb_customer SET telphone = p_telphone WHERE ht_id = p_customer_id;
+		UPDATE tb_customer SET 
+			telphone = p_telphone,
+			fend_date = IFNULL(p_fend_date,fend_date), 
+			uend_date = IFNULL(p_uend_date,uend_date),
+			birth_date = IFNULL(p_birth_date,birth_date),
+			fend_need_notify = IFNULL(p_f_flag,fend_need_notify), 
+			uend_need_notify = IFNULL(p_u_flag,uend_need_notify), 
+			birth_need_notify = IFNULL(p_birth_flag,birth_need_notify)
+		WHERE ht_id = p_customer_id;
 	END IF;
 
 	IF NOT EXISTS (
@@ -366,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `tb_call_api_log` (
   `success` varchar(20) DEFAULT NULL,
   `data` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 取消選取資料匯出。
 -- 傾印  表格 db_lexus_cs.tb_customer 結構
@@ -401,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `tb_manager` (
   `login` varchar(10) DEFAULT 'N',
   `compid` varchar(20) DEFAULT NULL,
   `dlrcd` varchar(20) DEFAULT NULL,
-  `brnchcd` varchar(20) DEFAULT NULL,
+  `brnhcd` varchar(20) DEFAULT NULL,
   `sectcd` varchar(20) DEFAULT NULL,
   `manager_type` varchar(50) DEFAULT NULL,
   `manager_name` varchar(50) DEFAULT NULL,

@@ -22,6 +22,8 @@ function call_hotai_api(api_code,data,callback){
 			detail:true
 		}),
 		success: function(d) {
+			console.log(api_code,d);
+			
 			today = new Date();
 			apilog.end = today.toLocaleDateString('zh-tw') + ' ' + today.toLocaleTimeString('zh-tw');
 			apilog.success = "Y";
