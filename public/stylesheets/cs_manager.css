@@ -443,13 +443,13 @@ table, th, td {
 		position: relative;
 	}
 	.dialog--client {
-		margin-left: 70px;
+		margin-left: 20px;
 	}
 	.dialog--client .dialog__profile {
 		left: -70px;
 	}
 	.dialog--service {
-		margin-right: 70px;
+		margin-right: 20px;
 	}
 	.dialog--service .dialog__profile {
 		right: -70px;

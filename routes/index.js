@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var common = require('../service/common');
-var ht_api = require('../service/ht_api.js');
+var call_api = require('../service/ht_api.js');
 var sp = require('../service/sp');
 const settings = require('../configs.js');
 
@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/api', async function(req, res, next) {
-	res.send(await ht_api.callApi(req.body));
+	res.send(await call_api.HT_Api(req.body));
 });
 
 router.get('/cust.do', function(req, res, next) {

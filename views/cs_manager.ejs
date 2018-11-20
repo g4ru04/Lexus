@@ -24,15 +24,12 @@
 		<div class='login_panel'>
 			<h2>登入頁面</h2>
 			<ul>
-				<li>帳號: <input type='text' id='username' value='AA94453'/></li>
+				<li>帳號: <input type='text' id='username' value='AA99061'/></li>
 				<li>密碼: <input type='password' id='password' value='ab#12345'/></li>
 			</ul>
 			<br>
 			<input type='checkbox' checked />記住密碼&nbsp;&nbsp;
 			<button onclick='to_login()'>登入</button>
-			<br>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href='javascript:void(0)' style='color:blue;text-decoration: underline;' onclick='$("#username").val("AA00001")'>銷售專員-陳柏廷</a>&nbsp;&nbsp;
-			<a href='javascript:void(0)' style='color:blue;text-decoration: underline;' onclick='$("#username").val("AA00002")'>服務專員-劉孟函</a><br>
 		</div>
 		<!-- 登入後 (左) -->
 		<div class='after_login'>
@@ -310,7 +307,7 @@
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
 								onclick='showGroupSend();'>推播</div>
 							<div id="btn-custinfo" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;">車主資料</div>
-							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
+							<div id="btn-call" style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;" 
 								onclick='location.href="tel:+886-919863010";'>撥打</div>
 							<div style="float:left;font-size: 1.3em;margin: 20px 8px;background-color: #ef3;cursor: pointer;"
 								onclick="$('#normal_talk_tricks').toggle();">常用話術</div>
@@ -325,15 +322,23 @@
 				<!--推播訊息-->
 				<div class="gs hide_view">
 					<form id="gs_form" style="width:100%;height:100%;">
+						<div>
+							<input type="text" placeholder="搜尋"/>	
+							<input type="checkbox" id="birth" />生日
+							<input type="checkbox" id="fend" />強制險
+						</div>
 						<div class="gs_content">
-								<div id="gs_list" class="gs_list">
-									<!-- generate list -->
-								</div>
+							<div id="gs_list" class="gs_list">
+								<!-- generate list -->
+							</div>
 							<div class="gs_area">
-								<textarea class="gs_msg" placeholder="請輸入訊息">親愛的車主，您好！</textarea>
-								<img id="gs_photo" class="fr-fil fr-dib" src="" alt="選擇圖片" width="300"/>
+								<textarea class="gs_msg" placeholder="請輸入訊息"></textarea>
+								<img id="gs_photo" class="fr-fil fr-dib" src="" alt="選擇圖片" width="300" style="display:none;"/>
 								<!-- <p><a id="get-text" class="btn r-btn highlight text-small">Clear</a></p> -->
 							</div>
+						</div>
+						<div class="">
+							
 						</div>
 						<div class="gs_btn_area gs_footer">
 							<input type="button" class="btn_gs_choose" value="選擇推播對象" />
@@ -354,6 +359,8 @@
 		<script src="/javascripts/common.js"></script>
 		<script src="/javascripts/cs_manager_preset.js"></script>
 		<script src="/javascripts/cs_manager.js"></script>
+		<script src="/javascripts/cs_manager_push.js"></script>
+		<script src="/javascripts/cs_manager_book.js"></script>
 		<script type='text/javascript' src='scripts/js/froala_editor.min.js'></script>
 		<script type='text/javascript' src='scripts/js/plugins/image.min.js'></script>
 		

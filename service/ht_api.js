@@ -2,13 +2,13 @@
 
 	// 20181102 - Michael
 	
-	class ht_api{
+	class call_api{
 		
 		constructor() {
-			this.callApi = this.callApi.bind(this);
+			this.HT_Api = this.HT_Api.bind(this);
 		}
 
-		callApi(body) {
+		HT_Api(body) {
 			return new Promise(async function(resolve, reject){
 				var detail = body.detail || false;
 				const settings = require('../configs.js');
@@ -28,7 +28,6 @@
 					/* 13 */ "USER_LOGIN"]
 
 				try{
-					
 					if(!body.api) throw Error("body.api is necessary");
 					if(!body.data) throw Error("body.data is necessary");
 
@@ -51,7 +50,7 @@
 		}
 	}
 	
-	module.exports = new ht_api();
+	module.exports = new call_api();
 
 	/// private functions
 

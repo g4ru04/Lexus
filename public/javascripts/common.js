@@ -1,6 +1,16 @@
 
 function call_hotai_api(api_code,data,callback){
 	console.log(api_code,data)
+	var today = new Date();
+
+	var apilog = {
+		url: "HT_API_URL/" + api_code,
+		start: today.toLocaleDateString('zh-tw') + ' ' + today.toLocaleTimeString('zh-tw'),
+		end: "",
+		success: "",
+		data: ""
+	};
+
 	$.ajax({
 		type : "POST",
 		url : "/api",
@@ -12,7 +22,10 @@ function call_hotai_api(api_code,data,callback){
 			detail:true
 		}),
 		success: function(d) {
-			console.log(api_code,d)
+			today = new Date();
+			apilog.end = today.toLocaleDateString('zh-tw') + ' ' + today.toLocaleTimeString('zh-tw');
+			apilog.success = "Y";
+			apilog.data = d;
 
 			if(d.isSuccess){
 				if(callback){
@@ -25,7 +38,18 @@ function call_hotai_api(api_code,data,callback){
 		},error: function (jqXHR, textStatus, errorThrown) {
 			alert('API使用異常:' + api_code);
 			console.log(jqXHR,textStatus,errorThrown);
-		}
+			
+			today = new Date();
+			apilog.end = today.toLocaleDateString('zh-tw') + ' ' + today.toLocaleTimeString('zh-tw');
+			apilog.success = "N";
+			apilog.data = textStatus;
+		},complete: function() {
+			try{
+				Connection.api_log(apilog);
+			}catch(e){
+				io(socket_server_ip).emit("api log", apilog).close();
+			}
+        }
 	});
 	
 }
@@ -147,6 +171,9 @@ function common_conn_setting(conn){
 		msg_obj.push = true;
 		console.log('msg_obj',msg_obj)
 		conn.socket.emit("message", msg_obj);
+	}
+	conn.api_log = function(log){
+		Connection.socket.emit("api log", log);
 	}
 }
 
