@@ -96,6 +96,7 @@ $('.btn_gs_choose').click(function(e){
 	gs_list_setting();
 })
 initFroalaEditor = function(){
+	
 	$('img#gs_photo').froalaEditor({
 		height: 30,
 		imageUploadParam: 'file',
@@ -109,8 +110,8 @@ initFroalaEditor = function(){
 		// $('img#gs_photo').attr('src', res.link);
 		// Image was uploaded to the server.
 	});
-	$('textarea').froalaEditor();
-	
+	$('textarea.gs_msg').froalaEditor();
+	console.log($(".fr-wrapper"));
 }
 $('.gs .btn_gs_submit').click(function(e){
 	e.preventDefault();

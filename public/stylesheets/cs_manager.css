@@ -1,4 +1,6 @@
-
+.fr-wrapper > div >a:first-child{
+	display: none !important;
+}
 .login_panel {
 	width: 300px;
 	margin: 120px auto;

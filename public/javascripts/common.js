@@ -1,3 +1,44 @@
+/* 關閉自定義 errorhandlerlog 請解開右邊 註解 → */
+window.onerror = function (msg, url, line, col, error) {
+	alert(JSON.stringify(msg));
+	/*
+	setTimeout(function () {
+		$.ajax({
+			type: "POST",
+			url: "https://nodered-api-lexus-test01.mybluemix.net/error_log_temp",
+			data: {
+				platform: "PageError byBen",
+				message: JSON.stringify(msg)
+			}
+		});
+	}, 2000);*/
+}
+
+$(function () {
+	$.ajaxSetup({
+		error: function (jqXHR, exception, errorThrown) {
+			/*
+			if (jqXHR.status == 0) {
+				return; //零只是因為還沒丟就跳頁了
+			}
+			var log_msg = 'Ajax.ERROR\n'
+				 + '\tsend:[' + JSON.stringify(this.data)
+				 + ']\n\tto:[' + this.url + ']'
+				 + '\n\tGet:[' + jqXHR.status + "-" + jqXHR.statusText + ']';
+			setTimeout(function () {
+				$.ajax({
+					type: "POST",
+					url: "https://nodered-api-lexus-test01.mybluemix.net/error_log_temp",
+					data: {
+						platform: "PageError byBen",
+						message: log_msg
+					}
+				});
+			}, 2000);*/
+		}
+	});
+});
+/* 關閉自定義 errorhandlerlog 請解開右上 註解  */
 
 function call_hotai_api(api_code,data,callback){
 	console.log(api_code,data)
@@ -91,6 +132,11 @@ function common_conn_setting(conn){
 	
 	conn.socket.on('get history', function (data) {
 		
+		if(Connection.end_point=="client"){
+			lexus_sys_talk("您好接下來將由專員'"+Connection.service_info.name
+			+"'為您服務，有任何問題都可以先留言，專員看到後會立即回覆");
+		}
+		$("#console .loading_div").after("<div style='text-align:center;'>======以上為未讀訊息======</div>")
 		conn.talks_history_cursor += data.data.length;
 		conn.talks = conn.talks.concat(data.data);
 		//此為補上歷史資料
@@ -268,6 +314,7 @@ function produce_dialog_element(message) {
 		+'	</div>'
 		+'</div>';
 }
+
 
 function smoothly_set_history(data){
 	if(data.length>0){
@@ -461,4 +508,21 @@ function post(path, params, method) {
 
 	document.body.appendChild(form);
 	form.submit();
+}
+
+function lexus_sys_talk(message){
+	$("#console .loading_div").after(
+		produce_dialog_element({
+			"type":"service",
+			"from":{
+				"avator":"https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+				"name":"Lexus"
+			},
+			"message":{
+				"type":"text",
+				"text":message
+			},
+			"time":Date.now()
+		})
+	);
 }

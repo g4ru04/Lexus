@@ -51,6 +51,7 @@ function set_customer_socket(){
 	Connection.set_listener = function(){
 		
 		Connection.socket.on('enter', function (data) {
+			console.log(data);
 			try {
 				let conversation_data = data[0][0];
 				Connection.client_info = JSON.parse(conversation_data.customer_data);

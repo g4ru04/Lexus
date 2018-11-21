@@ -13,7 +13,7 @@
 
 
 -- 傾印 db_lexus_cs 的資料庫結構
-CREATE DATABASE IF NOT EXISTS `db_lexus_cs` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+CREATE DATABASE IF NOT EXISTS `db_lexus_cs` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `db_lexus_cs`;
 
 -- 傾印  程序 db_lexus_cs.sp_api_log 結構
@@ -375,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `tb_call_api_log` (
   `success` varchar(20) DEFAULT NULL,
   `data` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 
 -- 取消選取資料匯出。
 -- 傾印  表格 db_lexus_cs.tb_customer 結構

@@ -228,7 +228,7 @@ function set_manager_socket( service_id, manager_data, responsibility_data,login
 				Connection.socket.emit("get history",{});
 			}
 			var notify = Connection.client_info.notify;
-			if((notify.birth_need_notify=="Y" && notify.birth_notify=="N") || 
+			if(notify!=null && (notify.birth_need_notify=="Y" && notify.birth_notify=="N") || 
 			    (notify.fend_need_notify=="Y" && notify.fend_notify=="N")){
 				$('#btn-custinfo')[0].style.backgroundColor = 'red';
 			}
