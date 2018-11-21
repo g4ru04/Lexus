@@ -486,6 +486,77 @@ function menu_setting(){
 	})
 }
 
+$('.gs .btn_gs_submit').click(function(e){
+	e.preventDefault();
+	
+	let userlist = [];
+	let msg = $('#gs_form .gs_msg').val(),
+		url = $('#gs_photo').attr('src');
+	
+	$('#gs_list :checkbox:checked').each(function(idx, element){
+		userlist.push($(element).attr('id'));
+	});
+ 	if(userlist.length == 0 || msg == ""){
+		alert('請挑選車主並填寫訊息。');
+		return;
+	}
+ 	userlist.forEach(function(element) {
+		let message_obj = {
+			type: "service",
+			from: {
+				id: Connection.service_id,
+				name: Connection.service_info.name,
+				avatar: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+			},
+			to: {
+				id: element,
+				name: Connection.client_info.name,
+				avatar: "/images/avatar.png"
+			},
+			time: Date.now(),
+			message: {
+				type: "text",
+				text: msg
+			}
+		},
+		image_obj = {
+			type: "service",
+			from: {
+				id: Connection.service_id,
+				avatar: "https://customer-service-xiang.herokuapp.com/images/Lexus_icon.png",
+			},
+			to: {
+				id: element,
+				avatar: "/images/avatar.png"
+			},
+			time: Date.now(),
+			message: {
+				type: "image",
+				url: url
+			}
+		};
+		
+		Connection.group_send(message_obj);
+		if(url) Connection.group_send(image_obj);
+
+		//推播
+ 		line_push_message_obj = {
+			COMPID: "AY",
+			USERID: "AY04916",
+			MSG: "您有一封來自車主的訊息，請登入https://htsr.hotaimotor.com.tw/LINENOTIFYAPI_TEST/LOGIN/login查看"
+		};
+		
+		//call_hotai_api("API",{},function(){});
+
+ 		// $.post('line_send_message', line_push_message_obj, function(result){
+		// 	return result;
+		// });
+		
+		$('.btn_gs_leave').trigger('click');
+	});
+}) 
+
+
 function DateDiff(birthday){
 	var today = new Date();
 	var b = moment(today)
