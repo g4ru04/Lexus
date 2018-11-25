@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF8">
+	
+	<link rel="Shortcut Icon" type="image/x-icon" href="http://bpic.588ku.com/element_pic/01/48/45/27574427e3b9062.jpg" />
+	<title>功能選單</title>
+	<script>
+	function getUrlParameter(name, url) {
+		if (!url) url = window.location.href;
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+	</script>
+	<style>
+		body{
+			font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
+		}
+	</style>
+</head>
+<body>
+	<h1>這是'
+	<script>
+		var page_dict = {
+			"activity":"活動專區",
+			"law":"規章&補助",
+			"vendor":"特約廠商",
+			"edu":"教育課程",
+			"game":"小遊戲區",
+			"body":"體檢報名"
+		};
+		document.writeln(page_dict[getUrlParameter("q")]?page_dict[getUrlParameter("q")]:"UNKNOWN?");
+	</script>' 頁面
+	</h1>
+</body>
+</html>
+	
+	
+	
+	
